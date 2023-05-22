@@ -8,12 +8,13 @@ const port = 3001
 describe('user actions', () => {
     let server: http.Server;
 
-    // Créer un objet mock pour req
     const goodReq = {
         body: {
-            name: 'John Doe',
-            age: 25,
-            email: 'johndoe@example.com',
+            userName: 'gens',
+            email: 'heud@hotmail.fr',
+            firstName: 'eude',
+            lastName: 'marcel',
+            password: 'opPsw1@',
         },
     };
 
@@ -24,7 +25,6 @@ describe('user actions', () => {
         },
     };
 
-    // Créer un objet mock pour res
     const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
@@ -32,23 +32,59 @@ describe('user actions', () => {
 
     it('should exec profileCtrl', async () => {
         const profileCtrl = new ProfileController
-        // Exécuter la fonction createProfile avec les objets mock
         await profileCtrl.createProfile(goodReq as any, res as any);
-
-        // Vérifier les résultats
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({ message: 'Profile created' });
-
     })
-    it('shouldn t exec profileCtrl', async () => {
+    it('without all param', async () => {
         const profileCtrl = new ProfileController
-        // Exécuter la fonction createProfile avec les objets mock
         await profileCtrl.createProfile(badReq as any, res as any);
+        expect(res.status).toHaveBeenCalledWith(405);
+    })
 
-        // Vérifier les résultats
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Profile created' });
-
+    it('with bad password', async () => {
+        const profileCtrl = new ProfileController
+        const modifiedReq = {
+            body: {
+                ...goodReq.body,
+                password: "abcd"
+            },
+        };
+        await profileCtrl.createProfile(modifiedReq as any, res as any);
+        expect(res.status).toHaveBeenCalledWith(406);
+    })
+    it('with bad email', async () => {
+        const profileCtrl = new ProfileController
+        const modifiedReq = {
+            body: {
+                ...goodReq.body,
+                email: "abcd"
+            },
+        };
+        await profileCtrl.createProfile(modifiedReq as any, res as any);
+        expect(res.status).toHaveBeenCalledWith(406);
+    })
+    it('already use userName', async () => {
+        const profileCtrl = new ProfileController
+        const modifiedReq = {
+            body: {
+                ...goodReq.body,
+                email: "abcd@test.oui"
+            },
+        };
+        await profileCtrl.createProfile(modifiedReq as any, res as any);
+        expect(res.status).toHaveBeenCalledWith(409);
+    })
+    it('already use email', async () => {
+        const profileCtrl = new ProfileController
+        const modifiedReq = {
+            body: {
+                ...goodReq.body,
+                userName: 'test2'
+            },
+        };
+        await profileCtrl.createProfile(modifiedReq as any, res as any);
+        expect(res.status).toHaveBeenCalledWith(409);
     })
 
 })

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/hauretax/matchaultrav2#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
   },
   "devDependencies": {
