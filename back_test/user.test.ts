@@ -10,7 +10,7 @@ describe('user actions', () => {
 
     const goodReq = {
         body: {
-            userName: 'gens',
+            userName: '',
             email: 'heud@hotmail.fr',
             firstName: 'eude',
             lastName: 'marcel',
