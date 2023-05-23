@@ -26,17 +26,32 @@ export default class Dbhandler {
         `)
     }
 
-    addUsers({ email,firstName,lastName,password,userName}:CreateProfileModel) { 
-
-        this.db.run(`INSERT INTO items (email) (firstName)
-            (lastName)(password)(userName)
-         VALUES(?)`, [email, firstName, lastName, password, userName], function(err) {
-            if (err) {
-              console.error(err);
-              return;
-            }
-          
-            console.log(`Inserted item with ID: ${this.lastID}`);
+    async insertUser(user: CreateProfileModel): Promise<number> {
+        const query = `
+          INSERT INTO users (email, userName, lastName, firstName, password)
+          VALUES (?, ?, ?, ?, ?)
+        `;
+    
+        const params = [user.email, user.userName, user.lastName, user.firstName, user.password];
+    
+        return new Promise<number>((resolve, reject) => {
+            this.db.run(query, params, function (err) {
+              if (err) {
+                if (err.message.includes('UNIQUE constraint failed') ) {
+                    reject(409);
+                  } else {
+                    console.error(err);
+                    reject(500);
+                  }
+              } else {
+                resolve(this.lastID);
+              }
+            });
           });
+      }
+
+
+    deletUser(id) {
+        this.db.run('DELETE FROM users WHERE id = ?', [id]);
     }
 }

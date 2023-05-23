@@ -5,31 +5,31 @@ import Dbhandler from '../database/DbHandler';
 class ProfileController {
     public async createProfile(req: Request, res: Response) {
         try {
-            // get data of body
             const profile: CreateProfileModel = {
                ...req.body
             }
             const db = new Dbhandler
-            
-            // TODO
-            /**
-             * verification username and email is unique (db can send error for us ?)
-             */
-            // TODO
-            /**
-             * rec data in db
-             */
+            const usrId = await db.insertUser(profile)
             // TODO
             /**
              * send email  of verification
              */
-            // Envoyer une réponse réussie
-            res.status(201).json({ message: 'Profile created' });
+            res.status(201).json({ message: 'Profile created', usrId: usrId });
         } catch (error) {
-            console.error(error);
+            if (error === 409) {
+                res.status(409).json({ error: 'user or email already taken' });
+                return;
+              } 
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 }
 
 export default ProfileController;
+
+
+// const res = {
+//     status: jest.fn().mockReturnThis(),
+//     json: jest.fn(),
+//     send: jest.fn()
+// }  as unknown as Response<any, Record<string, any>>;
