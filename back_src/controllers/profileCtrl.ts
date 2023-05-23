@@ -1,19 +1,16 @@
 import { Request, Response } from 'express';
-import { validateRequestData } from '../utils/validateReqData';
 import { CreateProfileModel } from '../models/profileModel'
+import Dbhandler from '../database/DbHandler';
 
 class ProfileController {
-    public createProfile(req: Request, res: Response): void {
+    public async createProfile(req: Request, res: Response) {
         try {
             // get data of body
             const profile: CreateProfileModel = {
                ...req.body
             }
-            // TODO
-            /** check
-             * password complexity
-             * username, firstname, lastName not void
-             *  */
+            const db = new Dbhandler
+            
             // TODO
             /**
              * verification username and email is unique (db can send error for us ?)
@@ -33,14 +30,6 @@ class ProfileController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
-
-    public checkDataProfilCreat(req){
-       const {userName, email, firstName,lastName, password} = req.body
-       if(!userName || !email || !firstName || !lastName || !password)
-            return 0
-    }
-
-    // Ajoutez d'autres méthodes pour les autres actions liées au profil
 }
 
 export default ProfileController;

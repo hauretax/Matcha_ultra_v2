@@ -1,15 +1,20 @@
 import express, { Application } from 'express';
 import { Request, Response } from 'express';
 import profileRoutes from './routes/profileRoutes';
+import Dbhandler from './database/DbHandler';
 
 class App {
   private app: Application;
+
 
   constructor() {
     this.app = express();
     this.configureMiddlewares();
     this.configureRoutes();
     this.handleErrors();
+    //je sait pas comment faire :s
+    const db = new Dbhandler
+    db.creatTables()
   }
 
   private configureMiddlewares(): void {
