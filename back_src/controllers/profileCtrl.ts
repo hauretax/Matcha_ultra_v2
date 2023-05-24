@@ -14,6 +14,7 @@ class ProfileController {
             /**
              * send email  of verification
              */
+
             res.status(201).json({ message: 'Profile created', usrId: usrId });
         } catch (error) {
             if (error === 409) {

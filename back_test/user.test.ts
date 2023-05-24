@@ -14,7 +14,10 @@ describe('user actions', () => {
     const db = new Dbhandler
     let usrId = 0;
     db.creatTables()
-
+            // TODO
+            /**
+             * verification of usr in db
+             */
     afterAll((done) => {
         db.deletUser(usrId);
         done();
@@ -38,11 +41,6 @@ describe('user actions', () => {
         },
     };
 
-    it('myshit', async () => { 
-        db.deletUser(22);
-        db.deletUser(21);
-    })
-
     const FE = new Fakexpress({
         params: {
           name: 'max'
@@ -53,17 +51,11 @@ describe('user actions', () => {
     //test on controller
     it('should exec profileCtrl', async () => {
 
-
-
         const profileCtrl = new ProfileController
         await profileCtrl.createProfile(goodReq as any, FE.res as any)
         console.log(FE.responseData.usrId)
         usrId = FE.responseData.usrId;
         expect(FE.res.status).toHaveBeenCalledWith(201);
-
-
-
-
 
     })
     //test on midelware

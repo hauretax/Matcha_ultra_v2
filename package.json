@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/hauretax/matchaultrav2#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
+    "nodemailer": "^6.9.2",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
   },
