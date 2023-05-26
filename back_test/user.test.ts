@@ -26,8 +26,8 @@ describe('user actions', () => {
 
     const goodReq = {
         body: {
-            userName: 'ouis',
-            email: 'heud@hotmail.fr',
+            userName: 'ahahah',
+            email: 'boyoxiy716@introace.com',
             firstName: 'eude',
             lastName: 'marcel',
             password: 'opPsw1@s',
@@ -53,7 +53,7 @@ describe('user actions', () => {
 
         const profileCtrl = new ProfileController
         await profileCtrl.createProfile(goodReq as any, FE.res as any)
-        console.log(FE.responseData.usrId)
+
         usrId = FE.responseData.usrId;
         expect(FE.res.status).toHaveBeenCalledWith(201);
 
