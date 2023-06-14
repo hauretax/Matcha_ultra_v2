@@ -3,6 +3,8 @@ import { CreateProfileModel } from '../models/profileModel'
 import Dbhandler from '../database/DbHandler';
 import sendEmail from '../utils/sendMail';
 
+
+// ca a du sens de mettre ca sur une classe ?
 class ProfileController {
     public async createProfile(req: Request, res: Response) {
         try {
