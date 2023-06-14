@@ -17,7 +17,7 @@ function Layout() {
     let navigate = useNavigate();
 
     const onClick: MenuProps['onClick'] = ({ key }) => {
-        if (key == '2') {
+        if (key === '2') {
             auth.signout(() => {navigate('/')})
         }
     };
