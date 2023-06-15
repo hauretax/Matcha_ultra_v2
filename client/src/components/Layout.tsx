@@ -48,7 +48,7 @@ function Layout() {
                     {auth.user &&
                         <Dropdown menu={{ items, onClick }} trigger={['click']}>
                             <Button type="primary" shape="round" icon={<UserOutlined />} >
-                                {auth.user} <DownOutlined />
+                                {auth.user.username} <DownOutlined />
                             </Button>
                         </Dropdown>
                     }

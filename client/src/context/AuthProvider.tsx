@@ -1,10 +1,14 @@
 import React from "react";
+
+import { message } from "antd";
+
 import { fakeAuthProvider } from "../services/fakeAuthProvider";
 
 interface AuthContextType {
     user: any;
-    signin: (user: string, callback: VoidFunction) => void;
+    signin: (username: string, password: string, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
+    // signup: (email: string, username: string, lastName: string, firstName: string, password: string) => void;
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
@@ -12,11 +16,25 @@ let AuthContext = React.createContext<AuthContextType>(null!);
 function AuthProvider({ children }: { children: React.ReactNode }) {
     let [user, setUser] = React.useState<any>(null);
 
-    let signin = (newUser: string, callback: VoidFunction) => {
-        return fakeAuthProvider.signin(() => {
-            setUser(newUser);
-            callback();
-        });
+    let signin = (username: string, password: string, callback: VoidFunction) => {
+        try {
+            const response = fakeAuthProvider.signin(username, password, () => {
+                message.success('Login successfull');
+                callback();
+            });
+            const { token, user } = response.data;
+
+            // Store the JWT token in local storage
+            localStorage.setItem('jwtToken', token);
+
+            // Update the user state
+            setUser(user);
+        } catch (error: any) {
+            const errorMessage = error.message || 'Login failed';
+
+            // Display error message to the user
+            message.error(errorMessage);
+        }
     };
 
     let signout = (callback: VoidFunction) => {
