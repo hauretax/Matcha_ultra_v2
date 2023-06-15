@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { CreateProfileModel } from '../models/profileModel'
-import Dbhandler from '../database/DbHandler';
 import UserDb from '../database/User.db';
 import sendEmail from '../utils/sendMail';
 import bcrypt from "bcrypt"
@@ -13,8 +11,6 @@ interface UsrRequest extends Request {
 }
 // ca a du sens de mettre ca dans une classe ?
 class ProfileController {
-    //TODO le viree quand le code auras ete deplacer (find #1)
-    db = new Dbhandler
     userDB = new UserDb
 
     public async createProfile(req: Request, res: Response) {
@@ -25,7 +21,7 @@ class ProfileController {
         }
         try {
             profile.password = await bcrypt.hash(req.body.password, 10)
-            const { id, accessCode, email } = await this.db.insertUser(profile)
+            const { id, accessCode, email } = await this.userDB.insertUser(profile)
             //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
             sendEmail(email, 'click on this link to activate account :http://' + 'localhost:' + '8080/' + accessCode);
             res.status(201).json({ message: 'Profile created', usrId: id });
@@ -54,7 +50,6 @@ class ProfileController {
                 res.status(404).json({ error: 'Not Found' });
                 return;
             }
-            console.log(password, fulluser.password)
             const isAutorized = await bcrypt.compare(password, fulluser.password)
             if (isAutorized) {
                 //TODO add jsonwebtoken

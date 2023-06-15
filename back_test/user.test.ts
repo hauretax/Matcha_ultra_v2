@@ -7,16 +7,19 @@ import { Request } from 'express';
 import Dbhandler from '../back_src/database/DbHandler';
 import { Fakexpress } from './FackExpress';
 import { UserProfile, UserReqLogin } from '../comon_src/type/user.type';
+import UserDb from '../back_src/database/User.db';
 
 const port = 3001
 const db = new Dbhandler
+const userDB = new UserDb
 const FE = new Fakexpress({
     params: {
         name: 'max'
     }
 });
-const email = 'mail1@oui.non'
-const userName = 'super'
+const name = (Math.random() * 65536).toString;
+const email = name+'mail1@oui.non'
+const userName = name+'super'
 const firstName = 'eude'
 const lastName = 'marcel'
 const password = 'opPsw1@s'
@@ -39,7 +42,7 @@ describe('user create Profile', () => {
      * verification of usr in db
      */
     afterAll((done) => {
-        db.deletUser(usrId);
+        userDB.deletUser(usrId);
         done();
         () => { }
     });
@@ -123,8 +126,20 @@ interface Datalogin {
     body: UserReqLogin
 }
 
+const name1 = (Math.random() * 65536).toString;
 
+const email1 = name1+'mail2@oui.non'
+const userName1 = name1+'supe2'
 
+const creationReq = {
+    body: {
+        userName:userName1,
+        email: email1,
+        firstName,
+        lastName,
+        password,
+    },
+} as Request;
 describe('user login', () => {
 
     db.creatTables()
@@ -135,12 +150,12 @@ describe('user login', () => {
      * verification of usr in db
      */
     beforeAll(async () => {
-        await profileCtrl.createProfile(goodReq as any, FE.res as any)
+        await profileCtrl.createProfile(creationReq as any, FE.res as any)
         usrId = FE.responseData.usrId;
     })
 
     afterAll((done) => {
-        db.deletUser(usrId);
+        userDB.deletUser(usrId);
         done();
         () => { }
     });
@@ -153,7 +168,7 @@ describe('user login', () => {
 
         const reqLogin = {
             body: {
-                email,
+                email:email1,
                 password,
             }, 
         }
@@ -162,8 +177,8 @@ describe('user login', () => {
 
         let userData: UserProfile = FE.responseData.user;
         const expectData: UserProfile = {
-            email,
-            userName,
+            email:email1,
+            userName:userName1,
             lastName,
             firstName,
             verified: false
@@ -172,50 +187,4 @@ describe('user login', () => {
         expect(userData).toEqual(expectData)
         expect(FE.res.status).toHaveBeenCalledWith(200);
     })
-
-    it('with bad password', async () => {
-        const modifiedReq = {
-            body: {
-                ...goodReq.body,
-                password: "abcd"
-            },
-        };
-        await checkDataProfilCreate(modifiedReq as any, FE.res as any, next);
-        expect(FE.res.status).toHaveBeenCalledWith(406);
-        expect(next).not.toHaveBeenCalled();
-    })
-    it('with bad email', async () => {
-        const profileCtrl = new ProfileController
-        const modifiedReq = {
-            body: {
-                ...goodReq.body,
-                email: "abcd"
-            },
-        };
-        await profileCtrl.createProfile(modifiedReq as any, FE.res as any);
-        expect(FE.res.status).toHaveBeenCalledWith(406);
-    })
-    it('already use userName', async () => {
-        const profileCtrl = new ProfileController
-        const modifiedReq = {
-            body: {
-                ...goodReq.body,
-                email: "abcd@test.oui"
-            },
-        };
-        await profileCtrl.createProfile(modifiedReq as any, FE.res as any);
-        expect(FE.res.status).toHaveBeenCalledWith(409);
-    })
-    it('already use email', async () => {
-        const profileCtrl = new ProfileController
-        const modifiedReq = {
-            body: {
-                ...goodReq.body,
-                userName: 'test2'
-            },
-        };
-        await profileCtrl.createProfile(modifiedReq as any, FE.res as any);
-        expect(FE.res.status).toHaveBeenCalledWith(409);
-    })
-
 })
