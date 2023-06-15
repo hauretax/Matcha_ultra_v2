@@ -1,10 +1,10 @@
 export type UserProfile= {
     email: string;
-    userName: string;
+    username: string;
     lastName: string;
     firstName: string;
-    //verified est envoyer pour le front mais une deuxiemme verificaiton coter back peu valoir le coups
-    verified: boolean;
+    //emailVerified est envoyer pour le front mais une deuxiemme verificaiton coter back peu valoir le coups
+    emailVerified: boolean;
     gender?: string;
     age?: number;
     sexualPreferences?: string;
@@ -12,7 +12,7 @@ export type UserProfile= {
 //TODO il y a sans doute une fasson de liee ces deux types ↑↓
 export type UserReqRegister = {
     email: string;
-    userName: string;
+    username: string;
     lastName: string;
     firstName: string;
     password: string;
@@ -26,12 +26,12 @@ export type FullUser = UserProfile & {
 
 export type UserReqLogin = {
     email?: string;
-    userName?: string;
+    username?: string;
     password: string;
 } & (
-        { email: string; userName?: never } |
-        { email?: never; userName: string }|
-        { email?: string; userName: string }
+        { email: string; username?: never } |
+        { email?: never; username: string }|
+        { email?: string; username: string }
     );
 
 

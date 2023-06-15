@@ -15,7 +15,7 @@ class ProfileController {
 
     public async createProfile(req: Request, res: Response) {
         const profile: UserReqRegister = req.body
-        if (!profile.email || !profile.firstName || !profile.lastName || !profile.password || !profile.userName) {
+        if (!profile.email || !profile.firstName || !profile.lastName || !profile.password || !profile.username) {
             res.status(422).json({ error: 'Unprocessable Entity' });
             return;
         }
@@ -53,9 +53,9 @@ class ProfileController {
             const isAutorized = await bcrypt.compare(password, fulluser.password)
             if (isAutorized) {
                 //TODO add jsonwebtoken
-                const { email, userName,firstName, lastName, verified } = fulluser
+                const { email, username,firstName, lastName, emailVerified } = fulluser
                 res.status(200).json({
-                    user: { email, userName, lastName, verified,firstName }
+                    user: { email, username, lastName, emailVerified,firstName }
                 });
             } else {
                 res.status(401).json({ error: 'Unauthorized' });

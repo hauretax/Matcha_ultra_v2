@@ -11,10 +11,10 @@ export default class UserDb extends Dbhandler {
         //peu etre plus de sens de le mettre dans profileCtrl ?
         const accessCode = Math.floor(Math.random() * 90000 + 10000)
         const query = `
-            INSERT INTO users (email, userName, lastName, firstName, password, accessCode, verified)
+            INSERT INTO users (email, username, lastName, firstName, password, accessCode, emailVerified)
             VALUES (?, ?, ?, ?, ?, ?, ?)
           `;
-          const params = [user.email, user.userName, user.lastName, user.firstName, user.password, accessCode, 0];
+          const params = [user.email, user.username, user.lastName, user.firstName, user.password, accessCode, 0];
       //TODO rename test
           return new Promise<test>((resolve, reject) => {
               this.db.run(query, params, function (err) {
@@ -44,7 +44,7 @@ export default class UserDb extends Dbhandler {
         const query = `
         SELECT *
         FROM users
-        WHERE email = ? OR userName = ?
+        WHERE email = ? OR username = ?
       `;
         
         return new Promise((resolve, reject) => {
@@ -58,7 +58,7 @@ export default class UserDb extends Dbhandler {
                     //4 eme niveaux de complexiter on s en soucie ?
                     if (rows && rows.length > 0) {
                         const user: FullUser = rows[0];
-                        user.verified = user.verified? true : false
+                        user.emailVerified = user.emailVerified? true : false
                         resolve(user);
                     } else {
                         resolve(null);

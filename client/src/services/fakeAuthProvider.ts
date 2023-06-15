@@ -1,4 +1,4 @@
-import { UserPayload } from '../../../comon_src/type/jwt.type'
+import { UserPayload } from '../../../comon_src/type/user.type'
 
 interface UserResponse {
     data : UserPayload;
@@ -16,7 +16,9 @@ const fakeAuthProvider = {
                     profile: {
                         username: 'tonio',
                         email: 'tonio@gmail.com',
-                        emailVerified: false
+                        emailVerified: false,
+                        lastName: 'yhaaa',
+                        firstName: 'oui'
                     }
                 }
             }

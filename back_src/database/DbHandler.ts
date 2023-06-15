@@ -12,14 +12,14 @@ export default class Dbhandler {
         CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
-        userName TEXT UNIQUE,
+        username TEXT UNIQUE,
         lastName TEXT,
         firstName TEXT,
         password TEXT,
         gender TEXT,
         age INTEGER,
         sexualPreferences TEXT,
-        verified INTEGER,
+        emailVerified INTEGER,
         accessCode INTEGER
         )
         `)

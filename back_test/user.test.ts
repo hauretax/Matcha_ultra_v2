@@ -19,14 +19,14 @@ const FE = new Fakexpress({
 });
 const name = (Math.random() * 65536).toString;
 const email = name+'mail1@oui.non'
-const userName = name+'super'
+const username = name+'super'
 const firstName = 'eude'
 const lastName = 'marcel'
 const password = 'opPsw1@s'
 
 const goodReq = {
     body: {
-        userName,
+        username,
         email,
         firstName,
         lastName,
@@ -97,7 +97,7 @@ describe('user create Profile', () => {
         await profileCtrl.createProfile(modifiedReq as any, FE.res as any);
         expect(FE.res.status).toHaveBeenCalledWith(406);
     })
-    it('already use userName', async () => {
+    it('already use username', async () => {
         const profileCtrl = new ProfileController
         const modifiedReq = {
             body: {
@@ -113,7 +113,7 @@ describe('user create Profile', () => {
         const modifiedReq = {
             body: {
                 ...goodReq.body,
-                userName: 'test2'
+                username: 'test2'
             },
         };
         await profileCtrl.createProfile(modifiedReq as any, FE.res as any);
@@ -129,11 +129,11 @@ interface Datalogin {
 const name1 = (Math.random() * 65536).toString;
 
 const email1 = name1+'mail2@oui.non'
-const userName1 = name1+'supe2'
+const username1 = name1+'supe2'
 
 const creationReq = {
     body: {
-        userName:userName1,
+        username:username1,
         email: email1,
         firstName,
         lastName,
@@ -178,10 +178,10 @@ describe('user login', () => {
         let userData: UserProfile = FE.responseData.user;
         const expectData: UserProfile = {
             email:email1,
-            userName:userName1,
+            username:username1,
             lastName,
             firstName,
-            verified: false
+            emailVerified: false
         }
 
         expect(userData).toEqual(expectData)
