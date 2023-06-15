@@ -16,9 +16,7 @@ function Layout() {
       <NavBar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Container maxWidth="lg">
-          <Typography variant="body1" paragraph>
             <Outlet />
-          </Typography>
         </Container>
       </Box>
       <Box component="footer" sx={{ p: 2, mt: 'auto', backgroundColor: 'lightgray' }}>
