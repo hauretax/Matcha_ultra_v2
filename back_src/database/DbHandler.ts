@@ -1,11 +1,12 @@
 import { Database } from 'sqlite3';
 import { CreateProfileModel } from '../models/profileModel';
+import { FullUser } from '../../comon_src/type/user.type';
 
 
 interface test { 
   id: number,
   email: string,
-  nbV: number
+  accessCode: number
 }
 
 export default class Dbhandler {
@@ -28,20 +29,21 @@ export default class Dbhandler {
         age INTEGER,
         sexualPreferences TEXT,
         verified INTEGER,
-        nbVerified INTEGER
+        accessCode INTEGER
         )
         `)
     }
-
+  
+//TODO moov this in correct file (find #1)
   async insertUser(user: CreateProfileModel): Promise<test> {
       //peu etre plus de sens de le mettre dans profileCtrl ?
-      const nbV = Math.floor(Math.random() * 90000 + 10000)
+      const accessCode = Math.floor(Math.random() * 90000 + 10000)
       const query = `
-          INSERT INTO users (email, userName, lastName, firstName, password, nbVerified, verified)
+          INSERT INTO users (email, userName, lastName, firstName, password, accessCode, verified)
           VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
-        const params = [user.email, user.userName, user.lastName, user.firstName, user.password, nbV, 0];
-    
+        const params = [user.email, user.userName, user.lastName, user.firstName, user.password, accessCode, 0];
+    //TODO rename test
         return new Promise<test>((resolve, reject) => {
             this.db.run(query, params, function (err) {
               if (err) {
@@ -55,14 +57,11 @@ export default class Dbhandler {
 
                   }
               } else {
-                resolve({id:this.lastID, nbV, email:user.email});
+                resolve({id:this.lastID, accessCode, email:user.email});
               }
             });
           });
       }
-
-    
-  
 
     deletUser(id) {
         this.db.run('DELETE FROM users WHERE id = ?', [id]);
