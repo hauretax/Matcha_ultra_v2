@@ -38,10 +38,23 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     let signout = (callback: VoidFunction) => {
-        return fakeAuthProvider.signout(() => {
+        try {
+            fakeAuthProvider.signout(() => {
+                message.success('Logout successfull');
+                callback();
+            });
+
+            // Store the JWT token in local storage
+            localStorage.removeItem('jwtToken');
+
+            // Update the user state
             setUser(null);
-            callback();
-        });
+        } catch (error: any) {
+            const errorMessage = error.message || 'Logout failed';
+
+            // Display error message to the user
+            message.error(errorMessage);
+        }
     };
 
     let value = { user, signin, signout };
