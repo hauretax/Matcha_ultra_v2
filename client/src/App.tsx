@@ -3,6 +3,9 @@ import {
   Route
 } from "react-router-dom";
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
 import { AuthProvider } from './context/AuthProvider';
 
 import LoginPage from './pages/LoginPage'
@@ -10,25 +13,32 @@ import LoginPage from './pages/LoginPage'
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 
+import themeOptions from './theme/classical'
+
 import './App.css';
+
+const theme = createTheme(themeOptions)
 
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<PublicPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/protected"
-            element={
-              <RequireAuth>
-                <ProtectedPage />
-              </RequireAuth>
-            }
-          />
-        </Route>
-      </Routes>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<PublicPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/protected"
+              element={
+                <RequireAuth>
+                  <ProtectedPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
