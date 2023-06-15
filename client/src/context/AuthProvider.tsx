@@ -19,18 +19,18 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     let signin = (username: string, password: string, callback: VoidFunction) => {
         try {
             const response = fakeAuthProvider.signin(username, password, () => {
-                message.success('Login successfull');
+                message.success("Login successfull");
                 callback();
             });
             const { jwtToken, profile } = response.data;
 
             // Store the JWT token in local storage
-            localStorage.setItem('jwtToken', jwtToken);
+            localStorage.setItem("jwtToken", jwtToken);
 
             // Update the user state
             setUser(profile);
         } catch (error: any) {
-            const errorMessage = error.message || 'Login failed';
+            const errorMessage = error.message || "Login failed";
 
             // Display error message to the user
             message.error(errorMessage);
@@ -40,17 +40,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     let signout = (callback: VoidFunction) => {
         try {
             fakeAuthProvider.signout(() => {
-                message.success('Logout successfull');
+                message.success("Logout successfull");
                 callback();
             });
 
             // Store the JWT token in local storage
-            localStorage.removeItem('jwtToken');
+            localStorage.removeItem("jwtToken");
 
             // Update the user state
             setUser(null);
         } catch (error: any) {
-            const errorMessage = error.message || 'Logout failed';
+            const errorMessage = error.message || "Logout failed";
 
             // Display error message to the user
             message.error(errorMessage);

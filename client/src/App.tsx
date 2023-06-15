@@ -3,14 +3,14 @@ import {
   Route
 } from "react-router-dom";
 
-import { AuthProvider } from './context/AuthProvider';
+import { AuthProvider } from "./context/AuthProvider";
 
-import LoginPage from './pages/LoginPage'
+import LoginPage from "./pages/LoginPage"
 
 import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 
-import './App.css';
+import "./App.css";
 
 function App() {
   return (

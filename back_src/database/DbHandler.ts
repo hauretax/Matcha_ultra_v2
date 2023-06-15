@@ -1,14 +1,14 @@
-import { Database } from 'sqlite3';
+import { Database } from "sqlite3";
 
 export default class Dbhandler {
-    db: Database
+	db: Database;
 
-    constructor() {
-        this.db = new Database('ma-base-de-donnees.db');
-    }
+	constructor() {
+		this.db = new Database("ma-base-de-donnees.db");
+	}
 
-    creatTables()  { 
-        this.db.run(`
+	creatTables()  { 
+		this.db.run(`
         CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -22,7 +22,7 @@ export default class Dbhandler {
         emailVerified INTEGER,
         accessCode INTEGER
         )
-        `)
-    }
+        `);
+	}
   
 }
