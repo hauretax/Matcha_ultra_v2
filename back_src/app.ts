@@ -32,7 +32,7 @@ class App {
 
   private handleErrors(): void {
     this.app.use((err: any, req: Request, res: Response, next: any) => {
-      console.error(err.stack);
+      console.log(err.stack);
       res.status(500).send('Une erreur est survenue sur le serveur.');
     });
   }
@@ -47,7 +47,7 @@ class App {
 
 // Utilisation de la classe App
 const app = new App();
-const port = 3000; // Choisissez le port que vous souhaitez utiliser
+const port = 3042; // Choisissez le port que vous souhaitez utiliser
 app.start(port);
 
 export default app

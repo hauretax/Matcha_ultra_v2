@@ -20,19 +20,14 @@ export type UserReqRegister = {
 
 export type FullUser = UserProfile & {
     password: string;
-    accessCode: number;
+    accessCode: string;
     id: number;
   };
 
 export type UserReqLogin = {
-    email?: string;
-    username?: string;
+    username: string;
     password: string;
-} & (
-        { email: string; username?: never } |
-        { email?: never; username: string }|
-        { email?: string; username: string }
-    );
+} 
 
 
 

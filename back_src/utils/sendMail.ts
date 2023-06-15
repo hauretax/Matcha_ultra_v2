@@ -22,7 +22,7 @@ export default async function sendEmail(to:string, text:string, subject?:string)
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    // const info = await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error('Error:', error);
   }

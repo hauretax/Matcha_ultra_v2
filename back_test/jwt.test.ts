@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { GenerateJwt, decodJwt } from '../back_src/utils/jwt';
 
+const secretKey = process.env.JWT_SECRET;
 describe('JWT Tests', () => {
     it('should generate and verify a JWT', () => {
         const token = GenerateJwt({ user: 'John Doe' })
@@ -9,7 +10,6 @@ describe('JWT Tests', () => {
     });
     it('should include a valid signed JWT in the request header', () => {
         const payload = { user: 'John Doe' };
-        const secretKey = process.env.JWT_SECRET;
         const token = jwt.sign(payload, secretKey);
         const req = {
             headers: {
