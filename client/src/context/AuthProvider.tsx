@@ -22,13 +22,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                 message.success('Login successfull');
                 callback();
             });
-            const { token, user } = response.data;
+            const { jwtToken, profile } = response.data;
 
             // Store the JWT token in local storage
-            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('jwtToken', jwtToken);
 
             // Update the user state
-            setUser(user);
+            setUser(profile);
         } catch (error: any) {
             const errorMessage = error.message || 'Login failed';
 
