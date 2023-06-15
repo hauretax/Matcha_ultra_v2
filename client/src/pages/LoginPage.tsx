@@ -114,7 +114,7 @@ function LoginPage() {
             </Grid>
             <Grid item>
               <MyLink to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
+                Don't have an account? Sign Up"
               </MyLink>
             </Grid>
           </Grid>

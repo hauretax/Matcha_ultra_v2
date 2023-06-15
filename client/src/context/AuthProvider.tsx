@@ -7,8 +7,8 @@ import { fakeAuthProvider } from "../services/fakeAuthProvider";
 interface AuthContextType {
     user: any;
     signin: (username: string, password: string, callback: VoidFunction) => void;
+    signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
-    // signup: (email: string, username: string, lastName: string, firstName: string, password: string) => void;
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
@@ -30,10 +30,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             // Update the user state
             setUser(profile);
         } catch (error: any) {
-            const errorMessage = error.message || 'Login failed';
+            const errorMessage = error.message;
 
             // Display error message to the user
-            message.error(errorMessage);
+            message.error('Login failed' + (errorMessage && (': ' + errorMessage)));
+        }
+    };
+
+    let signup = (username: string, email: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => {
+        try {
+            fakeAuthProvider.signup(username, email, firstName, lastName, password, () => {
+                message.success('Registration successfull. You can now login !');
+                callback();
+            });
+        } catch (error: any) {
+            const errorMessage = error.message;
+
+            // Display error message to the user
+            message.error('Registration failed' + (errorMessage && (': ' + errorMessage)));
         }
     };
 
@@ -57,7 +71,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    let value = { user, signin, signout };
+    let value = { user, signin, signup, signout };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

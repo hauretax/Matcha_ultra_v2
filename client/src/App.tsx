@@ -16,6 +16,7 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import './App.css';
+import RegisterPage from "./pages/RegisterPage";
 
 const theme = createTheme(themeOptions)
 
@@ -28,6 +29,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<PublicPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route
               path="/protected"
               element={

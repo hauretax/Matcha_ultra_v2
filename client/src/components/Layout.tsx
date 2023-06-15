@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import NavBar from './NavBar';
 import { Outlet } from 'react-router-dom';
+import Copyright from './Copywright';
 
 function Layout() {
   return (
@@ -21,9 +21,7 @@ function Layout() {
       </Box>
       <Box component="footer" sx={{ p: 2, mt: 'auto', backgroundColor: 'lightgray' }}>
         <Container maxWidth="lg">
-          <Typography variant="body1">
-            Footer content
-          </Typography>
+          <Copyright />
         </Container>
       </Box>
     </Box>
