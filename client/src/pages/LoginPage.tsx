@@ -1,7 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import axios from "axios";
-import {Bport} from "../../../comon_src/constant";
 
 
 function LoginPage() {
@@ -29,18 +27,6 @@ function LoginPage() {
     });
   }
 
-  function handleClick() {
-    axios.post('http://localhost:'+Bport+'/api/profile/login')
-    .then(response => {
-      // Handle success
-      console.log(response.data);
-    })
-      .catch(error => {
-        // Handle error
-        console.error(error);
-      });
-  }
-
   return (
     <div>
       <p>You must log in to view the page at {from}</p>
@@ -54,7 +40,6 @@ function LoginPage() {
         </label>{" "}
         <button type="submit">Login</button>
       </form>
-      <button onClick={handleClick}>TEST</button>
     </div>
   );
 }
