@@ -6,44 +6,89 @@ interface UserResponse {
 
 const fakeAuthProvider = {
   isAuthenticated: false,
-  signin(username: string, password: string, callback: VoidFunction): UserResponse {
+  signin(username: string, password: string): Promise<UserResponse> {
     fakeAuthProvider.isAuthenticated = true;
     console.log("Signing in with", "Username: " + username, "Password: " + password)
-    if (username === 'tonio' && password === 'antoine') {
-      setTimeout(callback, 100); // fake async
-      return {
-        data: {
-          jwtToken: 'i am a token',
-          profile: {
-            username: 'tonio',
-            email: 'tonio@gmail.com',
-            lastName: 'Labalette',
-            firstName: 'Antoine',
-            emailVerified: false
-          }
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        if (username === 'tonio' && password === 'antoine') {
+          // Simulate a successful response
+          console.log("Sign out response received")
+          const response = {
+            data: {
+              jwtToken: 'i am a token',
+              profile: {
+                username: 'tonio',
+                email: 'tonio@gmail.com',
+                lastName: 'Labalette',
+                firstName: 'Antoine',
+                emailVerified: false
+              }
+            }
+          };
+          resolve(response);
+        } else {
+          // Simulate an error response
+          const errorResponse = {
+            response: {
+              data: {
+                error: "wrong credentials"
+              }
+            }
+          };
+          reject(errorResponse);
         }
-      }
-    } else {
-      throw new Error('wrong credentials');
-    }
+      }, 1000);
+    });
   },
-  signup(username: string, email: string, firstName: string, lastName: string, password: string, callback: VoidFunction): void {
-    console.log("Signing in with", "Username: " + username, "Email: " + email, "First name: " + firstName, "Last name: " + lastName, "Password: " + password)
-    if (username !== 'tonio') {
-      setTimeout(callback, 100); // fake async
-    } else {
-      throw new Error('user already exists');
-    }
+  signup(username: string, email: string, firstName: string, lastName: string, password: string) {
+    console.log("Signing un with", "Username: " + username, "Email: " + email, "First name: " + firstName, "Last name: " + lastName, "Password: " + password)
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        if (username !== 'tonio') {
+          // Simulate a successful response
+          const response = { data: { message: 'Account created' } };
+          resolve(response);
+        } else {
+          // Simulate an error response
+          const errorResponse = {
+            response: {
+              data: {
+                error: "Username already exists"
+              }
+            }
+          };
+          reject(errorResponse);
+        }
+
+      }, 1000);
+    });
   },
-  resetPasswordRequest(email: string, callback: VoidFunction): void {
+  resetPasswordRequest(email: string) {
     console.log("Requesting password reset with", "Email: " + email)
-    setTimeout(callback, 100); // fake async
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        // Simulate a successful response
+        const response = { data: { message: 'An email has been sent' } };
+        resolve(response);
+      }, 1000);
+    });
   },
-  signout(callback: VoidFunction) {
-    console.log("Signing out")
+  signout() {
+    console.log("Sending sign out request")
     fakeAuthProvider.isAuthenticated = false;
-    setTimeout(callback, 100);
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        // Simulate a successful response
+        const response = { data: {} };
+        resolve(response);
+      }, 1000);
+    });
   },
 };
 
-export { fakeAuthProvider };
+export default fakeAuthProvider;
