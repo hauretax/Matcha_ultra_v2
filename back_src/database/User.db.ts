@@ -48,12 +48,12 @@ export default class UserDb extends Dbhandler {
 		const query = `
         SELECT *
         FROM users
-        WHERE email = ? OR username = ?
+        WHERE username = ?
       `;
 
 		return new Promise((resolve, reject) => {
 			this.db.all(query,
-				[login, login],
+				[login],
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				(err: Error, rows: any[]) => {
 					if (err) {
@@ -63,7 +63,6 @@ export default class UserDb extends Dbhandler {
 					//4 eme niveaux de complexiter on s en soucie ?
 					if (rows && rows.length > 0) {
 						const user: FullUser = rows[0];
-						user.emailVerified = user.emailVerified ? true : false;
 						resolve(user);
 					} else {
 						resolve(null);
