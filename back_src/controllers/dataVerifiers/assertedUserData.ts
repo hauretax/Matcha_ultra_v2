@@ -1,11 +1,11 @@
 import { UserReqRegister } from "../../../comon_src/type/user.type";
 
-interface CustomResponse {
+export interface checkDataProfilCreate {
     code: number,
     message: string
 }
 
-export function checkDataProfilCreate(profile: UserReqRegister): CustomResponse | null {
+export function checkDataProfilCreate(profile: UserReqRegister): checkDataProfilCreate | null {
 	if (!profile)
 		return { code: 405, message: "Missing required data" };
 	const { username, email, firstName, lastName, password } = profile;

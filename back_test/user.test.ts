@@ -2,8 +2,10 @@ import { createProfile, login } from "../back_src/controllers/profileCtrl";
 import { Request } from "express";
 import Dbhandler from "../back_src/database/DbHandler";
 import { Fakexpress } from "./FackExpress";
-import { UserProfile, UserReqLogin } from "../comon_src/type/user.type";
+import { UserProfile, UserReqLogin, UserReqRegister } from "../comon_src/type/user.type";
 import UserDb from "../back_src/database/User.db";
+import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
+
 
 const port = 3001;
 const db = new Dbhandler;
@@ -59,23 +61,22 @@ describe("user create Profile", () => {
 
 	});
 	//TODO se ne st plus un midelwar adapter le comportement en fonction
-	it.skip("should return 405 if data is missing", async () => {
-		// await checkDataProfilCreate(badReq as any, FE.res as any, next);
-
-		expect(FE.res.status).toHaveBeenCalledWith(405);
-		expect(next).not.toHaveBeenCalled();
+	it("should return 405 if data is missing", async () => {
+		const wrongUser = goodReq.body;
+		wrongUser['email'] = '';
+		const result = checkDataProfilCreate(wrongUser as UserReqRegister);
+		expect(result?.code).toEqual(405);
 	});
-	//TODO se ne st plus un midelwar adapter le comportement en fonction
-	it.skip("with bad password", async () => {
-		// const modifiedReq = {
-		// 	body: {
-		// 		...goodReq.body,
-		// 		password: "abcd"
-		// 	},
-		// };
-		// await checkDataProfilCreate(modifiedReq as any, FE.res as any, next);
-		expect(FE.res.status).toHaveBeenCalledWith(406);
-		expect(next).not.toHaveBeenCalled();
+	it("with bad password", async () => {
+		const modifiedReq = {
+			body: {
+				...goodReq.body,
+				password: "abcd",
+				email 
+			}, 
+		};
+		const result = checkDataProfilCreate(modifiedReq.body as UserReqRegister);
+		expect(result?.code).toEqual(406);
 	});
 	it("with bad email", async () => {
 		const modifiedReq = {
@@ -84,8 +85,8 @@ describe("user create Profile", () => {
 				email: "abcd"
 			},
 		};
-		await createProfile(modifiedReq as Request, FE.res as never);
-		expect(FE.res.status).toHaveBeenCalledWith(406);
+		const result = checkDataProfilCreate(modifiedReq.body as UserReqRegister);
+		expect(result?.code).toEqual(406);
 	});
 	it("already use username", async () => {
 		const modifiedReq = {
