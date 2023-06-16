@@ -7,7 +7,7 @@ export default class Dbhandler {
 		this.db = new Database("ma-base-de-donnees.db");
 	}
 
-	creatTables()  { 
+	createTables()  { 
 		this.db.run(`
         CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
