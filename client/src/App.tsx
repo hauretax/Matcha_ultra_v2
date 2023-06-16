@@ -11,12 +11,14 @@ import { AuthProvider } from './context/AuthProvider';
 import LoginPage from './pages/LoginPage'
 
 import Layout from "./components/Layout";
+import RegisterPage from "./pages/RegisterPage";
+import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
+
 import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
 import './App.css';
-import RegisterPage from "./pages/RegisterPage";
 
 const theme = createTheme(themeOptions)
 
@@ -30,6 +32,7 @@ function App() {
             <Route path="/" element={<PublicPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/reset_password" element={<ResetPasswordRequestPage />} />
             <Route
               path="/protected"
               element={

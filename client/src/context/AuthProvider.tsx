@@ -8,6 +8,7 @@ interface AuthContextType {
     user: any;
     signin: (username: string, password: string, callback: VoidFunction) => void;
     signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
+    resetPasswordRequest: (email: string, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
 }
 
@@ -51,6 +52,20 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    let resetPasswordRequest = (email: string, callback: VoidFunction) => {
+      try {
+        fakeAuthProvider.resetPasswordRequest(email, () => {
+          message.success('An email has been sent to ' + email + '. Clik in the link inside to reset your password');
+          callback();
+        })
+      } catch (error: any) {
+        const errorMessage = error.message;
+
+        // Display error message to the user
+        message.error('Request has failed' + (errorMessage && (': ' + errorMessage)));
+    }
+    }
+
     let signout = (callback: VoidFunction) => {
         try {
             fakeAuthProvider.signout(() => {
@@ -71,7 +86,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    let value = { user, signin, signup, signout };
+    let value = { user, signin, signup, resetPasswordRequest, signout };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
