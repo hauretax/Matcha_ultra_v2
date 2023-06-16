@@ -1,4 +1,4 @@
-import { UserPayload } from '../../../comon_src/type/jwt.type'
+import { UserPayload } from "../../../comon_src/type/user.type"
 
 interface UserResponse {
   data: UserPayload;

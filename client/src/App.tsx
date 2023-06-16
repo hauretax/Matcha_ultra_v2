@@ -8,7 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { AuthProvider } from './context/AuthProvider';
 
-import LoginPage from './pages/LoginPage'
+import LoginPage from "./pages/LoginPage"
 
 import Layout from "./components/Layout";
 import RegisterPage from "./pages/RegisterPage";
