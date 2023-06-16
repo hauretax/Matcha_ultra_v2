@@ -1,10 +1,13 @@
 import { Response } from "express";
+import { UserProfile } from "../comon_src/type/user.type";
+
+export interface CustomRespons {
+	usrId?: number
+	user?: UserProfile
+	error?: string
+  }
 
 export class Fakexpress {
-
-	constructor(req: any) {
-		this.req = req;
-	}
 
 	res : Partial<Response> = {
 		statusCode: 200,
@@ -22,5 +25,5 @@ export class Fakexpress {
 	};
 
 	req: Request;
-	responseData: any;
+	responseData: CustomRespons;
 }

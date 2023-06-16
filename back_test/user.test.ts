@@ -8,11 +8,8 @@ import UserDb from "../back_src/database/User.db";
 const port = 3001;
 const db = new Dbhandler;
 const userDB = new UserDb;
-const FE = new Fakexpress({
-	params: {
-		name: "max"
-	}
-});
+
+const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString;
 const email = name+"mail1@oui.non";
 const username = name+"super";
@@ -31,7 +28,7 @@ const goodReq = {
 } as Request;
 
 describe("user create Profile", () => {
-	let usrId = 0;
+	let usrId:number | undefined = 0;
 	db.creatTables();
 	// TODO
 	/**
@@ -55,10 +52,10 @@ describe("user create Profile", () => {
 	//test on controller
 	it("should exec profileCtrl", async () => {
 
-		await createProfile(goodReq as Request, FE.res as any);
-
-		usrId = FE.responseData.usrId;
+		await createProfile(goodReq as Request, FE.res as never);
+		
 		expect(FE.res.status).toHaveBeenCalledWith(201);
+		usrId = FE.responseData?.usrId;
 
 	});
 	//TODO se ne st plus un midelwar adapter le comportement en fonction
@@ -87,7 +84,7 @@ describe("user create Profile", () => {
 				email: "abcd"
 			},
 		};
-		await createProfile(modifiedReq as Request, FE.res as any);
+		await createProfile(modifiedReq as Request, FE.res as never);
 		expect(FE.res.status).toHaveBeenCalledWith(406);
 	});
 	it("already use username", async () => {
@@ -97,7 +94,7 @@ describe("user create Profile", () => {
 				email: "abcd@test.oui"
 			},
 		};
-		await createProfile(modifiedReq as Request, FE.res as any);
+		await createProfile(modifiedReq as Request, FE.res as never);
 		expect(FE.res.status).toHaveBeenCalledWith(409);
 	});
 	it("already use email", async () => {
@@ -107,7 +104,7 @@ describe("user create Profile", () => {
 				username: "test2"
 			},
 		};
-		await createProfile(modifiedReq as Request, FE.res as any);
+		await createProfile(modifiedReq as Request, FE.res as never);
 		expect(FE.res.status).toHaveBeenCalledWith(409);
 	});
 
@@ -130,14 +127,14 @@ const creationReq = {
 describe("user login", () => {
 
 	db.creatTables();
-	let usrId = 0;
+	let usrId:number | undefined = 0;
 	// TODO
 	/**
      * verification of usr in db
      */
 	beforeAll(async () => {
-		await createProfile(creationReq, FE.res as any);
-		usrId = FE.responseData.usrId;
+		await createProfile(creationReq, FE.res as never);
+		usrId = FE.responseData?.usrId ;
 	});
 
 	afterAll((done) => {
@@ -155,18 +152,15 @@ describe("user login", () => {
 			}, 
 		};
 
-		await login(reqLogin as Request, FE.res as any);
-
-		const userData: UserProfile = FE.responseData.user;
+		await login(reqLogin as Request, FE.res as never);
 		const expectData: UserProfile = {
 			email:email1,
 			username:username1,
 			lastName,
 			firstName,
 			emailVerified: false
-		};
-
+		}; 
 		expect(FE.res.status).toHaveBeenCalledWith(200);
-		expect(userData).toEqual(expectData);
+		expect(FE.responseData?.user).toEqual(expectData);
 	});
 });

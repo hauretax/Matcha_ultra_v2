@@ -6,7 +6,7 @@ describe("Routes", () => {
 	let server: http.Server;
 
 	beforeAll((done) => {
-		server = app.start(3001);
+		server = app.start(3000);
 		done();
 	});
   

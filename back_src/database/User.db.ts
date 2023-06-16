@@ -54,6 +54,7 @@ export default class UserDb extends Dbhandler {
 		return new Promise((resolve, reject) => {
 			this.db.all(query,
 				[login, login],
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				(err: Error, rows: any[]) => {
 					if (err) {
 						reject(err);

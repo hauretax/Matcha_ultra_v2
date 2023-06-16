@@ -1,7 +1,8 @@
-import express, { Application, NextFunction } from "express";
+import express, { Application } from "express";
 import { Request, Response } from "express";
 import profileRoutes from "./routes/profileRoutes";
 import Dbhandler from "./database/DbHandler";
+import { Bport } from "../comon_src/constant";
 
 class App {
 	private app: Application;
@@ -19,6 +20,12 @@ class App {
 
 	private configureMiddlewares(): void {
 		//body-parser, cors, etc.
+		this.app.use(function (req, res, next) {
+			res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+			res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+			next();
+		});
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
 	}
@@ -37,18 +44,16 @@ class App {
 		});
 	}
 
-	public start(port: number){
-		const  server  = this.app.listen(port, () => {
+	public start(port: number) {
+		const server = this.app.listen(port, () => {
 			console.log(`Le serveur est en cours d"exécution http://localhost:${port}`);
 		});
 		return server;
 	}
 }
 
-// Utilisation de la classe App
 const app = new App();
-const port = 3042; // Choisissez le port que vous souhaitez utiliser
-app.start(port);
+app.start(Bport);
 
 export default app;
 
