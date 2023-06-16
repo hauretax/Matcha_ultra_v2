@@ -9,7 +9,9 @@ export type UserProfile= {
     age?: number;
     sexualPreferences?: string;
 }
-//TODO il y a sans doute une fasson de liee ces deux types ↑↓
+/**
+ * 
+ */
 export type UserReqRegister = {
     email: string;
     username: string;
