@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { payload } from "../../comon_src/type/jwt.type";
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET;
 
-export function GenerateJwt(payload: payload) {
-	return jwt.sign(payload, secretKey);
+export function generateJwt(userId: number): string {
+	return jwt.sign({userId: userId.toString()}, secretKey);
 }
 
 export function decodJwt(token: string) {
