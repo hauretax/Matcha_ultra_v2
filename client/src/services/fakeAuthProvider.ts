@@ -17,6 +17,8 @@ const fakeAuthProvider = {
           profile: {
             username: 'tonio',
             email: 'tonio@gmail.com',
+            lastName: 'Labalette',
+            firstName: 'Antoine',
             emailVerified: false
           }
         }
