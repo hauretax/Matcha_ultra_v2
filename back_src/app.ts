@@ -1,12 +1,14 @@
-import express, { Application } from "express";
+import express, { Application, NextFunction } from "express";
 import { Request, Response } from "express";
 import profileRoutes from "./routes/profileRoutes";
 import Dbhandler from "./database/DbHandler";
 import { Bport } from "../comon_src/constant";
+import requestLoggerMiddleware from './middlewares/requestLogger.middleware';
+import globalErrorMiddleware from './middlewares/globalError.middleware'
 
 class App {
 	private app: Application;
-
+  requestLoggerMiddleware
 
 	constructor() {
 		this.app = express();
@@ -28,6 +30,7 @@ class App {
 		});
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(requestLoggerMiddleware);
 	}
 
 	private configureRoutes(): void {
@@ -38,10 +41,7 @@ class App {
 	}
 
 	private handleErrors(): void {
-		this.app.use((err: Error, req: Request, res: Response) => {
-			console.log(err.stack);
-			res.status(500).send("Une erreur est survenue sur le serveur.");
-		});
+		this.app.use(globalErrorMiddleware);
 	}
 
 	public start(port: number) {
