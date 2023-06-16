@@ -13,7 +13,8 @@ export async function createProfile(req: Request, res: Response) {
   const profile: UserReqRegister = req.body;
   const dataError = checkDataProfilCreate(profile);
   if (dataError) {
-    return res.status(dataError.code).json({ error: dataError.message });
+    res.status(dataError.code).json({ error: dataError.message });
+    return;
   }
   try {
     profile.password = await bcrypt.hash(req.body.password, 10);
@@ -21,15 +22,12 @@ export async function createProfile(req: Request, res: Response) {
     //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
     sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
     res.status(201).json({ message: "Profile created", usrId: id });
-
   } catch (error) {
     if (error === 409) {
       res.status(409).json({ error: "user or email already taken" });
       return;
     }
-    console.log("\nregister_error:\n", error);
-    res.status(500).json({ error: "Internal Server Error" });
-    return;
+    throw new Error(error)
   }
 }
 
