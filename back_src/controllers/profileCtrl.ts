@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import UserDb from "../database/User.db";
 import sendEmail from "../utils/sendMail";
 import bcrypt from "bcrypt";

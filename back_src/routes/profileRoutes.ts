@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { createProfile, login } from "../controllers/profileCtrl";
 import asyncHandler from 'express-async-handler';
 
