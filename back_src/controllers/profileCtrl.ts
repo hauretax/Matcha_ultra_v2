@@ -34,19 +34,25 @@ export async function createProfile(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
-  if (!req.body) return res.status(400).json({ error: "no credentials provided" })
+  if (!req.body) {
+    res.status(400).json({ error: "no credentials provided" })
+    return;
+  }
+
   const { username, password } = req.body;
   if (!username || !password) {
-    return res.status(422).json({ error: "username and/or password missing" });
+    res.status(422).json({ error: "username and/or password missing" });
+    return;
   }
 
   const fulluser = await userDB.findUser(username);
   if (fulluser === null) {
-    return res.status(404).json({ error: "account not found" });
+    res.status(404).json({ error: "account not found" });
+    return;
   }
+
   const isAutorized = await bcrypt.compare(password, fulluser.password);
   if (isAutorized) {
-    //TODO add jsonwebtoken
     const { id, email, username, firstName, lastName, emailVerified } = fulluser;
     const payload: UserPayload = {
       jwtToken: generateJwt(id),

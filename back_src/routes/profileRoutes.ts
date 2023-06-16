@@ -1,6 +1,6 @@
-import express, { NextFunction, Request, Response } from "express";
-// import ProfileController from "../controllers/ProfileController";
+import express, { Request, Response } from "express";
 import { createProfile, login } from "../controllers/profileCtrl";
+import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
 
@@ -9,14 +9,7 @@ router.post("/register", (req: Request, res: Response) => {
 	createProfile(req, res);
 });
     
-router.post("/login", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    await login(req,res);
-  } catch (error) {
-    next(error)
-  }
-	
-});
+router.post("/login", asyncHandler(login))
 
 
 export default router;  
