@@ -8,7 +8,6 @@ import globalErrorMiddleware from './middlewares/globalError.middleware'
 
 class App {
   private app: Application;
-  requestLoggerMiddleware
 
   constructor() {
     this.app = express();
