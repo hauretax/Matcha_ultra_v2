@@ -1,13 +1,18 @@
-import express, { Request, Response } from 'express';
-// import ProfileController from '../controllers/ProfileController';
-import {checkDataProfilCreate } from '../middlewares/profileMid'
+import express, { Request, Response } from "express";
+// import ProfileController from "../controllers/ProfileController";
+import { createProfile, login } from "../controllers/profileCtrl";
+
 const router = express.Router();
-// const profileController = new ProfileController();
-router.post('/profile/create' , checkDataProfilCreate,(req: Request, res: Response) => {
-    console.log('call profile create')
-    res.status(200).send('ok');
-//   profileController.createProfile(req, res);
+
+router.post("/profile/create", (req: Request, res: Response) => {
+	console.log("call profile create");
+	createProfile(req, res);
+});
+    
+router.post("/profile/login", (req: Request, res: Response) => {
+	console.log("call profile create");
+	login(req,res);
 });
 
 
-export default router;
+export default router;  

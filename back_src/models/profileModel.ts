@@ -13,7 +13,7 @@ enum gender {
 
 export interface CreateProfileModel {
   email:string;
-  userName:string;
+  username:string;
   lastName:string;
   firstName:string;
   password:string;
@@ -23,5 +23,5 @@ export interface ProfilModel extends CreateProfileModel {
   gender: gender;
   age: number;
   sexualPreferences: Array<gender>;
-  verified: boolean;
+  emailVerified: boolean;
 }
