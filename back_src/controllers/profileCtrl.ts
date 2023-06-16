@@ -33,7 +33,7 @@ export async function createProfile(req: Request, res: Response) {
   }
 }
 
-export async function login(req: Request, res: Response, next: NextFunction) {
+export async function login(req: Request, res: Response) {
   if (!req.body) return res.status(400).json({ error: "no credentials provided" })
   const { username, password } = req.body;
   if (!username || !password) {
