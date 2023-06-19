@@ -19,6 +19,7 @@ export function GenerateRefreshJwt(id: string) {
 }
 
 //j'ai fait deux fois la meme fonction pour eviter de sortire les cle priver de se fichier
+//TODO verification if token existe in db and if is validate
 export function validaterefreshJwt(token: string, id: string): boolean | 401 {
 	try {
 		const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
