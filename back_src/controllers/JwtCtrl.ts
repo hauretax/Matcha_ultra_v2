@@ -1,5 +1,11 @@
 
-//cree une entiter pour stocker les jwt .
+const jwtStore:Array<string> = []
+const refreshJwtStore:Array<string> = [] 
+
+export function createJwt(id:string){
+    jwtStore.push
+
+}
 
 //implementer une classe avec
 //set jwt cree un jwt avec le tokene envoyer le stocke dans la list des token avec la cle de l'id utilisateur.

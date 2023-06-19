@@ -1,5 +1,10 @@
 
 export type payload = {
-    user: string;
+    id: string;
 }
 
+export type newJwt={
+    refreshToken: string,
+    token: string}
+    |
+    {error:string}
