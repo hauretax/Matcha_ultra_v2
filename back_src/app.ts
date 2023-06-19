@@ -7,7 +7,6 @@ import { Bport } from "../comon_src/constant";
 class App {
 	private app: Application;
 
-
 	constructor() {
 		this.app = express();
 		this.configureMiddlewares();
@@ -15,7 +14,7 @@ class App {
 		this.handleErrors();
 		//je sait pas comment faire :s
 		const db = new Dbhandler;
-		db.creatTables();
+		db.initDb();
 	}
 
 	private configureMiddlewares(): void {

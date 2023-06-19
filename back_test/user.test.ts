@@ -31,7 +31,7 @@ const goodReq = {
 
 describe("user create Profile", () => {
 	let usrId:number | undefined = 0;
-	db.creatTables();
+	db.createUserTables();
 	// TODO
 	/**
      * verification of usr in db
@@ -127,7 +127,7 @@ const creationReq = {
 } as Request;
 describe("user login", () => {
 
-	db.creatTables();
+	db.createUserTables();
 	let usrId:number | undefined = 0;
 	// TODO
 	/**
