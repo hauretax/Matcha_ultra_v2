@@ -24,9 +24,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let signin = (username: string, password: string, callback: VoidFunction) => {
     api.signin(username, password)
       .then((res: AxiosResponse) => {
-        console.log(res)
         const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
-        console.log(jwtToken, profile)
 
         // Store the JWT token in local storage
         localStorage.setItem("jwtToken", jwtToken);
@@ -38,7 +36,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         callback();
       })
       .catch((error: AxiosError) => {
-        console.log(error)
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
 
         // Display error message to the user
