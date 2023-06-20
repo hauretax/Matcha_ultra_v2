@@ -12,11 +12,11 @@ if (!secretKey || !secretKeyR) {
 	throw (".env look broken JWT_SECRET or JWT_SECRETR is missing");
 }
 
-export function generateJwt(userId: string): string {
-	return jwt.sign({userId: userId.toString()}, secretKey);
+export function generateJwt(userId: number): string {
+	return jwt.sign({userId: userId}, secretKey);
 }
 
-export async function GenerateRefreshJwt(id: string): Promise<string> {
+export async function GenerateRefreshJwt(id: number): Promise<string> {
 	const token = jwt.sign({ id }, secretKeyR, { expiresIn: "1week" });
 
 	const decoded = jwt.verify(token, secretKeyR) as JwtPayload;
@@ -26,7 +26,7 @@ export async function GenerateRefreshJwt(id: string): Promise<string> {
 	return token;
 }
 
-export async function validaterefreshJwt(token: string, id: string): Promise<boolean | 401> {
+export async function validaterefreshJwt(token: string, id: number): Promise<boolean | 401> {
 	try {
 		const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
 		const valideToken = await jwtDb.tokenIsValide(token);
@@ -42,10 +42,10 @@ export async function validaterefreshJwt(token: string, id: string): Promise<boo
 	}
 }
 
-export function validateJwt(token: string, id: string): boolean | 401 {
+export function validateJwt(token: string, id: number): boolean | 401 {
 	try {
 		const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
-		if (decoded.id != id)
+		if (decoded.userId != id)
 			return false;
 		return true;
 	} catch (err) {
@@ -55,7 +55,7 @@ export function validateJwt(token: string, id: string): boolean | 401 {
 	}
 }
 
-export async function askNewJwt(refreshToken: string, userId: string): Promise<newJwt> {
+export async function askNewJwt(refreshToken: string, userId: number): Promise<newJwt> {
 	
 	const Vtoken = await validaterefreshJwt(refreshToken, userId);
 	if (!Vtoken) {

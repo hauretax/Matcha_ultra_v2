@@ -53,7 +53,7 @@ export async function login(req: Request, res: Response) {
   if (isAutorized) {
     const { id, email, username, firstName, lastName, emailVerified } = fulluser;
     const payload: UserPayload = {
-      jwtToken: generateJwt(id),
+      jwtToken: generateJwt(id.toString()),
       profile: {
         email,
         username,

@@ -3,7 +3,7 @@ import { generateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back
 import Dbhandler from "../back_src/database/DbHandler";
 
 const secretKey = process.env.JWT_SECRET;
-const id = "id";
+const id = 1;
 const db = new Dbhandler;
 
 
@@ -20,7 +20,7 @@ describe("JWT Tests", () => {
 	});
 	it("should generate and unverify a JWT", () => {
 		const token = generateJwt(id);
-		expect(validateJwt(token, id + "s")).toEqual(false);
+		expect(validateJwt(token, id + 1)).toEqual(false);
 	});
 	//j'imite le comportement que devrais avoir le front'
 	it("should be expire and aske new token", async () => {
