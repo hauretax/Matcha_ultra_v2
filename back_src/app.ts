@@ -1,11 +1,13 @@
-import express, { Application, NextFunction } from "express";
-import { Request, Response } from "express";
-import profileRoutes from "./routes/profileRoutes";
-import Dbhandler from "./database/DbHandler";
-import { Bport } from "../comon_src/constant";
+import express, { Application, Request, Response } from "express";
+
+import User from './database/User';
+
 import requestLoggerMiddleware from './middlewares/requestLogger.middleware';
 import globalErrorMiddleware from './middlewares/globalError.middleware'
 
+import profileRoutes from "./routes/profileRoutes";
+
+import { Bport } from "../comon_src/constant";
 class App {
   private app: Application;
 
@@ -49,11 +51,21 @@ class App {
   }
 }
 
-const db = new Dbhandler;
-db.createTables();
-
 const app = new App();
-app.start(Bport);
+
+const initFunctions = [
+  User.initializeUserTable,
+  // ... add any additional table initializers here
+];
+
+Promise.all(initFunctions.map(initFunc => initFunc()))
+  .then(() => {
+    app.start(Bport);
+  })
+  .catch(err => {
+    console.error("An error occurred while initializing the tables:", err);
+    process.exit(1);
+  });
 
 export default app;
 
