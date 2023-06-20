@@ -10,7 +10,7 @@ export function checkDataProfilCreate(profile: UserReqRegister): checkDataProfil
 		return { code: 405, message: "Missing required data" };
 	const { username, email, firstName, lastName, password } = profile;
 	const passwordRegex = /(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}/;
-	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;  
+	const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;  
 
 	if (!username || !email || !firstName || !lastName || !password) {
 		return { code: 405, message: "Missing required data" };

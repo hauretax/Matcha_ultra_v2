@@ -57,7 +57,7 @@ export default class UserDb extends Dbhandler {
 
 		return new Promise((resolve, reject) => {
 			this.db.all(query,
-				[login, login],
+				[login],
 				(err: Error, rows: FullUser[]) => {
 					if (err) {
 						reject(err);

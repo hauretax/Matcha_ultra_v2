@@ -20,8 +20,9 @@ export async function createProfile(req: Request, res: Response) {
     profile.password = await bcrypt.hash(req.body.password, 10);
     const { id, accessCode, email } = await userDB.insertUser(profile);
     //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
-    sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
+    // sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
     res.status(201).json({ message: "Profile created", usrId: id });
+    return;
   } catch (error) {
     if (error === 409) {
       res.status(409).json({ error: "user or email already taken" });
@@ -53,7 +54,7 @@ export async function login(req: Request, res: Response) {
   if (isAutorized) {
     const { id, email, username, firstName, lastName, emailVerified } = fulluser;
     const payload: UserPayload = {
-      jwtToken: generateJwt(id.toString()),
+      jwtToken: generateJwt(id),
       profile: {
         email,
         username,
