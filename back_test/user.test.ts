@@ -2,12 +2,10 @@ import { createProfile, login } from "../back_src/controllers/profileCtrl";
 import { Request } from "express";
 import Dbhandler from "../back_src/database/DbHandler";
 import { Fakexpress } from "./FackExpress";
-import { UserProfile, UserReqLogin, UserReqRegister } from "../comon_src/type/user.type";
+import { UserProfile, UserReqRegister } from "../comon_src/type/user.type";
 import UserDb from "../back_src/database/User.db";
 import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
 
-
-const port = 3001;
 const db = new Dbhandler;
 const userDB = new UserDb;
 
@@ -40,17 +38,7 @@ describe("user create Profile", () => {
 		userDB.deleteUser(usrId);
 		done();
 	});
-
-
-
-	const badReq = {
-		body: {
-			name: "John Doe",
-			email: "johndoe@example.com",
-		},
-	};
-
-	const next = jest.fn();
+	
 	//test on controller
 	it("should exec profileCtrl", async () => {
 
