@@ -2,12 +2,14 @@ import { Request, Response } from "express";
 import UserDb from "../database/User.db";
 import sendEmail from "../utils/sendMail";
 import bcrypt from "bcrypt";
-import {  UserReqRegister } from "../../comon_src/type/user.type";
+import { UserReqRegister } from "../../comon_src/type/user.type";
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
+import { GenerateJwt, GenerateRefreshJwt } from "../utils/jwt";
+
 
 const userDB = new UserDb;
 
-export async function  createProfile(req: Request, res: Response) {
+export async function createProfile(req: Request, res: Response) {
 	const profile: UserReqRegister = req.body;
 	const dataError = checkDataProfilCreate(profile);
 	if (dataError) {
@@ -46,10 +48,13 @@ export async function login(req: Request, res: Response) {
 		}
 		const isAutorized = await bcrypt.compare(password, fulluser.password);
 		if (isAutorized) {
-			//TODO add jsonwebtoken
+			const refreshToken = await GenerateRefreshJwt("" + fulluser.id);
+			const token = GenerateJwt("" + fulluser.id);
 			const { email, username, firstName, lastName, emailVerified } = fulluser;
 			res.status(200).json({
-				user: { email, username, lastName, emailVerified, firstName }
+				//TODO Update le readme
+				user: { email, username, lastName, emailVerified, firstName },
+				tokens: {token, refreshToken}
 			});
 		} else {
 			res.status(401).json({ error: "Unauthorized" });

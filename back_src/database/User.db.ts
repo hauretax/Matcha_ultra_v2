@@ -59,7 +59,7 @@ export default class UserDb extends Dbhandler {
 					}
 					//4 eme niveaux de complexiter on s en soucie ?
 					if (rows && rows.length > 0) {
-						const user: FullUser = rows[0];
+						const user = rows[0];
 						user.emailVerified = user.emailVerified ? true : false;
 						resolve(user);
 					}
