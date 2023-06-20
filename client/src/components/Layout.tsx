@@ -1,63 +1,31 @@
-import React from "react";
-import {
-    Link,
-    Outlet,
-    useNavigate,
-} from "react-router-dom";
-
-import { Dropdown, Button, Typography, MenuProps } from "antd";
-import { UserOutlined, DownOutlined } from "@ant-design/icons";
-
-import { useAuth } from "../context/AuthProvider";
-
-const { Title } = Typography;
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import NavBar from './NavBar';
+import { Outlet } from 'react-router-dom';
+import Copyright from './Copywright';
 
 function Layout() {
-    let auth = useAuth();
-    let navigate = useNavigate();
-
-    const onClick: MenuProps["onClick"] = ({ key }) => {
-        if (key === "2") {
-            auth.signout(() => {navigate("/")})
-        }
-    };
-
-    const items: MenuProps["items"] = [
-        {
-            key: "1",
-            label: (
-                <Link to="/profile">Profile</Link>
-            ),
-        },
-        {
-            key: "2",
-            label: (
-                <span>Logout</span>
-            ),
-        },
-    ]
-
-
-    return (
-        <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: "64px", padding: "0 32px" }}>
-                <Title level={2}>MATCHA</Title>
-                <div>
-                    <Link to="/" style={{ marginRight: "20px" }}>Public Page</Link>
-                    <Link to="/protected" style={{ marginRight: "20px" }}>Private Page</Link>
-                    {auth.user &&
-                        <Dropdown menu={{ items, onClick }} trigger={["click"]}>
-                            <Button type="primary" shape="round" icon={<UserOutlined />} >
-                                {auth.user.username} <DownOutlined />
-                            </Button>
-                        </Dropdown>
-                    }
-                </div>
-            </div>
-
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <NavBar />
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Container maxWidth="lg">
             <Outlet />
-        </div>
-    );
+        </Container>
+      </Box>
+      <Box component="footer" sx={{ p: 2, mt: 'auto', backgroundColor: 'lightgray' }}>
+        <Container maxWidth="lg">
+          <Copyright />
+        </Container>
+      </Box>
+    </Box>
+  );
 }
 
-export default Layout
+export default Layout;

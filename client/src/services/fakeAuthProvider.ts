@@ -1,35 +1,94 @@
 import { UserPayload } from "../../../comon_src/type/user.type"
 
 interface UserResponse {
-    data : UserPayload;
+  data: UserPayload;
 }
 
 const fakeAuthProvider = {
-    isAuthenticated: false,
-    signin(username: string, password: string, callback: VoidFunction): UserResponse {
-        fakeAuthProvider.isAuthenticated = true;
-        if (username === "tonio" && password === "antoine") {
-            setTimeout(callback, 100); // fake async
-            return {
-                data: {
-                    jwtToken: "i am a token",
-                    profile: {
-                        username: "tonio",
-                        email: "tonio@gmail.com",
-                        emailVerified: false,
-                        lastName: "yhaaa",
-                        firstName: "oui"
-                    }
-                }
+  isAuthenticated: false,
+  signin(username: string, password: string): Promise<UserResponse> {
+    fakeAuthProvider.isAuthenticated = true;
+    console.log("Signing in with", "Username: " + username, "Password: " + password)
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        if (username === 'tonio' && password === 'antoine') {
+          // Simulate a successful response
+          console.log("Sign out response received")
+          const response = {
+            data: {
+              jwtToken: 'i am a token',
+              profile: {
+                username: 'tonio',
+                email: 'tonio@gmail.com',
+                lastName: 'Labalette',
+                firstName: 'Antoine',
+                emailVerified: false
+              }
             }
+          };
+          resolve(response);
         } else {
-            throw new Error("wrong credentials");
+          // Simulate an error response
+          const errorResponse = {
+            response: {
+              data: {
+                error: "wrong credentials"
+              }
+            }
+          };
+          reject(errorResponse);
         }
-    },
-    signout(callback: VoidFunction) {
-        fakeAuthProvider.isAuthenticated = false;
-        setTimeout(callback, 100);
-    },
+      }, 1000);
+    });
+  },
+  signup(username: string, email: string, firstName: string, lastName: string, password: string) {
+    console.log("Signing un with", "Username: " + username, "Email: " + email, "First name: " + firstName, "Last name: " + lastName, "Password: " + password)
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        if (username !== 'tonio') {
+          // Simulate a successful response
+          const response = { data: { message: 'Account created' } };
+          resolve(response);
+        } else {
+          // Simulate an error response
+          const errorResponse = {
+            response: {
+              data: {
+                error: "Username already exists"
+              }
+            }
+          };
+          reject(errorResponse);
+        }
+
+      }, 1000);
+    });
+  },
+  resetPasswordRequest(email: string) {
+    console.log("Requesting password reset with", "Email: " + email)
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        // Simulate a successful response
+        const response = { data: { message: 'An email has been sent' } };
+        resolve(response);
+      }, 1000);
+    });
+  },
+  signout() {
+    console.log("Sending sign out request")
+    fakeAuthProvider.isAuthenticated = false;
+    return new Promise((resolve, reject) => {
+      // Simulating a delay of 1 second before resolving the promise
+      setTimeout(() => {
+        // Simulate a successful response
+        const response = { data: {} };
+        resolve(response);
+      }, 1000);
+    });
+  },
 };
 
-export { fakeAuthProvider };
+export default fakeAuthProvider;

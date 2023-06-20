@@ -3,32 +3,47 @@ import {
   Route
 } from "react-router-dom";
 
-import { AuthProvider } from "./context/AuthProvider";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+import { AuthProvider } from './context/AuthProvider';
 
 import LoginPage from "./pages/LoginPage"
 
 import Layout from "./components/Layout";
+import RegisterPage from "./pages/RegisterPage";
+import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
+
 import RequireAuth from "./components/RequireAuth";
 
-import "./App.css";
+import themeOptions from './theme/classical'
+
+import './App.css';
+
+const theme = createTheme(themeOptions)
 
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<PublicPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/protected"
-            element={
-              <RequireAuth>
-                <ProtectedPage />
-              </RequireAuth>
-            }
-          />
-        </Route>
-      </Routes>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<PublicPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/reset_password" element={<ResetPasswordRequestPage />} />
+            <Route
+              path="/protected"
+              element={
+                <RequireAuth>
+                  <ProtectedPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
+        </Routes>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

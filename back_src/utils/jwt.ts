@@ -12,8 +12,8 @@ if (!secretKey || !secretKeyR) {
 	throw (".env look broken JWT_SECRET or JWT_SECRETR is missing");
 }
 
-export function GenerateJwt(id: string): string {
-	return jwt.sign({ id }, secretKey, { expiresIn: "1h" });
+export function generateJwt(userId: string): string {
+	return jwt.sign({userId: userId.toString()}, secretKey);
 }
 
 export async function GenerateRefreshJwt(id: string): Promise<string> {
@@ -55,18 +55,18 @@ export function validateJwt(token: string, id: string): boolean | 401 {
 	}
 }
 
-export async function askNewJwt(refreshToken: string, id: string): Promise<newJwt> {
+export async function askNewJwt(refreshToken: string, userId: string): Promise<newJwt> {
 	
-	const Vtoken = await validaterefreshJwt(refreshToken, id);
+	const Vtoken = await validaterefreshJwt(refreshToken, userId);
 	if (!Vtoken) {
 		return { error: "token non valide" };
 	}
 	if (Vtoken === 401)
 		return { error: "token expirer" };
-	const newRefreshToken = await GenerateRefreshJwt(id);
+	const newRefreshToken = await GenerateRefreshJwt(userId);
 	jwtDb.invalidateToken(refreshToken);
 
-	const newToken = GenerateJwt(id);
+	const newToken = generateJwt(userId);
 	return { refreshToken: newRefreshToken, token: newToken };
 	//TODO unvalidate old refresh token
 }

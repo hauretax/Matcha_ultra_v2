@@ -35,7 +35,7 @@ describe("user create Profile", () => {
      * verification of usr in db
      */
 	afterAll((done) => {
-		userDB.deleteUser(usrId);
+		userDB.deleteUser(usrId || 0);
 		done();
 	});
 	
@@ -127,7 +127,7 @@ describe("user login", () => {
 	});
 
 	afterAll((done) => {
-		userDB.deleteUser(usrId);
+		userDB.deleteUser(usrId || 0);
 		done();
 	});
 

@@ -7,7 +7,7 @@ export default class Dbhandler {
 		this.db = new Database("ma-base-de-donnees.db");
 	}
 
-	initDb() {
+createTables() {
 		this.createUserTables();
 		this.createRJWTTables();
 	}

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { GenerateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
+import { generateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
 import Dbhandler from "../back_src/database/DbHandler";
 
 const secretKey = process.env.JWT_SECRET;
@@ -15,11 +15,11 @@ describe("JWT Tests", () => {
 	db.createRJWTTables();
 
 	it("should generate and verify a JWT", () => {
-		const token = GenerateJwt(id);
+		const token = generateJwt(id);
 		expect(validateJwt(token, id)).toEqual(true);
 	});
 	it("should generate and unverify a JWT", () => {
-		const token = GenerateJwt(id);
+		const token = generateJwt(id);
 		expect(validateJwt(token, id + "s")).toEqual(false);
 	});
 	//j'imite le comportement que devrais avoir le front'

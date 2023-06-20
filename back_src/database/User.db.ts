@@ -5,6 +5,7 @@ interface UserCredentials {
 	email: string,
 	accessCode: number
 }
+
 export default class UserDb extends Dbhandler {
 	async insertUser(user: UserReqRegister): Promise<UserCredentials> {
 		//peu etre plus de sens de le mettre dans profileCtrl ?
@@ -25,28 +26,33 @@ export default class UserDb extends Dbhandler {
 						reject(500);
 						return;
 
-					}
-				} else {
-					resolve({ id: this.lastID, accessCode, email: user.email });
-				}
-			});
-		});
-	}
+          }
+        } else {
+          resolve({ id: this.lastID, accessCode, email: user.email });
+        }
+      });
+    });
+  }
 
-	deleteUser(id) {
-		try {
-			this.db.run("DELETE FROM users WHERE id = ?", [id]);
-		} catch (err) {
-			console.log("deleteUser say:", err);
-		}
-	}
+  deleteUser(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.run("DELETE FROM users WHERE id = ?", [id], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+  }
 
 
-	findUser(login: string): Promise<FullUser | null> {
-		const query = `
+  findUser(login: string): Promise<FullUser | null> {
+    const query = `
         SELECT *
         FROM users
-        WHERE email = ? OR username = ?
+        WHERE username = ?
       `;
 
 		return new Promise((resolve, reject) => {
@@ -66,7 +72,7 @@ export default class UserDb extends Dbhandler {
 				}
 			);
 
-		});
-	}
+    });
+  }
 
 }
