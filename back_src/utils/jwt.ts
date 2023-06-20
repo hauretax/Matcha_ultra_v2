@@ -1,41 +1,44 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { newJwt } from "../../comon_src/type/jwt.type";
-import { insertToken } from "../database/jwt.db";
+import JwtDb from "../database/jwt.db";
 dotenv.config();
 
-const secretKey = process.env.JWT_SECRET || '';
-const secretKeyR = process.env.JWT_SECRETR || '';
+const secretKey = process.env.JWT_SECRET || "";
+const secretKeyR = process.env.JWT_SECRETR || "";
+const jwtDb = new JwtDb;
 
 if (!secretKey || !secretKeyR) {
-	throw ('.env look broken JWT_SECRET or JWT_SECRETR is missing');
+	throw (".env look broken JWT_SECRET or JWT_SECRETR is missing");
 }
 
-export function GenerateJwt(id: string) {
-	return jwt.sign({ id }, secretKey, { expiresIn: '1h' });
+export function GenerateJwt(id: string): string {
+	return jwt.sign({ id }, secretKey, { expiresIn: "1h" });
 }
 
-export function GenerateRefreshJwt(id: string) {
-	const token = jwt.sign({ id }, secretKeyR, { expiresIn: '1week' });
+export async function GenerateRefreshJwt(id: string): Promise<string> {
+	const token = jwt.sign({ id }, secretKeyR, { expiresIn: "1week" });
 
 	const decoded = jwt.verify(token, secretKeyR) as JwtPayload;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const expirationDate = new Date(decoded.exp! * 1000);
-	insertToken(token, expirationDate)
-	return token
+	await jwtDb.insertToken(token, expirationDate);
+	return token;
 }
 
-//j'ai fait deux fois la meme fonction pour eviter de sortire les cle priver de se fichier
-//TODO verification if token existe in db and if is validate
-export function validaterefreshJwt(token: string, id: string): boolean | 401 {
+export async function validaterefreshJwt(token: string, id: string): Promise<boolean | 401> {
 	try {
 		const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
+		const valideToken = await jwtDb.tokenIsValide(token);
+		if(!valideToken)
+			return false;
 		if (decoded.id != id)
-			return false
-		return true
+			return false;
+		return true;
 	} catch (err) {
-		if (err.message == 'jwt expired')
-			return 401 //401 correspond a l'erreur http
-		return false
+		if (err.message == "jwt expired")
+			return 401; //401 correspond a l'erreur http
+		return false;
 	}
 }
 
@@ -43,21 +46,27 @@ export function validateJwt(token: string, id: string): boolean | 401 {
 	try {
 		const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
 		if (decoded.id != id)
-			return false
-		return true
+			return false;
+		return true;
 	} catch (err) {
-		if (err.message == 'jwt expired')
-			return 401 //401 correspond a l'erreur http
-		return false
+		if (err.message == "jwt expired")
+			return 401; //401 correspond a l'erreur http
+		return false;
 	}
 }
 
-export function askNewJwt(token: string, id: string): newJwt {
-	const Vtoken = validaterefreshJwt(token, id)
+export async function askNewJwt(refreshToken: string, id: string): Promise<newJwt> {
+	
+	const Vtoken = await validaterefreshJwt(refreshToken, id);
 	if (!Vtoken) {
-		return { error: 'token non valide' }
+		return { error: "token non valide" };
 	}
 	if (Vtoken === 401)
-		return { error: 'token expirer' }
-	return { refreshToken: GenerateRefreshJwt(id), token: GenerateJwt(id) }
+		return { error: "token expirer" };
+	const newRefreshToken = await GenerateRefreshJwt(id);
+	jwtDb.invalidateToken(refreshToken);
+
+	const newToken = GenerateJwt(id);
+	return { refreshToken: newRefreshToken, token: newToken };
+	//TODO unvalidate old refresh token
 }

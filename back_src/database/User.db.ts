@@ -1,12 +1,12 @@
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
 import Dbhandler from "./DbHandler";
-interface UserCredentials  {
-  id: number,
-  email: string,
-  accessCode: number
+interface UserCredentials {
+	id: number,
+	email: string,
+	accessCode: number
 }
 export default class UserDb extends Dbhandler {
-	async insertUser(user: UserReqRegister): Promise<UserCredentials > {
+	async insertUser(user: UserReqRegister): Promise<UserCredentials> {
 		//peu etre plus de sens de le mettre dans profileCtrl ?
 		const accessCode = Math.floor(Math.random() * 90000 + 10000);
 		const query = `
@@ -52,8 +52,7 @@ export default class UserDb extends Dbhandler {
 		return new Promise((resolve, reject) => {
 			this.db.all(query,
 				[login, login],
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				(err: Error, rows: any[]) => {
+				(err: Error, rows: FullUser[]) => {
 					if (err) {
 						reject(err);
 						return;
@@ -63,8 +62,6 @@ export default class UserDb extends Dbhandler {
 						const user: FullUser = rows[0];
 						user.emailVerified = user.emailVerified ? true : false;
 						resolve(user);
-					} else {
-						resolve(null);
 					}
 				}
 			);

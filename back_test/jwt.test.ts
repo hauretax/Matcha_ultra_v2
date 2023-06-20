@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import { GenerateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
-import { newJwt } from "../comon_src/type/jwt.type";
 import Dbhandler from "../back_src/database/DbHandler";
 
 const secretKey = process.env.JWT_SECRET;
-const id = 'id'
+const id = "id";
 const db = new Dbhandler;
 
 
 if (!secretKey) {
-	throw ('.env look broken');
+	throw (".env look broken");
 }
 
 describe("JWT Tests", () => {
@@ -21,17 +20,21 @@ describe("JWT Tests", () => {
 	});
 	it("should generate and unverify a JWT", () => {
 		const token = GenerateJwt(id);
-		expect(validateJwt(token, id + 's')).toEqual(false);
+		expect(validateJwt(token, id + "s")).toEqual(false);
 	});
 	//j'imite le comportement que devrais avoir le front'
-	it("should be expire and aske new token", () => {
-		const token = jwt.sign({ id }, secretKey, { expiresIn: '1ms' });;
-		const refreshToken = GenerateRefreshJwt(id)
-		let newToken: newJwt;
-		expect(validateJwt(token, id)).toEqual(401)
-		newToken = askNewJwt(refreshToken, id)
-		expect(newToken).toHaveProperty('refreshToken');
-		expect(newToken).toHaveProperty('token')
+	it("should be expire and aske new token", async () => {
+		const token = jwt.sign({ id }, secretKey, { expiresIn: "1ms" });
+		expect(validateJwt(token, id)).toEqual(401);
+		const refreshToken = await GenerateRefreshJwt(id);
+		const newToken = await askNewJwt(refreshToken, id);
+		expect(newToken).toHaveProperty("token");
+		expect(newToken).toHaveProperty("refreshToken");
+		await new Promise((resolve) => setTimeout(async () => {
+			const scdToken = await askNewJwt(refreshToken, id);
+			expect(scdToken).toEqual({error: "token non valide" });
+			resolve("ok");
+		}, 500));
 	});
 	it("should include a valid signed JWT in the request header", () => {
 		const payload = { id };

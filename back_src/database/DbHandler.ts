@@ -7,10 +7,10 @@ export default class Dbhandler {
 		this.db = new Database("ma-base-de-donnees.db");
 	}
 
-    initDb() {
-        this.createUserTables();
-        this.createRJWTTables();
-    }
+	initDb() {
+		this.createUserTables();
+		this.createRJWTTables();
+	}
 
 	createUserTables()  { 
 		this.db.run(`
@@ -30,7 +30,7 @@ export default class Dbhandler {
         `);
 	}
 
-    createRJWTTables()  { 
+	createRJWTTables()  { 
 		this.db.run(`
         CREATE TABLE IF NOT EXISTS rjwt (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

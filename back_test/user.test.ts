@@ -63,7 +63,7 @@ describe("user create Profile", () => {
 	//TODO se ne st plus un midelwar adapter le comportement en fonction
 	it("should return 405 if data is missing", async () => {
 		const wrongUser = goodReq.body;
-		wrongUser['email'] = '';
+		wrongUser["email"] = "";
 		const result = checkDataProfilCreate(wrongUser as UserReqRegister);
 		expect(result?.code).toEqual(405);
 	});
