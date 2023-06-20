@@ -23,7 +23,8 @@ const fakeAuthProvider = {
                 email: 'tonio@gmail.com',
                 lastName: 'Labalette',
                 firstName: 'Antoine',
-                emailVerified: false
+                emailVerified: false,
+                profilePicture: process.env.PUBLIC_URL + '/images/profilePicture.png'
               }
             }
           };
