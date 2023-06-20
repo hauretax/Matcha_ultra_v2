@@ -22,8 +22,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = React.useState<UserProfile | null>(null);
 
   let signin = (username: string, password: string, callback: VoidFunction) => {
-    api.signin(username, password)
-      .then((res: AxiosResponse) => {
+    fakeAuthProvider.signin(username, password)
+      .then((res: any) => {
         console.log(res)
         const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
         console.log(jwtToken, profile)
