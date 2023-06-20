@@ -8,7 +8,7 @@ export type UserProfile = {
     gender?: string;
     age?: number;
     sexualPreferences?: string;
-    profilePicture?: string;
+    pictures?: (string | null)[];
 }
 /**
  * 

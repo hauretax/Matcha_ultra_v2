@@ -3,6 +3,14 @@ import { UserPayload } from "../../../comon_src/type/user.type"
 interface UserResponse {
   data: UserPayload;
 }
+const profile = {
+  username: 'tonio',
+  email: 'tonio@gmail.com',
+  lastName: 'Labalette',
+  firstName: 'Antoine',
+  emailVerified: false,
+  pictures: [process.env.PUBLIC_URL + '/images/profilePicture.png', null, null, process.env.PUBLIC_URL + '/images/secondaryPicture.png']
+}
 
 const fakeAuthProvider = {
   isAuthenticated: false,
@@ -18,14 +26,7 @@ const fakeAuthProvider = {
           const response = {
             data: {
               jwtToken: 'i am a token',
-              profile: {
-                username: 'tonio',
-                email: 'tonio@gmail.com',
-                lastName: 'Labalette',
-                firstName: 'Antoine',
-                emailVerified: false,
-                profilePicture: process.env.PUBLIC_URL + '/images/profilePicture.png'
-              }
+              profile: profile
             }
           };
           resolve(response);
