@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import { generateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
-import Dbhandler from "../back_src/database/DbHandler";
+import JwtDb from "../back_src/database/Jwt";
 
 const secretKey = process.env.JWT_SECRET;
 const id = 1;
-const db = new Dbhandler;
+// const db = new Dbhandler;
 
 
 if (!secretKey) {
@@ -12,7 +12,7 @@ if (!secretKey) {
 }
 
 describe("JWT Tests", () => {
-	db.createRJWTTables();
+	JwtDb.initializeUserTable();
 
 	it("should generate and verify a JWT", () => {
 		const token = generateJwt(id);

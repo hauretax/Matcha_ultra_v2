@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
-import UserDb from "../database/User.db";
-import sendEmail from "../utils/sendMail";
 import bcrypt from "bcrypt";
-import { UserReqRegister } from "../../comon_src/type/user.type";
-import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
-import { UserPayload } from "../../comon_src/type/user.type"
+
+import sendEmail from "../utils/sendMail";
 import { generateJwt } from "../utils/jwt"
 
-const userDB = new UserDb;
+import { UserPayload } from "../../comon_src/type/user.type"
+import { UserReqRegister } from "../../comon_src/type/user.type";
+
+import UserDb from "../database/User";
+import { UniqueConstraintError } from "../database/errors";
+
+import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 
 export async function createProfile(req: Request, res: Response) {
   const profile: UserReqRegister = req.body;
@@ -18,17 +21,17 @@ export async function createProfile(req: Request, res: Response) {
   }
   try {
     profile.password = await bcrypt.hash(req.body.password, 10);
-    const { id, accessCode, email } = await userDB.insertUser(profile);
+    const { id, accessCode, email } = await UserDb.insertUser(profile);
     //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
     // sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
     res.status(201).json({ message: "Profile created", usrId: id });
     return;
   } catch (error) {
-    if (error === 409) {
+    if (error instanceof UniqueConstraintError) {
       res.status(409).json({ error: "user or email already taken" });
-      return;
+    } else {
+      throw error;  // propagate the error
     }
-    throw new Error(error)
   }
 }
 
@@ -46,8 +49,8 @@ export async function login(req: Request, res: Response) {
 
 
   //si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
-  const fulluser = res?.locals?.fulluser || await userDB.findUser(username);
-  if (fulluser === null) {
+  const fulluser = res?.locals?.fulluser || await UserDb.findUser(username);
+  if (fulluser === undefined) {
     res.status(404).json({ error: "account not found" });
     return;
   }

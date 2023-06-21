@@ -1,12 +1,13 @@
 import React from "react";
 import { AxiosError, AxiosResponse } from "axios";
-import { message } from "antd";
 
 import { ErrorPayload } from '../../../comon_src/type/error.type'
 import { UserProfile } from "../../../comon_src/type/user.type";
 
 import fakeAuthProvider from "../services/fakeAuthProvider";
 import api from "../services/api";
+
+import { useSnackbar } from "./SnackBar";
 
 interface AuthContextType {
   user: any;
@@ -20,13 +21,12 @@ let AuthContext = React.createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = React.useState<UserProfile | null>(null);
+  const snackBar = useSnackbar();
 
   let signin = (username: string, password: string, callback: VoidFunction) => {
     api.signin(username, password)
       .then((res: AxiosResponse) => {
-        console.log(res)
         const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
-        console.log(jwtToken, profile)
 
         // Store the JWT token in local storage
         localStorage.setItem("jwtToken", jwtToken);
@@ -34,39 +34,38 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         // Update the user state
         setUser(profile);
 
-        message.success("Login successfull");
+        snackBar("Login successfull", 'success');
         callback();
       })
       .catch((error: AxiosError) => {
-        console.log(error)
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
 
         // Display error message to the user
-        message.error('Login failed' + (errorMessage && (': ' + errorMessage)));
+        snackBar('Login failed' + (errorMessage && (': ' + errorMessage)), 'error');
       })
   };
 
   let signup = (username: string, email: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => {
     api.signup(username, email, firstName, lastName, password)
       .then((res: AxiosResponse) => {
-        message.success('Registration successful. You can now login !');
+        snackBar('Registration successful. You can now login !', 'success');
         callback();
       })
       .catch((error: AxiosError) => {
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        message.error('Registration failed' + (errorMessage ? ': ' + errorMessage : ''));
+        snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
       });
   };
 
   let resetPasswordRequest = (email: string, callback: VoidFunction) => {
     fakeAuthProvider.resetPasswordRequest(email)
       .then((res: any) => {
-        message.success('An email has been sent to ' + email + '. Clik in the link inside to reset your password');
+        snackBar('An email has been sent to ' + email + '. Clik in the link inside to reset your password', 'success');
         callback();
       })
       .catch((error: AxiosError) => {
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        message.error('Registration failed' + (errorMessage ? ': ' + errorMessage : ''));
+        snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
       })
   }
 
@@ -78,12 +77,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         // Update the user state
         setUser(null);
 
-        message.success("Logout successfull");
+        snackBar("Logout successfull", 'success');
         callback();
       })
       .catch((error: AxiosError) => {
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        message.error('Logout failed' + (errorMessage ? ': ' + errorMessage : ''));
+        snackBar('Logout failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
       })
   };
 

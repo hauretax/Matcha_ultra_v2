@@ -3,5 +3,10 @@ node_modules
 package-lock.json
 build
 dist
+
+# Databases
+database.sqlite
 ma-base-de-donnees.db
+
+# Env files
 .env

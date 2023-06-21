@@ -1,12 +1,11 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { newJwt, possiblyNewJwt } from "../../comon_src/type/jwt.type";
-import JwtDb from "../database/jwt.db";
+import JwtDb from "../database/Jwt";
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET || "";
 const secretKeyR = process.env.JWT_SECRETR || "";
-const jwtDb = new JwtDb;
 
 if (!secretKey || !secretKeyR) {
 	throw (".env look broken JWT_SECRET or JWT_SECRETR is missing");
@@ -22,14 +21,14 @@ export async function GenerateRefreshJwt(id: number): Promise<string> {
 	const decoded = jwt.verify(token, secretKeyR) as JwtPayload;
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const expirationDate = new Date(decoded.exp! * 1000);
-	await jwtDb.insertToken(token, expirationDate);
+	await JwtDb.insertToken(token, expirationDate);
 	return token;
 }
 
 export async function validaterefreshJwt(token: string, id: number): Promise<boolean | 401> {
 	try {
 		const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
-		const valideToken = await jwtDb.tokenIsValide(token);
+		const valideToken = await JwtDb.tokenIsValide(token);
 		if(!valideToken)
 			return false;
 		if (decoded.id != id)
@@ -64,7 +63,7 @@ export async function askNewJwt(refreshToken: string, userId: number): Promise<p
 	if (Vtoken === 401)
 		return { error: "token expirer" };
 	const newRefreshToken = await GenerateRefreshJwt(userId);
-	jwtDb.invalidateToken(refreshToken);
+	JwtDb.invalidateToken(refreshToken);
 
 	const newToken = generateJwt(userId);
 	return { refreshToken: newRefreshToken, token: newToken };

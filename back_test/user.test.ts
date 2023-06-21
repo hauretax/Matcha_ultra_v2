@@ -1,13 +1,11 @@
 import { createProfile, login } from "../back_src/controllers/profileCtrl";
 import { Request } from "express";
-import Dbhandler from "../back_src/database/DbHandler";
+
 import { Fakexpress } from "./FackExpress";
 import { UserProfile, UserReqRegister } from "../comon_src/type/user.type";
-import UserDb from "../back_src/database/User.db";
-import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
 
-const db = new Dbhandler;
-const userDB = new UserDb;
+import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
+import UserDb from "../back_src/database/User";
 
 const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString();
@@ -29,13 +27,13 @@ const goodReq = {
 
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;
-	db.createUserTables();
+	UserDb.initializeUserTable();
 	// TODO
 	/**
 	 * verification of usr in db
 	 */
 	afterAll((done) => {
-		userDB.deleteUser(usrId || 0);
+		UserDb.deleteUser(usrId || 0);
 		done();
 	});
 
@@ -115,7 +113,7 @@ const creationReq = {
 } as Request;
 describe("user login", () => {
 
-	db.createUserTables();
+	UserDb.initializeUserTable();
 	let usrId: number | undefined = 0;
 	// TODO
 	/**
@@ -127,7 +125,7 @@ describe("user login", () => {
 	});
 
 	afterAll((done) => {
-		userDB.deleteUser(usrId || 0);
+		UserDb.deleteUser(usrId || 0);
 		done();
 	});
 
@@ -147,7 +145,7 @@ describe("user login", () => {
 			username: username1,
 			lastName,
 			firstName,
-			emailVerified: false,
+			emailVerified: 0,
 			id: usrId || 0
 		};
 		expect(FE.res.status).toHaveBeenCalledWith(200);

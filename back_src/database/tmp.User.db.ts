@@ -1,5 +1,5 @@
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
-import Dbhandler from "./DbHandler";
+import Dbhandler from "./tmp.DbHandler";
 interface UserCredentials {
 	id: number,
 	email: string,
