@@ -9,7 +9,7 @@ const profile = {
   lastName: 'Labalette',
   firstName: 'Antoine',
   emailVerified: false,
-  pictures: [process.env.PUBLIC_URL + '/images/profilePicture.png', null, null, process.env.PUBLIC_URL + '/images/secondaryPicture.png']
+  pictures: [process.env.PUBLIC_URL + '/images/profilePicture.png', null, null, process.env.PUBLIC_URL + '/images/secondaryPicture.jpeg']
 }
 
 const fakeAuthProvider = {
