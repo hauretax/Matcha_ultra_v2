@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { newJwt } from "../../comon_src/type/jwt.type";
+import { newJwt, possiblyNewJwt } from "../../comon_src/type/jwt.type";
 import JwtDb from "../database/jwt.db";
 dotenv.config();
 
@@ -55,7 +55,7 @@ export function validateJwt(token: string, id: number): boolean | 401 {
 	}
 }
 
-export async function askNewJwt(refreshToken: string, userId: number): Promise<newJwt> {
+export async function askNewJwt(refreshToken: string, userId: number): Promise<possiblyNewJwt> {
 	
 	const Vtoken = await validaterefreshJwt(refreshToken, userId);
 	if (!Vtoken) {

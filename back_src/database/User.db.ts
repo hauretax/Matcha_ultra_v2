@@ -47,7 +47,6 @@ export default class UserDb extends Dbhandler {
 
   }
 
-
   findUser(login: string): Promise<FullUser | null> {
     const query = `
         SELECT *

@@ -44,7 +44,9 @@ export async function login(req: Request, res: Response) {
     return;
   }
 
-  const fulluser = await userDB.findUser(username);
+
+  //si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
+  const fulluser = res?.locals?.fulluser || await userDB.findUser(username);
   if (fulluser === null) {
     res.status(404).json({ error: "account not found" });
     return;
@@ -54,13 +56,17 @@ export async function login(req: Request, res: Response) {
   if (isAutorized) {
     const { id, email, username, firstName, lastName, emailVerified } = fulluser;
     const payload: UserPayload = {
-      jwtToken: generateJwt(id),
+      jwtToken: {
+        token:generateJwt(id),
+        refreshToken:generateJwt(id),
+      },
       profile: {
         email,
         username,
         lastName,
         firstName,
-        emailVerified
+        emailVerified,
+        id
       }
     };
     res.status(200).json(payload);

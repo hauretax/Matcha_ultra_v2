@@ -10,8 +10,13 @@ export type validToken = {
     isValide:number;
 }
 
-export type newJwt={
+
+export type newJwt= {
     refreshToken: string,
-    token: string}
+    token: string
+}
+
+export type possiblyNewJwt=
+    newJwt
     |
     {error:string}

@@ -11,8 +11,8 @@ const userDB = new UserDb;
 
 const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString();
-const email = name+"mail1@oui.non";
-const username = name+"super";
+const email = name + "mail1@oui.non";
+const username = name + "super";
 const firstName = "eude";
 const lastName = "marcel";
 const password = "opPsw1@s";
@@ -28,22 +28,22 @@ const goodReq = {
 } as Request;
 
 describe("user create Profile", () => {
-	let usrId:number | undefined = 0;
+	let usrId: number | undefined = 0;
 	db.createUserTables();
 	// TODO
 	/**
-     * verification of usr in db
-     */
+	 * verification of usr in db
+	 */
 	afterAll((done) => {
 		userDB.deleteUser(usrId || 0);
 		done();
 	});
-	
+
 	//test on controller
 	it("should exec profileCtrl", async () => {
 
 		await createProfile(goodReq as Request, FE.res as never);
-		
+
 		expect(FE.res.status).toHaveBeenCalledWith(201);
 		usrId = FE.responseData?.usrId;
 
@@ -60,8 +60,8 @@ describe("user create Profile", () => {
 			body: {
 				...goodReq.body,
 				password: "abcd",
-				email 
-			}, 
+				email
+			},
 		};
 		const result = checkDataProfilCreate(modifiedReq.body as UserReqRegister);
 		expect(result?.code).toEqual(406);
@@ -101,12 +101,12 @@ describe("user create Profile", () => {
 
 const name1 = (Math.random() * 65536).toString();
 
-const email1 = name1+"mail2@oui.non";
-const username1 = name1+"supe2";
+const email1 = name1 + "mail2@oui.non";
+const username1 = name1 + "supe2";
 
 const creationReq = {
 	body: {
-		username:username1,
+		username: username1,
 		email: email1,
 		firstName,
 		lastName,
@@ -116,14 +116,14 @@ const creationReq = {
 describe("user login", () => {
 
 	db.createUserTables();
-	let usrId:number | undefined = 0;
+	let usrId: number | undefined = 0;
 	// TODO
 	/**
-     * verification of usr in db
-     */
+	 * verification of usr in db
+	 */
 	beforeAll(async () => {
 		await createProfile(creationReq, FE.res as never);
-		usrId = FE.responseData?.usrId ;
+		usrId = FE.responseData?.usrId;
 	});
 
 	afterAll((done) => {
@@ -136,21 +136,24 @@ describe("user login", () => {
 		//TODO gere pour que l on puisse mettre un login
 		const reqLogin = {
 			body: {
-				username:username1,
+				username: username1,
 				password,
-			}, 
+			},
 		};
 
 		await login(reqLogin as Request, FE.res as never);
 		const expectData: UserProfile = {
-			email:email1,
-			username:username1,
+			email: email1,
+			username: username1,
 			lastName,
 			firstName,
-			emailVerified: false
-		}; 
+			emailVerified: false,
+			id: usrId || 0
+		};
 		expect(FE.res.status).toHaveBeenCalledWith(200);
-	//TODO add token
-		//	expect(FE.responseData?.user).toEqual(expectData);
+		expect(FE.responseData?.profile).toEqual(expectData);
+		const newToken = FE.responseData?.jwtToken
+		expect(newToken).toHaveProperty("token");
+		expect(newToken).toHaveProperty("refreshToken");
 	});
 });

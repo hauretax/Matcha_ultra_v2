@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 
 export async function createNewJwt(req:Request, res:Response) {
 	const { refreshToken, id } = req.body;
+	if(req.body) {
+		res.status(405).json({ error: "Missing required data" });
+	}
 	if (!refreshToken || !id) {
 		res.status(405).json({ error: "Missing required data" });
 	}
