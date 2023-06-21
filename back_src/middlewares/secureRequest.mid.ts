@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import UserDb from "../database/User.db";
+import UserDb from "../database/User";
 import { validateJwt } from "../utils/jwt";
 
-const userDB = new UserDb;
 
 export async function validsecurRequest(
     req: Request,
@@ -23,7 +22,7 @@ export async function validsecurRequest(
 
     //TODO opti faire une variable avec une cle usrname et une variable mail valider ?
     try {
-        const fulluser = await userDB.findUser(username);
+        const fulluser = await UserDb.findUser(username);
         if (!fulluser?.emailVerified) {
             res.status(422).json({ error: "unverified email" });
             return;
