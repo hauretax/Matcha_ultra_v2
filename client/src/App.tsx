@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage"
 import Layout from "./components/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
+import ProfilePage from './pages/ProfilePage'
 
 import RequireAuth from "./components/RequireAuth";
 
@@ -33,14 +34,10 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/reset_password" element={<ResetPasswordRequestPage />} />
-              <Route
-                path="/protected"
-                element={
-                  <RequireAuth>
-                    <ProtectedPage />
-                  </RequireAuth>
-                }
-              />
+              <Route element={<RequireAuth />} >
+                <Route path='/home' element={<ProtectedPage />} />
+                <Route path='/profile' element={<ProfilePage />} />
+              </Route>
             </Route>
           </Routes>
         </ThemeProvider>

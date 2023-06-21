@@ -21,7 +21,7 @@ const pages = [
   },
   {
     label: 'Protected page',
-    url: '/protected'
+    url: '/home'
   }
 ];
 

@@ -1,7 +1,7 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
-function RequireAuth({ children }: { children: JSX.Element }) {
+function RequireAuth() {
     let auth = useAuth();
     let location = useLocation();
 
@@ -13,7 +13,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    return children;
+    return <Outlet />;
 }
 
 export default RequireAuth
