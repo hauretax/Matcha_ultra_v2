@@ -7,7 +7,7 @@ import { generateJwt } from "../utils/jwt"
 import { UserPayload } from "../../comon_src/type/user.type"
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
-import User from "../database/User";
+import UserDb from "../database/User";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
@@ -21,10 +21,11 @@ export async function createProfile(req: Request, res: Response) {
   }
   try {
     profile.password = await bcrypt.hash(req.body.password, 10);
-    const { id, accessCode, email } = await User.insertUser(profile);
+    const { id, accessCode, email } = await UserDb.insertUser(profile);
     //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
-    sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
+    // sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
     res.status(201).json({ message: "Profile created", usrId: id });
+    return;
   } catch (error) {
     if (error instanceof UniqueConstraintError) {
       res.status(409).json({ error: "user or email already taken" });
@@ -46,7 +47,9 @@ export async function login(req: Request, res: Response) {
     return;
   }
 
-  const fulluser = await User.findUser(username);
+
+  //si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
+  const fulluser = res?.locals?.fulluser || await UserDb.findUser(username);
   if (fulluser === undefined) {
     res.status(404).json({ error: "account not found" });
     return;
@@ -56,13 +59,17 @@ export async function login(req: Request, res: Response) {
   if (isAutorized) {
     const { id, email, username, firstName, lastName, emailVerified } = fulluser;
     const payload: UserPayload = {
-      jwtToken: generateJwt(id),
+      jwtToken: {
+        token:generateJwt(id),
+        refreshToken:generateJwt(id),
+      },
       profile: {
         email,
         username,
         lastName,
         firstName,
-        emailVerified
+        emailVerified,
+        id
       }
     };
     res.status(200).json(payload);

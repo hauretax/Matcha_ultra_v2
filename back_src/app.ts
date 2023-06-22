@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 
-import User from './database/User';
+import UserDb from './database/User';
 
 import requestLoggerMiddleware from './middlewares/requestLogger.middleware';
 import globalErrorMiddleware from './middlewares/globalError.middleware'
@@ -54,7 +54,7 @@ class App {
 const app = new App();
 
 const initFunctions = [
-  User.initializeUserTable,
+  UserDb.initializeUserTable,
   // ... add any additional table initializers here
 ];
 

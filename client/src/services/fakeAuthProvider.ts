@@ -17,13 +17,16 @@ const fakeAuthProvider = {
           console.log("Sign out response received")
           const response = {
             data: {
-              jwtToken: 'i am a token',
+              jwtToken: {
+                refreshToken: 'i am a token',
+                token: 'i am a token'
+              },
               profile: {
                 username: 'tonio',
                 email: 'tonio@gmail.com',
                 lastName: 'Labalette',
                 firstName: 'Antoine',
-                emailVerified: false
+                emailVerified: 0
               }
             }
           };

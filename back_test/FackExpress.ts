@@ -1,10 +1,12 @@
 import { Response } from "express";
 import { UserProfile } from "../comon_src/type/user.type";
+import { newJwt } from "../comon_src/type/jwt.type";
 
 export interface CustomRespons {
 	usrId?: number
-	user?: UserProfile
+	profile?: UserProfile
 	error?: string
+	jwtToken?: newJwt
   }
 
 export class Fakexpress {

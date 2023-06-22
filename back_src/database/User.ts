@@ -9,7 +9,7 @@ interface InsertedUser {
   accessCode: number
 }
 
-const User = {
+const UserDb = {
   initializeUserTable() {
     const sql = `
       CREATE TABLE IF NOT EXISTS users (
@@ -60,4 +60,4 @@ const User = {
   }
 };
 
-export default User
+export default UserDb
