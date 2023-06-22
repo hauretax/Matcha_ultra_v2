@@ -9,7 +9,7 @@ import UserDb from "../back_src/database/User";
 
 const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString();
-const email = name + "mail1@oui.non";
+const email = name + "cihipir849@anomgo.com";
 const username = name + "super";
 const firstName = "eude";
 const lastName = "marcel";
@@ -25,6 +25,14 @@ const goodReq = {
 	},
 } as Request;
 
+// function sleep(ms: number) {
+// 	return new Promise(resolve => {
+// 		setTimeout(() => {
+// 			resolve("s");
+// 		}, ms);
+// 	});
+// }
+//TODO test mailler
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;
 	UserDb.initializeUserTable();
@@ -36,13 +44,13 @@ describe("user create Profile", () => {
 
 	//test on controller
 	it("should exec profileCtrl", async () => {
-
+		
 		await createProfile(goodReq as Request, FE.res as never);
+		// await sleep(10000);
 
 		expect(FE.res.status).toHaveBeenCalledWith(201);
 		usrId = FE.responseData?.usrId;
-
-	});
+	},60000);
 
 	it("should return 405 if data is missing", async () => {
 		const wrongUser = goodReq.body;

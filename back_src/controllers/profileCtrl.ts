@@ -12,7 +12,9 @@ import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 
-export async function createProfile(req: Request, res: Response) {
+
+
+export async function   createProfile(req: Request, res: Response) {
   const profile: UserReqRegister = req.body;
   const dataError = checkDataProfilCreate(profile);
   if (dataError) {
@@ -23,7 +25,7 @@ export async function createProfile(req: Request, res: Response) {
     profile.password = await bcrypt.hash(req.body.password, 10);
     const { id, accessCode, email } = await UserDb.insertUser(profile);
     //TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
-    // sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
+    sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
     res.status(201).json({ message: "Profile created", usrId: id });
     return;
   } catch (error) {
