@@ -1,5 +1,4 @@
-import { validToken } from "../../comon_src/type/jwt.type";
-import db from './db';
+import db from "./db";
 
 
 const JwtDb = {
@@ -40,10 +39,10 @@ const JwtDb = {
 			WHERE token = ?
 		`;
 		const params = [token];
-		const row = await db.get(query, params)
+		const row = await db.get(query, params);
 
 		if (!row)
-			return false
+			return false;
 		if (!row.isValide)
 			return false;
 		if (new Date(row.endDate) < new Date())
@@ -57,6 +56,6 @@ const JwtDb = {
 		console.log("work in progress");
 	}
 
-}
+};
 
-export default JwtDb
+export default JwtDb;

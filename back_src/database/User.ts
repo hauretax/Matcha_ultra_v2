@@ -1,5 +1,5 @@
-import db from './db';
-import { UniqueConstraintError, DatabaseError } from './errors';
+import db from "./db";
+import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
 
 
@@ -10,8 +10,8 @@ interface InsertedUser {
 }
 
 const UserDb = {
-  initializeUserTable() {
-    const sql = `
+	initializeUserTable() {
+		const sql = `
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -25,39 +25,39 @@ const UserDb = {
         emailVerified INTEGER,
         accessCode INTEGER
       )`;
-    return db.run(sql);
-  },
+		return db.run(sql);
+	},
 
-  // if user is not found, returns undefined
-  findUser(username: string): Promise<FullUser> {
-    const sql = 'SELECT * FROM users WHERE username = ?';
-    return db.get(sql, [username]);
-  },
+	// if user is not found, returns undefined
+	findUser(username: string): Promise<FullUser> {
+		const sql = "SELECT * FROM users WHERE username = ?";
+		return db.get(sql, [username]);
+	},
 
-  async insertUser(user: UserReqRegister): Promise<InsertedUser> {
-    const accessCode = Math.floor(Math.random() * 90000 + 10000);
-    const query = `
+	async insertUser(user: UserReqRegister): Promise<InsertedUser> {
+		const accessCode = Math.floor(Math.random() * 90000 + 10000);
+		const query = `
           INSERT INTO users (email, username, lastName, firstName, password, accessCode, emailVerified)
           VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
-    const params = [user.email, user.username, user.lastName, user.firstName, user.password, accessCode, 0];
+		const params = [user.email, user.username, user.lastName, user.firstName, user.password, accessCode, 0];
 
-    try {
-      const result = await db.run(query, params);
-      return { id: result.lastID, accessCode, email: user.email };
-    } catch (err) {
-      if (err.message.includes("UNIQUE constraint failed")) {
-        throw new UniqueConstraintError(err.message);
-      } else {
-        throw new DatabaseError("A database error occurred");
-      }
-    }
-  },
+		try {
+			const result = await db.run(query, params);
+			return { id: result.lastID, accessCode, email: user.email };
+		} catch (err) {
+			if (err.message.includes("UNIQUE constraint failed")) {
+				throw new UniqueConstraintError(err.message);
+			} else {
+				throw new DatabaseError("A database error occurred");
+			}
+		}
+	},
 
-  deleteUser(userId: number) {
-    const sql = 'DELETE FROM users WHERE id = ?';
-    return db.run(sql, [userId]);
-  }
+	deleteUser(userId: number) {
+		const sql = "DELETE FROM users WHERE id = ?";
+		return db.run(sql, [userId]);
+	}
 };
 
-export default UserDb
+export default UserDb;

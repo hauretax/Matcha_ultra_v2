@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { newJwt, possiblyNewJwt } from "../../comon_src/type/jwt.type";
+import { possiblyNewJwt } from "../../comon_src/type/jwt.type";
 import JwtDb from "../database/Jwt";
 dotenv.config();
 
