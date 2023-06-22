@@ -47,7 +47,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
             onChange={(e) => setBiography(e.target.value)}
           />
         ) : (
-          <Box p={1}>
+          <Box p={2}>
             {biography}
           </Box>
         )}
