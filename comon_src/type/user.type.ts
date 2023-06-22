@@ -3,7 +3,6 @@ export type UserProfile = {
     username: string;
     lastName: string;
     firstName: string;
-    //emailVerified est envoyer pour le front mais une deuxiemme verificaiton coter back peu valoir le coups
     emailVerified: number;
     id?: number;
     gender?: string;
