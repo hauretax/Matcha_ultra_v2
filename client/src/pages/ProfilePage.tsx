@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 
 import { useAuth } from '../context/AuthProvider'
 
@@ -16,7 +16,7 @@ function ProfilePage() {
       <Caroussel imgs={auth.user.pictures} />
       <Biography biography='Je suis un texte'/>
       <Interests interests={['vegan']} options={['meat', 'sport', 'hard work', 'god', 'reading', 'swimming', 'hiking in the mountains', 'bikes', 'crypto', 'math', 'philosophy']}/>
-      <UserInformation firstName='Antoine' lastName='Labalette' age={26} gender='male' orientation='heterosexual' />
+      <UserInformation firstName='Antoine' lastName='Labalette' age={26} gender='Male' orientation='Heterosexual' email='labalette.antoine@gmail.com' />
     </Box>
   )
 }
