@@ -36,10 +36,7 @@ const goodReq = {
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;
 	UserDb.initializeUserTable();
-	// TODO
-	/**
-	 * verification of usr in db
-	 */
+
 	afterAll((done) => {
 		UserDb.deleteUser(usrId || 0);
 		done();
@@ -53,9 +50,8 @@ describe("user create Profile", () => {
 
 		expect(FE.res.status).toHaveBeenCalledWith(201);
 		usrId = FE.responseData?.usrId;
-
 	},60000);
-	//TODO se ne st plus un midelwar adapter le comportement en fonction
+
 	it("should return 405 if data is missing", async () => {
 		const wrongUser = goodReq.body;
 		wrongUser["email"] = "";
@@ -140,7 +136,6 @@ describe("user login", () => {
 
 	//test on controller
 	it("should receivd user", async () => {
-		//TODO gere pour que l on puisse mettre un login
 		const reqLogin = {
 			body: {
 				username: username1,
