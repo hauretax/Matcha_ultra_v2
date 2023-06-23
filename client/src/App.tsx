@@ -17,6 +17,8 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import './App.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 const theme = createTheme(themeOptions)
@@ -56,8 +58,40 @@ function PublicPage() {
 }
 
 function ProtectedPage() {
+  const [accessToken, setAccessToken] = useState<string | null>('')
+  const [refreshToken, setRefreshToken] = useState<string | null>('')
+  const [profile, setProfile] = useState({
+    username: '',
+  })
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('jwtToken'))
+    setRefreshToken(localStorage.getItem('jwtRefreshToken'))
+  }, [])
+
+  const getProfile = () => {
+    axios.get('http://localhost:8080/api/profile', { 'headers': { 'Authorization': 'CetteStringPeutEtreNimporteQuoi ' + accessToken } })
+      .then((res) => {
+        console.log(res)
+      })
+  }
+
+  const refresh = () => {
+    axios.post('http://localhost:8080/api/newToken', { 'refreshToken': refreshToken })
+      .then((res) => {
+        setAccessToken(res.data.token)
+        setRefreshToken(res.data.refreshToken)
+      })
+  }
+
   return (
-    <p>Protected page</p>
+    <>
+      <button onClick={getProfile}>get Profile</button>
+      <button onClick={refresh}>Refresh token</button>
+      <p>Protected page</p>
+      <p>Access token : {accessToken}</p>
+      <p>Refresh token : {refreshToken}</p>
+    </>
   )
 }
 

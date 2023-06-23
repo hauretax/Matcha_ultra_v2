@@ -11,12 +11,7 @@ export type validToken = {
 }
 
 
-export type newJwt= {
+export type accessTokenList = {
     refreshToken: string,
     token: string
 }
-
-export type possiblyNewJwt=
-    newJwt
-    |
-    {error:string}

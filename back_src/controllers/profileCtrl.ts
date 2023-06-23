@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import sendEmail from "../utils/sendMail";
 import { GenerateRefreshJwt, generateJwt } from "../utils/jwt";
 
-import { UserPayload } from "../../comon_src/type/user.type";
+import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
 import UserDb from "../database/User.db";
@@ -62,7 +62,7 @@ export async function login(req: Request, res: Response) {
 		const payload: UserPayload = {
 			jwtToken: {
 				token:generateJwt(id),
-				refreshToken:await GenerateRefreshJwt(id),
+				refreshToken: await GenerateRefreshJwt(id),
 			},
 			profile: {
 				email,
@@ -80,7 +80,10 @@ export async function login(req: Request, res: Response) {
 
 }
 
-
+export function getProfile(req: Request, res: Response) {
+	const user: UserProfile = res.locals.fulluser as UserProfile;
+	res.json({user});
+}
 
 // const res = {
 //     status: jest.fn().mockReturnThis(),

@@ -12,18 +12,13 @@ const JwtDb = {
 		await db.run(sql, [token, userId]);
 	},
 
-	async getToken(userId: number): Promise<string> {
+	async getToken(userId: number): Promise<{token:string}> {
 		const sql = `
 			SELECT token 
 			FROM users
 			WHERE id = ?
     	`;
-		const row = await db.get(sql, [userId]);
-		if (row === undefined)
-			return "404";
-		if (!row.token)
-			return "404";
-		return row.token;
+		return db.get(sql, [userId]);
 	}
 
 };

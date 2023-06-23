@@ -26,10 +26,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let signin = (username: string, password: string, callback: VoidFunction) => {
     api.signin(username, password)
       .then((res: AxiosResponse) => {
-        const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
+        const { jwtToken, profile }: { jwtToken: {refreshToken: string, token: string}, profile: UserProfile } = res.data;
+        const { token, refreshToken } = jwtToken
 
         // Store the JWT token in local storage
-        localStorage.setItem("jwtToken", jwtToken);
+        localStorage.setItem("jwtToken", token);
+
+        localStorage.setItem("jwtRefreshToken", refreshToken);
 
         // Update the user state
         setUser(profile);

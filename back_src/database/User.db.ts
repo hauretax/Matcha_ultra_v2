@@ -37,6 +37,11 @@ const UserDb = {
 		return db.get(sql, [username]);
 	},
 
+	findUserById(id: number): Promise<FullUser> {
+		const sql = "SELECT * FROM users WHERE id = ?";
+		return db.get(sql, [id]);
+	},
+
 	async insertUser(user: UserReqRegister): Promise<InsertedUser> {
 		const accessCode = Math.floor(Math.random() * 90000 + 10000);
 		const query = `

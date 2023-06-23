@@ -85,6 +85,6 @@ describe("JWT Tests", () => {
 		const authHeader = req.headers.Authorization;
 		const extractedToken = authHeader.split(" ")[1];
 		const decoded = jwt.verify(extractedToken, secretKey) as jwt.JwtPayload;
-		expect(decoded.usrId).toEqual(usrId);
+		expect(decoded.userId).toEqual(usrId);
 	});
 });
