@@ -9,6 +9,7 @@ export type UserProfile = {
     age?: number;
     sexualPreferences?: string;
     pictures?: (string | null)[];
+    interests?: string[];
 }
 /**
  * 

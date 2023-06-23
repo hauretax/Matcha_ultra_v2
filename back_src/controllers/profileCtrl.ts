@@ -51,6 +51,7 @@ export async function login(req: Request, res: Response) {
 
 	//si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
 	const fulluser = res?.locals?.fulluser || await UserDb.findUser(username);
+	console.log(fulluser)
 	if (fulluser === undefined) {
 		res.status(404).json({ error: "account not found" });
 		return;
@@ -58,19 +59,24 @@ export async function login(req: Request, res: Response) {
 
 	const isAutorized = await bcrypt.compare(password, fulluser.password);
 	if (isAutorized) {
-		const { id, email, username, firstName, lastName, emailVerified } = fulluser;
+		const { id, email, username, firstName, lastName, gender, age, sexualPreferences, emailVerified, pictures, interests } = fulluser;
 		const payload: UserPayload = {
 			jwtToken: {
 				token:generateJwt(id),
 				refreshToken: await GenerateRefreshJwt(id),
 			},
 			profile: {
+				id,
 				email,
 				username,
 				lastName,
 				firstName,
+				gender,
+				age,
+				sexualPreferences,
 				emailVerified,
-				id
+				pictures,
+				interests
 			}
 		};
 		res.status(200).json(payload);
