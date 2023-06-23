@@ -16,6 +16,7 @@ interface AuthContextType {
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
   getProfile: () => void;
+  updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => void;
   signout: (callback: VoidFunction) => void;
 }
 
@@ -82,11 +83,20 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       .catch((error: AxiosError) => {
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
-
-        // Display error message to the user
-        snackBar('Login failed' + (errorMessage && (': ' + errorMessage)), 'error');
+        snackBar('Error while fetching profile information' + (errorMessage && (': ' + errorMessage)), 'error');
       })
   };
+
+  let updateProfile = async (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string): Promise<void> => {
+    try {
+      await apiProvider.updateProfile(firstName, lastName, age, gender, orientation, email)
+      const newUser = {...(user as UserProfile), firstName, lastName, email, age, gender, orientation, emailVerified: Number((user as UserProfile).email === email)}
+      setUser(newUser);
+    } catch (error: any) {
+      const errorMessage = (error.response?.data as ErrorPayload)?.error;
+      snackBar('Error while updating profile information' + (errorMessage && (': ' + errorMessage)), 'error');
+    }
+  }
 
   let signout = (callback: VoidFunction) => {
     fakeAuthProvider.signout()
@@ -105,7 +115,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
   };
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, signout };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

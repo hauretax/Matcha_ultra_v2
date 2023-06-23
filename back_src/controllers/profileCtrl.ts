@@ -14,7 +14,7 @@ import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 
 
 
-export async function   createProfile(req: Request, res: Response) {
+export async function createProfile(req: Request, res: Response) {
 	const profile: UserReqRegister = req.body;
 	const dataError = checkDataProfilCreate(profile);
 	if (dataError) {
@@ -62,7 +62,7 @@ export async function login(req: Request, res: Response) {
 		const { id, email, username, firstName, lastName, gender, age, sexualPreferences, emailVerified, pictures, interests } = fulluser;
 		const payload: UserPayload = {
 			jwtToken: {
-				token:generateJwt(id),
+				token: generateJwt(id),
 				refreshToken: await GenerateRefreshJwt(id),
 			},
 			profile: {
@@ -88,7 +88,44 @@ export async function login(req: Request, res: Response) {
 
 export function getProfile(req: Request, res: Response) {
 	const user: UserProfile = res.locals.fulluser as UserProfile;
-	res.json({user});
+	res.json({ user });
+}
+
+export async function updateProfile(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { firstName, lastName, age, gender, orientation, email } = req.body;
+
+	// Age validation
+	if (!Number.isInteger(age) || age < 0 || age > 120) {
+		res.status(400).json({ error: "invalid age" });
+		return;
+	}
+
+	// Gender validation
+	if (!['Male', 'Female'].includes(gender)) {
+		res.status(400).json({ error: "invalid gender" });
+		return;
+	}
+
+	// Orientation validation
+	if (!['Homosexual', 'Heterosexual', 'Bisexual'].includes(orientation)) {
+		res.status(400).json({ error: "invalid orientation" });
+		return;
+	}
+
+	// Email validation
+	const emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+	if (!emailRegexp.test(email)) {
+		res.status(400).json({ error: "invalid email" });
+		return;
+	}
+
+	await UserDb.updateProfile(firstName, lastName, age, gender, orientation, email, Number(email === res.locals.fulluser.email), res.locals.fulluser.id)
+	res.status(200).json({ message: 'Profile updated successfully' });
 }
 
 // const res = {

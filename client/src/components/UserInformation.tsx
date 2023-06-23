@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid, Skeleton } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
-import fakeApiProvider from '../services/fakeApiProvider';
+import { useAuth } from '../context/AuthProvider';
 
 interface UserInformationProps {
   firstName: string;
@@ -22,27 +22,26 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [orientation, setOrientation] = useState(props.orientation);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const auth = useAuth();
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsUploading(true);
-    fakeApiProvider.setProfile(firstName, lastName, age, gender, orientation, email)
-      .then(() => {
-        setIsEditing(false);
-        setIsUploading(false);
-      });
+    await auth.updateProfile(firstName, lastName, age, gender, orientation, email);
+    setIsEditing(false);
+    setIsUploading(false);
   };
 
   React.useEffect(() => {
-    setEmail(props.email)
-    setFirstName(props.firstName)
-    setLastName(props.lastName)
-    setAge(props.age)
-    setGender(props.gender)
-    setOrientation(props.orientation)
+    setEmail(props.email || '')
+    setFirstName(props.firstName || '')
+    setLastName(props.lastName || '')
+    setAge(props.age || 0)
+    setGender(props.gender || '')
+    setOrientation(props.orientation || '')
   }, [props]);
 
   return (
@@ -122,7 +121,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Age</Typography>
                 <Box>
-                  <SkeletonTypo text={age.toString()} isLoading={props.isLoading} />
+                  <SkeletonTypo text={age} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -195,8 +194,8 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   );
 };
 
-const SkeletonTypo = ({ text, isLoading }: { text: string, isLoading: boolean }) => (
-  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{isLoading ? <Skeleton /> : <span>{text}</span>}</Typography>
+const SkeletonTypo = ({ text, isLoading }: { text: (string | number), isLoading: boolean }) => (
+  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{isLoading ? <Skeleton /> : <span>{text || "-"}</span>}</Typography>
 )
 
 export default UserInformation;

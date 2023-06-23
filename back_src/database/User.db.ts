@@ -29,27 +29,27 @@ const UserDb = {
 	},
 
 	initializePictureTable() {
-        const sql = `
+		const sql = `
         CREATE TABLE IF NOT EXISTS pictures (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             picture_path TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )`;
-        return db.run(sql);
-    },
+		return db.run(sql);
+	},
 
 	initializeInterestsTable() {
-        const sql = `
+		const sql = `
             CREATE TABLE IF NOT EXISTS interests (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 interest TEXT UNIQUE
             )`;
-        return db.run(sql);
-    },
-    
-    initializeUserInterestsTable() {
-        const sql = `
+		return db.run(sql);
+	},
+
+	initializeUserInterestsTable() {
+		const sql = `
             CREATE TABLE IF NOT EXISTS user_interests (
                 user_id INTEGER,
                 interest_id INTEGER,
@@ -57,15 +57,15 @@ const UserDb = {
                 FOREIGN KEY(user_id) REFERENCES users(id),
                 FOREIGN KEY(interest_id) REFERENCES interests(id)
             )`;
-        return db.run(sql);
-    },
+		return db.run(sql);
+	},
 
-	findPicturesByUserId(userId: number): Promise<{picture_path: string}[]> {
+	findPicturesByUserId(userId: number): Promise<{ picture_path: string }[]> {
 		const sql = "SELECT picture_path FROM pictures WHERE user_id = ?";
 		return db.all(sql, [userId]);
 	},
-	
-	findInterestsByUserId(userId: number): Promise<{interest: string}[]> {
+
+	findInterestsByUserId(userId: number): Promise<{ interest: string }[]> {
 		const sql = `
 			SELECT interests.interest 
 			FROM interests
@@ -73,7 +73,7 @@ const UserDb = {
 			WHERE user_interests.user_id = ?`;
 		return db.all(sql, [userId]);
 	},
-	
+
 	async findUser(username: string): Promise<FullUser> {
 		const sql = "SELECT * FROM users WHERE username = ?";
 		const user = await db.get(sql, [username]);
@@ -90,7 +90,7 @@ const UserDb = {
 			return null;
 		}
 	},
-	
+
 	async findUserById(id: number): Promise<FullUser> {
 		const sql = "SELECT * FROM users WHERE id = ?";
 		const user = await db.get(sql, [id]);
@@ -144,6 +144,15 @@ const UserDb = {
 		}
 	},
 
+	updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number, userId: number) {
+		const sql = `
+			UPDATE users 
+			SET firstName=?, lastName=?, age=?, gender=?, sexualPreferences=?, email=?, emailVerified=?
+			WHERE id=?`;
+		const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
+		return db.run(sql, params);
+	},
+
 	async findOrCreateInterest(interest: string): Promise<number> {
 		const findSql = "SELECT id FROM interests WHERE interest = ?";
 		const interestObj = await db.get(findSql, [interest]);
@@ -155,7 +164,7 @@ const UserDb = {
 				.then((result) => result.lastID);
 		}
 	},
-	
+
 	async updateUserInterests(userId: number, interests: string[]): Promise<void> {
 		// First, remove all current interests of this user
 		const deleteSql = "DELETE FROM user_interests WHERE user_id = ?";
@@ -170,8 +179,8 @@ const UserDb = {
 		);
 		await Promise.all(addInterestPromises);
 	},
-	
-	getAllInterests(): Promise<{interest: string}[]> {
+
+	getAllInterests(): Promise<{ interest: string }[]> {
 		const sql = "SELECT interest FROM interests";
 		return db.all(sql);
 	},

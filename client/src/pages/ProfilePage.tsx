@@ -9,6 +9,7 @@ import Interests from '../components/Interests'
 import UserInformation from '../components/UserInformation'
 import { useLocation } from 'react-router-dom'
 import { useSnackbar } from '../context/SnackBar'
+import { useAuth } from '../context/AuthProvider'
 
 const initialProfile = {
   biography: 'test',
@@ -23,20 +24,10 @@ const initialProfile = {
 }
 
 function ProfilePage() {
-  const [profile, setProfile] = useState(initialProfile)
+  const auth = useAuth()
   const [options, setOptions] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const location = useLocation();
   let snackbar = useSnackbar()
-
-
-  useEffect(() => {
-    fakeApiProvider.getProfile()
-      .then((res: any) => {
-        setProfile(res.data)
-        setIsLoading(false)
-      })
-  }, [])
 
   useEffect(() => {
     fakeApiProvider.getOptions()
@@ -51,10 +42,10 @@ function ProfilePage() {
 
   return (
     <Box>
-      <Caroussel imgs={profile.pictures} isLoading={isLoading} />
-      <Biography biography={profile.biography} isLoading={isLoading} />
-      <Interests interests={profile.interests} options={options} isLoading={isLoading} />
-      <UserInformation firstName={profile.firstName} lastName={profile.lastName} age={profile.age} gender={profile.gender} orientation={profile.orientation} email={profile.email} isLoading={isLoading} />
+      <Caroussel imgs={auth.user.pictures} isLoading={false} />
+      <Biography biography={auth.user.biography} isLoading={false} />
+      <Interests interests={auth.user.interests} options={options} isLoading={false} />
+      <UserInformation firstName={auth.user.firstName} lastName={auth.user.lastName} age={auth.user.age} gender={auth.user.gender} orientation={auth.user.orientation} email={auth.user.email} isLoading={false} />
     </Box>
 
   )
