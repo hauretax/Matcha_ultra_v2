@@ -4,6 +4,20 @@ interface UserResponse {
   data: UserPayload;
 }
 
+const profile = {
+  username: 'tonio',
+  email: 'tonio@gmail.com',
+  lastName: 'Labalette',
+  firstName: 'Antoine',
+  emailVerified: false,
+  gender: '',
+  age: 26,
+  orientation: 'Heterosexual',
+  interests: ['sport', 'philosophy', 'dev', 'techno', 'board games'],
+  biography: 'What\'s amazing about life is that you are ALL IN. Whether you want it or not. It WILL kill you at the end. So why not live the most amazing life you can ?',
+  pictures: [process.env.PUBLIC_URL + '/images/profilePicture.png', null, null, process.env.PUBLIC_URL + '/images/secondaryPicture.jpeg']
+}
+
 const fakeAuthProvider = {
   isAuthenticated: false,
   signin(username: string, password: string): Promise<UserResponse> {
@@ -17,17 +31,8 @@ const fakeAuthProvider = {
           console.log("Sign out response received")
           const response = {
             data: {
-              jwtToken: {
-                refreshToken: 'i am a token',
-                token: 'i am a token'
-              },
-              profile: {
-                username: 'tonio',
-                email: 'tonio@gmail.com',
-                lastName: 'Labalette',
-                firstName: 'Antoine',
-                emailVerified: 0
-              }
+              jwtToken: 'i am a token',
+              profile: profile
             }
           };
           resolve(response);

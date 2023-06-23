@@ -24,8 +24,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const snackBar = useSnackbar();
 
   let signin = (username: string, password: string, callback: VoidFunction) => {
-    api.signin(username, password)
-      .then((res: AxiosResponse) => {
+    fakeAuthProvider.signin(username, password)
+      .then((res: any) => {
         const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
 
         // Store the JWT token in local storage

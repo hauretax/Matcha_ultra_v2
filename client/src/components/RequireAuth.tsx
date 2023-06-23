@@ -1,11 +1,14 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
-function RequireAuth({ children }: { children: JSX.Element }) {
+function RequireAuth() {
+    
     let auth = useAuth();
+    let navigate = useNavigate()
     let location = useLocation();
+    let u = auth.user;
 
-    if (!auth.user) {
+    if (!u) {
         // Redirect them to the /login page, but save the current location they were
         // trying to go to when they were redirected. This allows us to send them
         // along to that page after they login, which is a nicer user experience
@@ -13,7 +16,20 @@ function RequireAuth({ children }: { children: JSX.Element }) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    return children;
+    if (location.pathname !== '/profile') {
+        if (
+            u.gender === '' ||
+            u.age === 0 ||
+            u.orientation === '' ||
+            u.interests.length === 0 ||
+            u.biography === '' ||
+            u.pictures.every((pic: (string | null)) => pic === null)
+        ) {
+            return <Navigate to="/profile" state={{ profileIncomplete: true }} />;
+        }
+    }
+
+    return <Outlet />;
 }
 
 export default RequireAuth
