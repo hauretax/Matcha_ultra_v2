@@ -4,9 +4,9 @@ import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
 
 
 interface InsertedUser {
-  id: number,
-  email: string,
-  accessCode: number
+	id: number,
+	email: string,
+	accessCode: number
 }
 
 const UserDb = {
@@ -57,6 +57,13 @@ const UserDb = {
 	deleteUser(userId: number) {
 		const sql = "DELETE FROM users WHERE id = ?";
 		return db.run(sql, [userId]);
+	},
+	getCode(email:string) {
+		const sql = "SELECT accessCode FROM users WHERE email = ?";
+		return db.get(sql, [email]);
+	},
+	valideUser() {
+		console.log
 	}
 };
 

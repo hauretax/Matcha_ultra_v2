@@ -9,5 +9,6 @@ const router = express.Router();
 router.post("/register", asyncHandler(createProfile)); 
 router.post("/login", asyncHandler(login));
 router.post("/newToken", asyncHandler(createNewJwt));
+router.get("/account/validation",asyncHandler());
 
 export default router;  
