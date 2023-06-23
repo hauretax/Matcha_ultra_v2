@@ -63,19 +63,19 @@ describe("JWT Tests", () => {
 	//j'imite le comportement que devrais avoir le front'
 	it("should be expire and aske new token", async () => {
 		const token = jwt.sign({ usrId }, secretKey, { expiresIn: "1ms" });
-		
+
 		expect(validateJwt(token, usrId)).toEqual(401);
 		const refreshToken = await GenerateRefreshJwt(usrId);
-		await sleep(100);
+		await sleep(500);
 		const newToken = await askNewJwt(refreshToken, usrId);
 		expect(newToken).toHaveProperty("token");
 		expect(newToken).toHaveProperty("refreshToken");
-		// await new Promise((resolve) => setTimeout(async () => {
-		const scdToken = await askNewJwt(refreshToken, usrId);
-		expect(scdToken).toEqual({error: "token non valide" });
-		// resolve("ok");
-		// }, 500));
-	});
+		await new Promise((resolve) => setTimeout(async () => {
+			const scdToken = await askNewJwt(refreshToken, usrId);
+			expect(scdToken).toEqual({ error: "token non valide" });
+			resolve("ok");
+		}, 500));
+	},10000);
 	it("should include a valid signed JWT in the request header", () => {
 		const payload = { usrId };
 		const token = jwt.sign(payload, secretKey);

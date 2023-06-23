@@ -10,7 +10,6 @@ const JwtDb = {
 			WHERE id = ?
     	`;
 		await db.run(sql, [token, userId]);
-		console.log(token,'inserted==')
 	},
 
 	async getToken(userId: number): Promise<string> {
