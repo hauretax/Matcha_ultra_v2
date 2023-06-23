@@ -25,7 +25,6 @@ const UserDb = {
         sexualPreferences TEXT,
         emailVerified INTEGER,
         accessCode INTEGER,
-		randomKey TEXT,
 		token TEXT
       )`;
 		return db.run(sql);
@@ -52,10 +51,9 @@ const UserDb = {
 			firstName,
 			password,
 			accessCode,
-			emailVerified,
-			randomKey
+			emailVerified
 		)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       	`;
 		const params = [
 			user.email,
@@ -64,8 +62,7 @@ const UserDb = {
 			user.firstName,
 			user.password,
 			accessCode,
-			0,
-			randomString(16)
+			0
 		];
 
 		try {
