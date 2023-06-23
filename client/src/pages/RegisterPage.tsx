@@ -110,8 +110,27 @@ function RegisterPage() {
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
+  const prefill = () => {
+    const preFilledValues : { [key: string]: string } = {
+      'username': "tonio",
+      'firstName': "Antoine",
+      'lastName': "Labalette",
+      'email': "labalette@gmail.com",
+      'password': "@Antoine1",
+      'confirmPassword': "@Antoine1",
+    };
+  
+    Object.keys(preFilledValues).forEach((fieldName) => {
+      const inputField = document.getElementById(fieldName) as HTMLInputElement;
+      if (inputField) {
+        inputField.value = preFilledValues[fieldName] as string;
+      }
+    });
+  }
+
   return (
     <Container component="main" maxWidth="xs">
+      <Button onClick={() => prefill()}>Prefill</Button>
       <Box
         sx={{
           marginTop: 8,

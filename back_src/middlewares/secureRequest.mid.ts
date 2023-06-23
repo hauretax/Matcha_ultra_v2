@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserDb from "../database/User";
+import UserDb from "../database/User.db";
 import { validateJwt } from "../utils/jwt";
 
 
@@ -13,43 +13,43 @@ export async function validsecurRequest(
 		return;
 	}
 
-	const { username } = req.body;
-	if (!username) {
-		res.status(422).json({ error: "username and/or password missing" });
-		return;
-	}
-
-
 	//TODO opti faire une variable avec une cle usrname et une variable mail valider ?
 	try {
-		const fulluser = await UserDb.findUser(username);
-		if (!fulluser?.emailVerified) {
-			res.status(422).json({ error: "unverified email" });
-			return;
-		}
-		const authHeader = req.headers.Authorization as string;
-		if (!authHeader) {
-			res.status(422).json({ error: "header missing" });
-			return;
-		}
-		const token = authHeader.split(" ")[1];
+		console.log("hello");
+		const authHeader = req.headers.authorization as string;
+		const token = authHeader && authHeader.split(" ")[1];
+
+		console.log(authHeader, token);
+		console.log(req.headers);
 		if (!token) {
 			res.status(422).json({ error: "header missing" });
 			return;
 		}
-		const jwtIsValidate = validateJwt(token, fulluser.id);
-		if (jwtIsValidate === 401) {
-			res.status(401).json({ error: "token expired" });
-			return;
-		}
-		if (jwtIsValidate) {
-			res.locals.fulluser = fulluser;
-			next();
-			return;
-		}
-		res.status(422).json({ error: "wrong token" });
-		return;
 
+		// returns userId or null
+		const userId = validateJwt(token);
+
+		if (!userId) {
+			res.status(403).json({ error: "Unauthorized" });
+			return;
+		}
+
+		const fulluser = await UserDb.findUserById(userId);
+		console.log(fulluser);
+		if (fulluser === undefined) {
+			res.status(404).json({ error: "user not found" });
+			return;
+		}
+		
+		// if (!fulluser?.emailVerified) {
+		// 	res.status(422).json({ error: "unverified email" });
+		// 	return;
+		// }
+
+		res.locals.fulluser = fulluser;
+		delete res.locals.fulluser.email;
+		next();
+		
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: "server error" });

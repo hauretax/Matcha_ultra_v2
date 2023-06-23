@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 
-import UserDb from "./database/User";
+import UserDb from "./database/User.db";
+import PictureDb from "./database/Picture.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
@@ -55,6 +56,7 @@ const app = new App();
 
 const initFunctions = [
 	UserDb.initializeUserTable,
+	PictureDb.initializePictureTable,
 	// ... add any additional table initializers here
 ];
 

@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import sendEmail from "../utils/sendMail";
-import { generateJwt } from "../utils/jwt";
+import { GenerateRefreshJwt, generateJwt } from "../utils/jwt";
 
-import { UserPayload } from "../../comon_src/type/user.type";
+import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
-import UserDb from "../database/User";
+import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
@@ -27,7 +27,6 @@ export async function   createProfile(req: Request, res: Response) {
 		//TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
 		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
 		res.status(201).json({ message: "Profile created", usrId: id });
-		return;
 	} catch (error) {
 		if (error instanceof UniqueConstraintError) {
 			res.status(409).json({ error: "user or email already taken" });
@@ -63,7 +62,7 @@ export async function login(req: Request, res: Response) {
 		const payload: UserPayload = {
 			jwtToken: {
 				token:generateJwt(id),
-				refreshToken:generateJwt(id),
+				refreshToken: await GenerateRefreshJwt(id),
 			},
 			profile: {
 				email,
@@ -81,7 +80,10 @@ export async function login(req: Request, res: Response) {
 
 }
 
-
+export function getProfile(req: Request, res: Response) {
+	const user: UserProfile = res.locals.fulluser as UserProfile;
+	res.json({user});
+}
 
 // const res = {
 //     status: jest.fn().mockReturnThis(),
