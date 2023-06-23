@@ -53,7 +53,8 @@ const Biography: React.FC<BiographyProps> = (props) => {
                 <Skeleton animation="wave"  style={{ marginBottom: 6 }} />
                 <Skeleton animation="wave"  width="80%" />
               </React.Fragment> :
-              <Typography>{biography}
+              <Typography>
+                {biography}
               </Typography>
             }
 
