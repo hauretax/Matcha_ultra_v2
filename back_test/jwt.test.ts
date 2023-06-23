@@ -4,7 +4,6 @@ import UserDb from "../back_src/database/User.db";
 import { createProfile } from "../back_src/controllers/profileCtrl";
 import { Fakexpress } from "./FackExpress";
 import { Request } from "express";
-import { sleep } from "./utils";
 
 const FE = new Fakexpress();
 const secretKey = process.env.JWT_SECRET;
