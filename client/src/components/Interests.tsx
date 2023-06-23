@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, Chip, Autocomplete } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
+import fakeApiProvider from '../services/fakeApiProvider';
 
 interface InterestsProps {
   interests: string[];
@@ -18,13 +19,11 @@ const Interests: React.FC<InterestsProps> = (props) => {
 
   const handleSave = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsEditing(false);
-      setIsLoading(false);
-      // Here you would persist the changes to the database
-      // For example:
-      // api.updateInterests(interests).then(() => setIsEditing(false));
-    }, 2000);
+    fakeApiProvider.setInterests(interests)
+      .then(() => {
+        setIsEditing(false);
+        setIsLoading(false);
+      });
   };
 
   const handleDelete = (chipToDelete: string) => {
@@ -36,6 +35,10 @@ const Interests: React.FC<InterestsProps> = (props) => {
       setInterests([...interests, newValue]);
     }
   };
+
+  React.useEffect(() => {
+    setInterests(props.interests);
+  }, [props]);
 
   return (
     <Box>
@@ -58,7 +61,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
               options={props.options}
               onChange={handleAddition}
               renderInput={(params) => (
-                <TextField {...params} variant='standard' placeholder="Add Interest" size="small" sx={{minWidth: '150px'}} />
+                <TextField {...params} variant='standard' placeholder="Add Interest" size="small" sx={{ minWidth: '150px' }} />
               )}
             />
           ) : null}

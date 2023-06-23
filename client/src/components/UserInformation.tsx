@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
+import fakeApiProvider from '../services/fakeApiProvider';
 
 interface UserInformationProps {
   firstName: string;
@@ -8,7 +9,7 @@ interface UserInformationProps {
   age: number;
   gender: string;
   orientation: string;
-  email:string;
+  email: string;
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {
@@ -27,14 +28,21 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
 
   const handleSave = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsEditing(false);
-      setIsLoading(false);
-      // Here you would persist the changes to the database
-      // For example:
-      // api.updateUserInfo({ firstName, lastName, age, gender, orientation }).then(() => setIsEditing(false));
-    }, 2000);
+    fakeApiProvider.setProfile(firstName, lastName, age, gender, orientation, email)
+      .then(() => {
+        setIsEditing(false);
+        setIsLoading(false);
+      });
   };
+
+  React.useEffect(() => {
+    setEmail(props.email)
+    setFirstName(props.firstName)
+    setLastName(props.lastName)
+    setAge(props.age)
+    setGender(props.gender)
+    setOrientation(props.orientation)
+  }, [props]);
 
   return (
     <Box>
@@ -43,7 +51,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
       </Typography>
       <Paper elevation={5} sx={{ position: 'relative', minHeight: '250px', padding: '1rem' }}>
         <Grid container spacing={2}>
-        <Grid item xs={12}>
+          <Grid item xs={12}>
             {isEditing ?
               <TextField
                 fullWidth

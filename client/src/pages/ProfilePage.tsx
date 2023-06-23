@@ -1,22 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 
-import { useAuth } from '../context/AuthProvider'
+import fakeApiProvider from '../services/fakeApiProvider'
 
 import Caroussel from '../components/Caroussel'
 import Biography from '../components/Biography'
-import Interests  from '../components/Interests'
+import Interests from '../components/Interests'
 import UserInformation from '../components/UserInformation'
 
+const initialProfile = {
+  biography: 'test',
+  interests: [],
+  firstName: '',
+  lastName: '',
+  age: 0,
+  gender: '',
+  orientation: '',
+  email: '',
+  pictures: [null, null, null, null, null]
+}
+
 function ProfilePage() {
-  const auth = useAuth();
+  const [profile, setProfile] = useState(initialProfile)
+  const [options, setOptions] = useState<string[]>([])
+
+  useEffect(() => {
+    fakeApiProvider.getProfile()
+      .then((res: any) => {
+        console.log(res)
+        setProfile(res.data)
+      })
+  }, [])
+
+  useEffect(() => {
+    fakeApiProvider.getOptions()
+      .then((res: any) => {
+        setOptions(res.data)
+      })
+  }, [])
 
   return (
     <Box>
-      <Caroussel imgs={auth.user.pictures} />
-      <Biography biography='Je suis un texte'/>
-      <Interests interests={['vegan']} options={['meat', 'sport', 'hard work', 'god', 'reading', 'swimming', 'hiking in the mountains', 'bikes', 'crypto', 'math', 'philosophy']}/>
-      <UserInformation firstName='Antoine' lastName='Labalette' age={26} gender='Male' orientation='Heterosexual' email='labalette.antoine@gmail.com' />
+      <Caroussel imgs={profile.pictures} />
+      <Biography biography={profile.biography} />
+      <Interests interests={profile.interests} options={options} />
+      <UserInformation firstName={profile.firstName} lastName={profile.lastName} age={profile.age} gender={profile.gender} orientation={profile.orientation} email={profile.email} />
     </Box>
   )
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
+import fakeApiProvider from '../services/fakeApiProvider';
 
 interface BiographyProps {
   biography: string;
@@ -17,18 +18,16 @@ const Biography: React.FC<BiographyProps> = (props) => {
 
   const handleSave = () => {
     setIsLoading(true);
-    // Mimicking API call delay with setTimeout
-    setTimeout(() => {
+    fakeApiProvider.setBiography(biography)
+      .then(() => {
       setIsEditing(false);
       setIsLoading(false);
-      // Here you can make an API call or whatever is necessary to save the changes
-      // For example:
-      // api.updateBiography(biography).then(() => {
-      //   setIsEditing(false);
-      //   setIsLoading(false);
-      // });
-    }, 1000);
+    });
   };
+
+  React.useEffect(() => {
+    setBiography(props.biography);
+  }, [props]);
 
   return (
 
