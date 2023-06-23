@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress } from '@mui/material';
+import { Box, TextField, Typography, Paper, Fab, CircularProgress, Skeleton } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import fakeApiProvider from '../services/fakeApiProvider';
 
 interface BiographyProps {
   biography: string;
+  isLoading: boolean;
 }
 
 const Biography: React.FC<BiographyProps> = (props) => {
   const [biography, setBiography] = useState(props.biography);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = () => {
-    setIsLoading(true);
+    setIsUploading(true);
     fakeApiProvider.setBiography(biography)
       .then(() => {
-      setIsEditing(false);
-      setIsLoading(false);
-    });
+        setIsEditing(false);
+        setIsUploading(false);
+      });
   };
 
   React.useEffect(() => {
@@ -47,14 +48,22 @@ const Biography: React.FC<BiographyProps> = (props) => {
           />
         ) : (
           <Box p={2}>
-            {biography}
+            {props.isLoading ?
+              <React.Fragment>
+                <Skeleton animation="wave"  style={{ marginBottom: 6 }} />
+                <Skeleton animation="wave"  width="80%" />
+              </React.Fragment> :
+              <Typography>{biography}
+              </Typography>
+            }
+
           </Box>
         )}
         <Fab color="primary" aria-label={isEditing ? 'save' : 'edit'}
           sx={{ position: 'absolute', bottom: 16, right: 16 }}
           onClick={isEditing ? handleSave : handleEdit}
-          disabled={isLoading}>
-          {isLoading ? (
+          disabled={isUploading}>
+          {isUploading ? (
             <CircularProgress size={24} />
           ) : isEditing ? (
             <Save />

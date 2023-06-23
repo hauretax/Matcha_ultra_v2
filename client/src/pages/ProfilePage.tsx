@@ -23,11 +23,13 @@ const initialProfile = {
 function ProfilePage() {
   const [profile, setProfile] = useState(initialProfile)
   const [options, setOptions] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     fakeApiProvider.getProfile()
       .then((res: any) => {
         setProfile(res.data)
+        setIsLoading(false)
       })
   }, [])
 
@@ -40,11 +42,12 @@ function ProfilePage() {
 
   return (
     <Box>
-      <Caroussel imgs={profile.pictures} />
-      <Biography biography={profile.biography} />
-      <Interests interests={profile.interests} options={options} />
-      <UserInformation firstName={profile.firstName} lastName={profile.lastName} age={profile.age} gender={profile.gender} orientation={profile.orientation} email={profile.email} />
+      <Caroussel imgs={profile.pictures} isLoading={isLoading} />
+      <Biography biography={profile.biography} isLoading={isLoading} />
+      <Interests interests={profile.interests} options={options} isLoading={isLoading} />
+      <UserInformation firstName={profile.firstName} lastName={profile.lastName} age={profile.age} gender={profile.gender} orientation={profile.orientation} email={profile.email} isLoading={isLoading} />
     </Box>
+
   )
 }
 

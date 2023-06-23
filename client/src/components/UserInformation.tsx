@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
+import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid, Skeleton } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import fakeApiProvider from '../services/fakeApiProvider';
 
@@ -10,6 +10,7 @@ interface UserInformationProps {
   gender: string;
   orientation: string;
   email: string;
+  isLoading: boolean;
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {
@@ -20,18 +21,18 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [gender, setGender] = useState(props.gender);
   const [orientation, setOrientation] = useState(props.orientation);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = () => {
-    setIsLoading(true);
+    setIsUploading(true);
     fakeApiProvider.setProfile(firstName, lastName, age, gender, orientation, email)
       .then(() => {
         setIsEditing(false);
-        setIsLoading(false);
+        setIsUploading(false);
       });
   };
 
@@ -65,7 +66,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Email</Typography>
                 <Box>
-                  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{email}</Typography>
+                  <SkeletonTypo text={email} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -84,7 +85,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>First Name</Typography>
                 <Box>
-                  <Typography sx={{ paddingBottom: '4px', paddingTop: '1px' }}>{firstName}</Typography>
+                  <SkeletonTypo text={firstName} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -102,7 +103,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Last Name</Typography>
                 <Box>
-                  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{lastName}</Typography>
+                  <SkeletonTypo text={lastName} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -121,7 +122,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Age</Typography>
                 <Box>
-                  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{age}</Typography>
+                  <SkeletonTypo text={age.toString()} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -145,7 +146,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Gender</Typography>
                 <Box>
-                  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{gender}</Typography>
+                  <SkeletonTypo text={gender} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -169,7 +170,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Sexual Orientation</Typography>
                 <Box>
-                  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{orientation}</Typography>
+                  <SkeletonTypo text={orientation} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }
@@ -179,8 +180,8 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
             aria-label={isEditing ? 'save' : 'edit'}
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
             onClick={isEditing ? handleSave : handleEdit}
-            disabled={isLoading}>
-            {isLoading ? (
+            disabled={isUploading}>
+            {isUploading ? (
               <CircularProgress size={24} />
             ) : isEditing ? (
               <Save />
@@ -193,5 +194,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     </Box>
   );
 };
+
+const SkeletonTypo = ({ text, isLoading }: { text: string, isLoading: boolean }) => (
+  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{isLoading ? <Skeleton /> : <span>{text}</span>}</Typography>
+)
 
 export default UserInformation;
