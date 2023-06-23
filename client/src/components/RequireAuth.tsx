@@ -1,10 +1,9 @@
-import { Navigate, useLocation, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
 function RequireAuth() {
     
     let auth = useAuth();
-    let navigate = useNavigate()
     let location = useLocation();
     let u = auth.user;
 

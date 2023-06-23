@@ -47,7 +47,7 @@ function ProfilePage() {
 
   useEffect(() => {
     if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")
-  }, [])
+  }, [location.state?.profileIncomplete, snackbar])
 
   return (
     <Box>

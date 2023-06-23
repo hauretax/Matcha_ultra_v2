@@ -9,7 +9,7 @@ const profile = {
   email: 'tonio@gmail.com',
   lastName: 'Labalette',
   firstName: 'Antoine',
-  emailVerified: false,
+  emailVerified: 0,
   gender: '',
   age: 26,
   orientation: 'Heterosexual',
@@ -31,7 +31,10 @@ const fakeAuthProvider = {
           console.log("Sign out response received")
           const response = {
             data: {
-              jwtToken: 'i am a token',
+              jwtToken: {
+                refreshToken: 'string',
+                token: 'string'
+              },
               profile: profile
             }
           };
