@@ -28,15 +28,39 @@ const UserDb = {
 		return db.run(sql);
 	},
 
-	// if user is not found, returns undefined
-	findUser(username: string): Promise<FullUser> {
-		const sql = "SELECT * FROM users WHERE username = ?";
-		return db.get(sql, [username]);
+	findPicturesByUserId(userId: number): Promise<{picture_path: string}[]> {
+		const sql = "SELECT picture_path FROM pictures WHERE user_id = ?";
+		return db.all(sql, [userId]);
 	},
-
-	findUserById(id: number): Promise<FullUser> {
+	
+	async findUser(username: string): Promise<FullUser> {
+		const sql = "SELECT * FROM users WHERE username = ?";
+		const user = await db.get(sql, [username]);
+		if (user) {
+			return this.findPicturesByUserId(user.id)
+				.then((pictures: {picture_path: string}[]) => {
+					user.pictures = pictures;
+					return user;
+				});
+		}
+		else {
+			return null;
+		}
+	},
+	
+	async findUserById(id: number): Promise<FullUser> {
 		const sql = "SELECT * FROM users WHERE id = ?";
-		return db.get(sql, [id]);
+		const user = await db.get(sql, [id]);
+		if (user) {
+			return this.findPicturesByUserId(user.id)
+				.then((pictures: {picture_path: string}[]) => {
+					user.pictures = pictures;
+					return user;
+				});
+		}
+		else {
+			return null;
+		}
 	},
 
 	async insertUser(user: UserReqRegister): Promise<InsertedUser> {
