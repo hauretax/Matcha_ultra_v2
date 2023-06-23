@@ -26,11 +26,6 @@ export async function validaterefreshJwt(token: string, id: number): Promise<boo
 		const valideToken = await JwtDb.getToken(id);
 		if (valideToken !== token)
 			return false;
-		// const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
-		// if(!valideToken)
-		// 	return false;
-		// if (decoded.id != id)
-		// 	return false;
 		return true;
 	} catch (err) {
 		if (err.message == "jwt expired")
@@ -39,16 +34,16 @@ export async function validaterefreshJwt(token: string, id: number): Promise<boo
 	}
 }
 
-export function validateJwt(token: string, id: number): boolean | 401 {
+
+
+export function validateJwt(token: string, id: number): number | string {
 	try {
 		const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
 		if (decoded.userId != id)
-			return false;
-		return true;
+			return "wrong usage";
+		return id;
 	} catch (err) {
-		if (err.message == "jwt expired")
-			return 401; //401 correspond a l'erreur http
-		return false;
+		return err.message;
 	}
 }
 

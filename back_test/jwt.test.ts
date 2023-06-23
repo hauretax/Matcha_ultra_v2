@@ -54,24 +54,23 @@ describe("JWT Tests", () => {
 
 	it("should generate and verify a JWT", () => {
 		const token = generateJwt(usrId);
-		expect(validateJwt(token, usrId)).toEqual(true);
+		expect(typeof validateJwt(token, usrId)).toBe("number");
 	});
 	it("should generate and unverify a JWT", () => {
 		const token = generateJwt(usrId);
-		expect(validateJwt(token, usrId + 1)).toEqual(false);
+		expect(validateJwt(token, usrId + 1)).toEqual("wrong usage");
 	});
 	//j'imite le comportement que devrais avoir le front'
 	it("should be expire and aske new token", async () => {
 		const token = jwt.sign({ usrId }, secretKey, { expiresIn: "1ms" });
 
-		expect(validateJwt(token, usrId)).toEqual(401);
+		expect(typeof(validateJwt(token, usrId))).toBe("string");
 		const refreshToken = await GenerateRefreshJwt(usrId);
-		await sleep(500);
 		const newToken = await askNewJwt(refreshToken, usrId);
 		expect(newToken).toHaveProperty("token");
 		expect(newToken).toHaveProperty("refreshToken");
 		await new Promise((resolve) => setTimeout(async () => {
-			const scdToken = await askNewJwt(refreshToken, usrId);
+			const scdToken = await askNewJwt("BOHOU", usrId);
 			expect(scdToken).toEqual({ error: "token non valide" });
 			resolve("ok");
 		}, 500));

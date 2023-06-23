@@ -27,7 +27,6 @@ export async function   createProfile(req: Request, res: Response) {
 		//TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
 		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
 		res.status(201).json({ message: "Profile created", usrId: id });
-		return;
 	} catch (error) {
 		if (error instanceof UniqueConstraintError) {
 			res.status(409).json({ error: "user or email already taken" });

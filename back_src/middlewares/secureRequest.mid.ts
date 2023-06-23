@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserDb from "../database/User";
+import UserDb from "../database/User.db";
 import { validateJwt } from "../utils/jwt";
 
 
@@ -13,12 +13,11 @@ export async function validsecurRequest(
 		return;
 	}
 
-	const { username } = req.body;
-	if (!username) {
-		res.status(422).json({ error: "username and/or password missing" });
+	const { id,username } = req.body;
+	if (!id || !username) {
+		res.status(422).json({ error: "username or id is missing" });
 		return;
 	}
-
 
 	//TODO opti faire une variable avec une cle usrname et une variable mail valider ?
 	try {
@@ -37,9 +36,9 @@ export async function validsecurRequest(
 			res.status(422).json({ error: "header missing" });
 			return;
 		}
-		const jwtIsValidate = validateJwt(token, fulluser.id);
-		if (jwtIsValidate === 401) {
-			res.status(401).json({ error: "token expired" });
+		const jwtIsValidate = validateJwt(token, id);
+		if (typeof jwtIsValidate !== "number") {
+			res.status(401).json({ error: jwtIsValidate });
 			return;
 		}
 		if (jwtIsValidate) {
@@ -49,7 +48,6 @@ export async function validsecurRequest(
 		}
 		res.status(422).json({ error: "wrong token" });
 		return;
-
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: "server error" });
