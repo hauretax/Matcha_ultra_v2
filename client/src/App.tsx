@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import { AuthProvider } from './context/AuthProvider';
+import { AuthProvider, useAuth } from './context/AuthProvider';
 import SnackBarProvider from "./context/SnackBar";
 
 import LoginPage from "./pages/LoginPage"
@@ -60,20 +60,15 @@ function PublicPage() {
 function ProtectedPage() {
   const [accessToken, setAccessToken] = useState<string | null>('')
   const [refreshToken, setRefreshToken] = useState<string | null>('')
-  const [profile, setProfile] = useState({
-    username: '',
-  })
+  const auth = useAuth();
 
   useEffect(() => {
-    setAccessToken(localStorage.getItem('jwtToken'))
-    setRefreshToken(localStorage.getItem('jwtRefreshToken'))
+    setAccessToken(localStorage.getItem('accessToken'))
+    setRefreshToken(localStorage.getItem('refreshToken'))
   }, [])
 
   const getProfile = () => {
-    axios.get('http://localhost:8080/api/profile', { 'headers': { 'Authorization': 'CetteStringPeutEtreNimporteQuoi ' + accessToken } })
-      .then((res) => {
-        console.log(res)
-      })
+    auth.getProfile()
   }
 
   const refresh = () => {
