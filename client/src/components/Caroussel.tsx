@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,13 +7,13 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Skeleton } from '@mui/material';
 
 function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boolean }) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [images, setImages] = useState<string[]>([])
   const theme = useTheme();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 
-  const changeImage = (nextIndex: number) => {
+  const changeImage = useCallback((nextIndex: number) => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -23,7 +23,7 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
     intervalRef.current = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 5000);
-  };
+  }, [images.length]);
 
   useEffect(() => {
     changeImage(0);
@@ -32,7 +32,7 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
         clearInterval(intervalRef.current);
       }
     };
-  }, [imgs.length]);
+  }, [changeImage]);
 
   const goLeft = () => {
     changeImage((activeIndex + images.length - 1) % images.length);
