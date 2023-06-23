@@ -5,7 +5,7 @@ import { Fakexpress } from "./FackExpress";
 import { UserProfile, UserReqRegister } from "../comon_src/type/user.type";
 
 import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
-import UserDb from "../back_src/database/User";
+import UserDb from "../back_src/database/User.db";
 
 const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString();
@@ -25,13 +25,7 @@ const goodReq = {
 	},
 } as Request;
 
-// function sleep(ms: number) {
-// 	return new Promise(resolve => {
-// 		setTimeout(() => {
-// 			resolve("s");
-// 		}, ms);
-// 	});
-// }
+
 //TODO test mailler
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;

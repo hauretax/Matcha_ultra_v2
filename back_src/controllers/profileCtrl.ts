@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import sendEmail from "../utils/sendMail";
-import { generateJwt } from "../utils/jwt";
+import { GenerateRefreshJwt, generateJwt } from "../utils/jwt";
 
 import { UserPayload } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
-import UserDb from "../database/User";
+import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
@@ -63,7 +63,7 @@ export async function login(req: Request, res: Response) {
 		const payload: UserPayload = {
 			jwtToken: {
 				token:generateJwt(id),
-				refreshToken:generateJwt(id),
+				refreshToken:await GenerateRefreshJwt(id),
 			},
 			profile: {
 				email,

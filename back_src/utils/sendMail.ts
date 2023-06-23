@@ -22,6 +22,6 @@ export default async function sendEmail(to: string, text: string, subject?: stri
 	};
 
 	const info = await transporter.sendMail(mailOptions);
-	console.log("infoMail:", info);
+	return {info, text};
 
 }

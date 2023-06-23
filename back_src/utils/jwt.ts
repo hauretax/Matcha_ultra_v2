@@ -1,7 +1,7 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { possiblyNewJwt } from "../../comon_src/type/jwt.type";
-import JwtDb from "../database/Jwt";
+import JwtDb from "../database/Jwt.db";
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET || "";
@@ -12,27 +12,28 @@ if (!secretKey || !secretKeyR) {
 }
 
 export function generateJwt(userId: number): string {
-	return jwt.sign({userId: userId}, secretKey);
+	return jwt.sign({ userId: userId }, secretKey, { expiresIn: "1h" });
 }
 
 export async function GenerateRefreshJwt(id: number): Promise<string> {
 	const token = jwt.sign({ id }, secretKeyR, { expiresIn: "1week" });
-
-	const decoded = jwt.verify(token, secretKeyR) as JwtPayload;
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const expirationDate = new Date(decoded.exp! * 1000);
-	await JwtDb.insertToken(token, expirationDate);
+	await JwtDb.insertToken(token, id);
 	return token;
 }
 
 export async function validaterefreshJwt(token: string, id: number): Promise<boolean | 401> {
 	try {
-		const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
-		const valideToken = await JwtDb.tokenIsValide(token);
-		if(!valideToken)
+		const valideToken = await JwtDb.getToken(id);
+		console.log('vt:', valideToken)
+		console.log('token:', token)
+
+		if (valideToken !== token)
 			return false;
-		if (decoded.id != id)
-			return false;
+		// const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
+		// if(!valideToken)
+		// 	return false;
+		// if (decoded.id != id)
+		// 	return false;
 		return true;
 	} catch (err) {
 		if (err.message == "jwt expired")
@@ -55,7 +56,7 @@ export function validateJwt(token: string, id: number): boolean | 401 {
 }
 
 export async function askNewJwt(refreshToken: string, userId: number): Promise<possiblyNewJwt> {
-	
+
 	const Vtoken = await validaterefreshJwt(refreshToken, userId);
 	if (!Vtoken) {
 		return { error: "token non valide" };
@@ -63,7 +64,6 @@ export async function askNewJwt(refreshToken: string, userId: number): Promise<p
 	if (Vtoken === 401)
 		return { error: "token expirer" };
 	const newRefreshToken = await GenerateRefreshJwt(userId);
-	JwtDb.invalidateToken(refreshToken);
 
 	const newToken = generateJwt(userId);
 	return { refreshToken: newRefreshToken, token: newToken };
