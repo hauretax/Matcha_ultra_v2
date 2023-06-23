@@ -1,15 +1,43 @@
 import jwt from "jsonwebtoken";
-import { GenerateJwt, decodJwt } from "../back_src/utils/jwt";
+import { generateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
+import JwtDb from "../back_src/database/Jwt";
 
 const secretKey = process.env.JWT_SECRET;
+const id = 1;
+// const db = new Dbhandler;
+
+
+if (!secretKey) {
+	throw (".env look broken");
+}
+
 describe("JWT Tests", () => {
+	JwtDb.initializeUserTable();
+
 	it("should generate and verify a JWT", () => {
-		const token = GenerateJwt({ user: "John Doe" });
-		const decoded = decodJwt(token);
-		expect(decoded.user).toEqual("John Doe");
+		const token = generateJwt(id);
+		expect(validateJwt(token, id)).toEqual(true);
+	});
+	it("should generate and unverify a JWT", () => {
+		const token = generateJwt(id);
+		expect(validateJwt(token, id + 1)).toEqual(false);
+	});
+	//j'imite le comportement que devrais avoir le front'
+	it("should be expire and aske new token", async () => {
+		const token = jwt.sign({ id }, secretKey, { expiresIn: "1ms" });
+		expect(validateJwt(token, id)).toEqual(401);
+		const refreshToken = await GenerateRefreshJwt(id);
+		const newToken = await askNewJwt(refreshToken, id);
+		expect(newToken).toHaveProperty("token");
+		expect(newToken).toHaveProperty("refreshToken");
+		await new Promise((resolve) => setTimeout(async () => {
+			const scdToken = await askNewJwt(refreshToken, id);
+			expect(scdToken).toEqual({error: "token non valide" });
+			resolve("ok");
+		}, 500));
 	});
 	it("should include a valid signed JWT in the request header", () => {
-		const payload = { user: "John Doe" };
+		const payload = { id };
 		const token = jwt.sign(payload, secretKey);
 		const req = {
 			headers: {
@@ -18,7 +46,7 @@ describe("JWT Tests", () => {
 		};
 		const authHeader = req.headers.Authorization;
 		const extractedToken = authHeader.split(" ")[1];
-		const decoded = jwt.verify(extractedToken, secretKey);
-		expect(decoded.user).toEqual("John Doe");
+		const decoded = jwt.verify(extractedToken, secretKey) as jwt.JwtPayload;
+		expect(decoded.id).toEqual(id);
 	});
 });

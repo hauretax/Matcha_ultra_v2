@@ -28,10 +28,9 @@ give all data needed to use website as a loged user
 flowchart TD
     D(data Type: UserReqLogin) -->A
     A[POST /api/login] 
-    A-->|Error| B(dJSON Error message)
-    A-->|SUCCES| C(JSON Object with jwtToken and userProfile)
+    A-->|Error| B(JSON Error message)
+    A-->|SUCCES| C(data Type: UserPayload)
 ``` 
-Returns: Upon successful login, return a JSON object with a success message and a user session or JWT token. In case of an error (e.g., incorrect credentials), return an error message.
 
 ### ask for reset password:
 creat a token send it via mail and stor it
