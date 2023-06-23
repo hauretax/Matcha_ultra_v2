@@ -27,7 +27,6 @@ function ProfilePage() {
   useEffect(() => {
     fakeApiProvider.getProfile()
       .then((res: any) => {
-        console.log(res)
         setProfile(res.data)
       })
   }, [])
