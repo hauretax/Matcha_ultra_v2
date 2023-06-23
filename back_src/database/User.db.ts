@@ -48,9 +48,8 @@ const UserDb = {
 			password,
 			accessCode,
 			emailVerified,
-			randomKey
 		)
-        VALUES (?, ?, ?, ?, ?, ?, ?,?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       	`;
 		const params = [
 			user.email,
@@ -59,8 +58,7 @@ const UserDb = {
 			user.firstName,
 			user.password,
 			accessCode,
-			0,
-			randomString(16)
+			0
 		];
 
 		try {
