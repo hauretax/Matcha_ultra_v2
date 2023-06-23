@@ -7,6 +7,8 @@ import Caroussel from '../components/Caroussel'
 import Biography from '../components/Biography'
 import Interests from '../components/Interests'
 import UserInformation from '../components/UserInformation'
+import { useLocation } from 'react-router-dom'
+import { useSnackbar } from '../context/SnackBar'
 
 const initialProfile = {
   biography: 'test',
@@ -24,6 +26,9 @@ function ProfilePage() {
   const [profile, setProfile] = useState(initialProfile)
   const [options, setOptions] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const location = useLocation();
+  let snackbar = useSnackbar()
+
 
   useEffect(() => {
     fakeApiProvider.getProfile()
@@ -38,6 +43,10 @@ function ProfilePage() {
       .then((res: any) => {
         setOptions(res.data)
       })
+  }, [])
+
+  useEffect(() => {
+    if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")
   }, [])
 
   return (

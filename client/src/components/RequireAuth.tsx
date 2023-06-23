@@ -1,10 +1,10 @@
-import { Navigate, useLocation, Outlet } from "react-router-dom";
+import { Navigate, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { useSnackbar } from "../context/SnackBar";
 
 function RequireAuth() {
-    let snackbar = useSnackbar()
+    
     let auth = useAuth();
+    let navigate = useNavigate()
     let location = useLocation();
     let u = auth.user;
 
@@ -16,11 +16,16 @@ function RequireAuth() {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (location.pathname != '/profile') {
-        if (u.gender === '' || u.age === 0 || u.orientation === '' || u.interests.length === 0 || u.biography == '' || u.pictures.every((pic: (string | null)) => pic === null))
-        {
-            snackbar("Tell us more a bit more you before meeting other people", "info")
-            return <Navigate to="/profile" />;
+    if (location.pathname !== '/profile') {
+        if (
+            u.gender === '' ||
+            u.age === 0 ||
+            u.orientation === '' ||
+            u.interests.length === 0 ||
+            u.biography === '' ||
+            u.pictures.every((pic: (string | null)) => pic === null)
+        ) {
+            return <Navigate to="/profile" state={{ profileIncomplete: true }} />;
         }
     }
 
