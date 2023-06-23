@@ -1,8 +1,6 @@
 import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
-// import } from "../utils/random";
-import { randomString } from "../utils/random";
 
 interface InsertedUser {
 	id: number,
