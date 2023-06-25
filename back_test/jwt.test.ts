@@ -53,26 +53,30 @@ describe("JWT Tests", () => {
 
 	it("should generate and verify a JWT", () => {
 		const token = generateJwt(usrId);
-		expect(typeof validateJwt(token, usrId)).toBe("number");
+		expect(typeof validateJwt(token)).toBe("number");
 	});
 	it("should generate and unverify a JWT", () => {
 		const token = generateJwt(usrId);
-		expect(validateJwt(token, usrId + 1)).toEqual("wrong usage");
+		expect(validateJwt(token+"s")).toEqual(null);
 	});
 	//j'imite le comportement que devrais avoir le front'
-	it("should be expire and aske new token", async () => {
+	it("should refresh token", async () => {
 		const token = jwt.sign({ usrId }, secretKey, { expiresIn: "1ms" });
-
-		expect(typeof(validateJwt(token, usrId))).toBe("string");
+		expect(validateJwt(token)).toEqual(null);
 		const refreshToken = await GenerateRefreshJwt(usrId);
-		const newToken = await askNewJwt(refreshToken, usrId);
+		const newToken = await askNewJwt(refreshToken);
 		expect(newToken).toHaveProperty("token");
 		expect(newToken).toHaveProperty("refreshToken");
-		await new Promise((resolve) => setTimeout(async () => {
-			const scdToken = await askNewJwt("BOHOU", usrId);
-			expect(scdToken).toEqual({ error: "token non valide" });
-			resolve("ok");
-		}, 500));
+	});
+	it("should not refresh token", async () => {
+		let scdToken;
+		try {
+		  scdToken = await askNewJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsIm5vbmNlIjowLjMyMzYxNTQ0OTMyNTUxMzY3LCJpYXQiOjE2ODc3MDk1NjYsImV4cCI6MTY4ODMxNDM2Nn0.DXaSpZPJfgPcddooLwsnSe_P-0U6PpXGoPm0weDlEf4");
+		} catch (error) {
+		  // Une erreur a été renvoyée
+		  expect(error).toBeInstanceOf(Error);
+		  expect(error.message).toBe("token not valid");
+		}
 	},10000);
 	it("should include a valid signed JWT in the request header", () => {
 		const payload = { usrId };
@@ -85,6 +89,6 @@ describe("JWT Tests", () => {
 		const authHeader = req.headers.Authorization;
 		const extractedToken = authHeader.split(" ")[1];
 		const decoded = jwt.verify(extractedToken, secretKey) as jwt.JwtPayload;
-		expect(decoded.userId).toEqual(usrId);
+		expect(decoded.usrId).toEqual(usrId);
 	});
 });

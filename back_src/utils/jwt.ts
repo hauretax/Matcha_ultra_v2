@@ -25,7 +25,6 @@ export async function GenerateRefreshJwt(id: number): Promise<string> {
 export async function validaterefreshJwt(token: string): Promise<number | null> {
 	const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
 	const validToken = await JwtDb.getToken(decoded.userId);
-	console.log(validToken)
 	if (validToken && validToken.token === token)
 		return decoded.userId;
 	return null;
