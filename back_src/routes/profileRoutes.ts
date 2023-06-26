@@ -14,4 +14,5 @@ router.get("/account/validation",asyncHandler());
 router.get("/profile", validsecurRequest, asyncHandler((getProfile)));
 router.patch("/profile", validsecurRequest, asyncHandler(updateProfile))
 
+
 export default router;  
