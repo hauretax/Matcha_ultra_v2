@@ -66,5 +66,3 @@ const UserDb = {
 		console.log
 	}
 };
-
-export default UserDb;

@@ -8,6 +8,8 @@ export type UserProfile = {
     gender?: string;
     age?: number;
     sexualPreferences?: string;
+    pictures?: string[];
+    interests?: string[];
 }
 /**
  * 

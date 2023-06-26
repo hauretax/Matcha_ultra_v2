@@ -5,15 +5,18 @@ import { ErrorPayload } from '../../../comon_src/type/error.type'
 import { UserProfile } from "../../../comon_src/type/user.type";
 
 import fakeAuthProvider from "../services/fakeAuthProvider";
-import api from "../services/api";
+import authProvider from "../services/authProvider";
 
 import { useSnackbar } from "./SnackBar";
+import apiProvider from "../services/apiProvider";
 
 interface AuthContextType {
   user: any;
   signin: (username: string, password: string, callback: VoidFunction) => void;
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
+  getProfile: () => void;
+  updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => void;
   signout: (callback: VoidFunction) => void;
 }
 
@@ -24,12 +27,14 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const snackBar = useSnackbar();
 
   let signin = (username: string, password: string, callback: VoidFunction) => {
-    api.signin(username, password)
+    authProvider.signin(username, password)
       .then((res: AxiosResponse) => {
-        const { jwtToken, profile }: {jwtToken: string, profile: UserProfile} = res.data;
+        const { jwtToken, profile }: { jwtToken: { refreshToken: string, token: string }, profile: UserProfile } = res.data;
+        const { token, refreshToken } = jwtToken
 
         // Store the JWT token in local storage
-        localStorage.setItem("jwtToken", jwtToken);
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("refreshToken", refreshToken);
 
         // Update the user state
         setUser(profile);
@@ -46,7 +51,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   let signup = (username: string, email: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => {
-    api.signup(username, email, firstName, lastName, password)
+    authProvider.signup(username, email, firstName, lastName, password)
       .then((res: AxiosResponse) => {
         snackBar('Registration successful. You can now login !', 'success');
         callback();
@@ -67,6 +72,30 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         const errorMessage = (error.response?.data as ErrorPayload)?.error;
         snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
       })
+  };
+
+  let getProfile = () => {
+    apiProvider.getProfile()
+      .then((res: AxiosResponse) => {
+        const profile: UserProfile = res.data
+        // Update the user state
+        setUser(profile);
+      })
+      .catch((error: AxiosError) => {
+        const errorMessage = (error.response?.data as ErrorPayload)?.error;
+        snackBar('Error while fetching profile information' + (errorMessage && (': ' + errorMessage)), 'error');
+      })
+  };
+
+  let updateProfile = async (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string): Promise<void> => {
+    try {
+      await apiProvider.updateProfile(firstName, lastName, age, gender, orientation, email)
+      const newUser = {...(user as UserProfile), firstName, lastName, email, age, gender, orientation, emailVerified: Number((user as UserProfile).email === email)}
+      setUser(newUser);
+    } catch (error: any) {
+      const errorMessage = (error.response?.data as ErrorPayload)?.error;
+      snackBar('Error while updating profile information' + (errorMessage && (': ' + errorMessage)), 'error');
+    }
   }
 
   let signout = (callback: VoidFunction) => {
@@ -86,7 +115,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
   };
 
-  let value = { user, signin, signup, resetPasswordRequest, signout };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

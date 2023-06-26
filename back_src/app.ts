@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 
-import UserDb from "./database/User";
+import UserDb from "./database/User.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
@@ -23,7 +23,7 @@ class App {
 		//body-parser, cors, etc.
 		this.app.use(function (req, res, next) {
 			res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-			res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
 			res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 			next();
 		});
@@ -55,6 +55,9 @@ const app = new App();
 
 const initFunctions = [
 	UserDb.initializeUserTable,
+	UserDb.initializePictureTable,
+	UserDb.initializeInterestsTable,
+	UserDb.initializeUserInterestsTable
 	// ... add any additional table initializers here
 ];
 
