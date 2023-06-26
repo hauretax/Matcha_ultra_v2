@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 
-import fakeApiProvider from '../services/fakeApiProvider'
+import apiProvider from '../services/apiProvider'
 
 import Caroussel from '../components/Caroussel'
 import Biography from '../components/Biography'
@@ -18,7 +18,7 @@ function ProfilePage() {
   let snackbar = useSnackbar()
 
   useEffect(() => {
-    fakeApiProvider.getOptions()
+    apiProvider.getOptions()
       .then((res: any) => {
         setOptions(res.data)
       })
@@ -32,7 +32,7 @@ function ProfilePage() {
     <Box>
       <Caroussel imgs={auth.user.pictures} isLoading={false} />
       <Biography biography={auth.user.biography} isLoading={false} />
-      <Interests interests={auth.user.interests} options={options} isLoading={false} />
+      <Interests interests={auth.user.interests} options={options} />
       <UserInformation firstName={auth.user.firstName} lastName={auth.user.lastName} age={auth.user.age} gender={auth.user.gender} orientation={auth.user.orientation} email={auth.user.email} isLoading={false} />
     </Box>
 

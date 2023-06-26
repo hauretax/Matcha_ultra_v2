@@ -194,9 +194,11 @@ const UserDb = {
     await Promise.all(addInterestPromises);
   },
 
-  getAllInterests(): Promise<{ interest: string }[]> {
+  async getAllInterests(): Promise<string[]> {
     const sql = "SELECT interest FROM interests";
-    return db.all(sql);
+    const res = await db.all(sql);
+    const ret = res.map((interestObj: { interest: string }) => interestObj.interest)
+    return ret
   },
 
   deleteUser(userId: number) {

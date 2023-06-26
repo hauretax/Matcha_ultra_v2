@@ -91,6 +91,11 @@ export function getProfile(req: Request, res: Response) {
 	res.json({ user });
 }
 
+export async function getOptions(req: Request, res: Response) {
+	const options = await UserDb.getAllInterests()
+	res.json(options);
+}
+
 export async function updateProfile(req: Request, res: Response) {
 	if (!req.body) {
 		res.status(400).json({ error: "missing parameters" });
@@ -145,8 +150,26 @@ export async function updateBio(req: Request, res: Response) {
 	await UserDb.updateBio(biography, res.locals.fulluser.id)
 	res.status(200).json({ message: 'Profile updated successfully' });
 }
-// const res = {
-//     status: jest.fn().mockReturnThis(),
-//     json: jest.fn(),
-//     send: jest.fn()
-// }  as unknown as Response<any, Record<string, any>>;
+
+export async function updateInterests(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { interests } = req.body;
+
+	// interests validation
+	if (!Array.isArray(interests)) {
+		res.status(400).json({ error: "Invalid interest list. Interests must be an array" });
+		return;
+	}
+
+  if (!interests.every((interest: any) => (typeof interest === 'string' && interest != ''))) {
+		res.status(400).json({ error: "Invalid interest list. Interests must be an array of non empty strings" });
+		return;
+	}
+
+	await UserDb.updateUserInterests(res.locals.fulluser.id, interests)
+	res.status(200).json({ message: 'Profile updated successfully' });
+}

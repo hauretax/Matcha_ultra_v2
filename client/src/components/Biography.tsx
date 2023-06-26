@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, Skeleton } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
@@ -25,7 +25,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
     setIsUploading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setBiography(props.biography);
   }, [props]);
 

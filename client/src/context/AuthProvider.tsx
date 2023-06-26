@@ -17,6 +17,7 @@ interface AuthContextType {
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
   getProfile: () => void;
   updateBio: (biography: string) => Promise<void>;
+  updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
   signout: (callback: VoidFunction) => void;
 }
@@ -125,6 +126,22 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const updateInterests = async (interests: string[]): Promise<void> => {
+    try {
+      await apiProvider.updateInterests(interests)
+
+      if (user) {
+        const newUser = {
+          ...user,
+          interests
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while updating interests');
+    }
+  }
+
   let signout = (callback: VoidFunction) => {
     fakeAuthProvider.signout()
       .then((res: any) => {
@@ -142,7 +159,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
   };
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, signout };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
