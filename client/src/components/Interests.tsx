@@ -1,30 +1,28 @@
-import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, Chip, Autocomplete, Skeleton } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, TextField, Typography, Paper, Fab, CircularProgress, Chip, Autocomplete } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
-import fakeApiProvider from '../services/fakeApiProvider';
+import { useAuth } from '../context/AuthProvider';
 
 interface InterestsProps {
   interests: string[];
   options: string[];
-  isLoading: boolean;
 }
 
 const Interests: React.FC<InterestsProps> = (props) => {
-  const [interests, setInterests] = useState(props.interests);
+  const [interests, setInterests] = useState<string[]>(props.interests);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const auth = useAuth()
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsUploading(true);
-    fakeApiProvider.setInterests(interests)
-      .then(() => {
-        setIsEditing(false);
-        setIsUploading(false);
-      });
+    await auth.updateInterests(interests)
+    setIsEditing(false);
+    setIsUploading(false);
   };
 
   const handleDelete = (chipToDelete: string) => {
@@ -37,7 +35,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setInterests(props.interests);
   }, [props]);
 
@@ -47,11 +45,6 @@ const Interests: React.FC<InterestsProps> = (props) => {
         Interests
       </Typography>
       <Paper elevation={5} sx={{ position: 'relative', minHeight: '125px', padding: '1rem' }}>
-        {props.isLoading &&
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Skeleton sx={{mr: '8px'}} variant='text' height={40} width={120} /><Skeleton sx={{mr: '8px'}} variant='text' height={40} width={120} /><Skeleton sx={{mr: '8px'}} variant='text' height={40} width={120} /><Skeleton variant='text' height={40} width={120} />
-          </Box>
-        }
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
           {interests.map((interest, index) => (
             <Chip

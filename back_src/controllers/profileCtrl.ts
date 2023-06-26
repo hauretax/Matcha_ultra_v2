@@ -59,7 +59,7 @@ export async function login(req: Request, res: Response) {
 
 	const isAutorized = await bcrypt.compare(password, fulluser.password);
 	if (isAutorized) {
-		const { id, email, username, firstName, lastName, gender, age, sexualPreferences, emailVerified, pictures, interests } = fulluser;
+		const { id, email, username, firstName, lastName, biography, gender, age, orientation, emailVerified, pictures, interests } = fulluser;
 		const payload: UserPayload = {
 			jwtToken: {
 				token: generateJwt(id),
@@ -71,9 +71,10 @@ export async function login(req: Request, res: Response) {
 				username,
 				lastName,
 				firstName,
+        biography,
 				gender,
 				age,
-				sexualPreferences,
+				orientation,
 				emailVerified,
 				pictures,
 				interests
@@ -91,14 +92,17 @@ export function getProfile(req: Request, res: Response) {
 	res.json({ user });
 }
 
+export async function getOptions(req: Request, res: Response) {
+	const options = await UserDb.getAllInterests()
+	res.json(options);
+}
+
 export async function validByEmail(req: Request, res: Response) {
 	const requestUrl = req.url;
 
-	// Analyse de l'URL pour extraire les paramètres de requête
 	const parsedUrl = new URL(requestUrl, `http://${req.headers.host}`);
 	const queryParameters = parsedUrl.searchParams;
 	
-	// Récupération de l'e-mail à partir des paramètres de requête
 	const email = queryParameters.get("email");
 	const code = queryParameters.get("code");
 	if (!email || !code){
@@ -131,7 +135,7 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// Gender validation
-	if (!["Male", "Female"].includes(gender)) {
+	if (!["Male", "Female", "Other"].includes(gender)) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
@@ -153,8 +157,43 @@ export async function updateProfile(req: Request, res: Response) {
 	res.status(200).json({ message: "Profile updated successfully" });
 }
 
-// const res = {
-//     status: jest.fn().mockReturnThis(),
-//     json: jest.fn(),
-//     send: jest.fn()
-// }  as unknown as Response<any, Record<string, any>>;
+export async function updateBio(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { biography } = req.body;
+
+	// Biography validation
+	if (typeof biography !== 'string') {
+		res.status(400).json({ error: "Invalid biography. Biography must be a string" });
+		return;
+	}
+
+	await UserDb.updateBio(biography, res.locals.fulluser.id)
+	res.status(200).json({ message: 'Profile updated successfully' });
+}
+
+export async function updateInterests(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { interests } = req.body;
+
+	// interests validation
+	if (!Array.isArray(interests)) {
+		res.status(400).json({ error: "Invalid interest list. Interests must be an array" });
+		return;
+	}
+
+  if (!interests.every((interest: any) => (typeof interest === 'string' && interest != ''))) {
+		res.status(400).json({ error: "Invalid interest list. Interests must be an array of non empty strings" });
+		return;
+	}
+
+	await UserDb.updateUserInterests(res.locals.fulluser.id, interests)
+	res.status(200).json({ message: 'Profile updated successfully' });
+}

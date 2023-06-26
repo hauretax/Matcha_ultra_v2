@@ -19,11 +19,12 @@ const UserDb = {
         firstName TEXT,
         password TEXT,
         gender TEXT,
+        biography TEXT,
         age INTEGER,
-        sexualPreferences TEXT,
+        orientation TEXT,
         emailVerified INTEGER,
         accessCode INTEGER,
-		token TEXT
+		    token TEXT
       )`;
 		return db.run(sql);
 	},
@@ -151,52 +152,65 @@ const UserDb = {
 	updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number, userId: number) {
 		const sql = `
 			UPDATE users 
-			SET firstName=?, lastName=?, age=?, gender=?, sexualPreferences=?, email=?, emailVerified=?
+			SET firstName=?, lastName=?, age=?, gender=?, orientation=?, email=?, emailVerified=?
 			WHERE id=?`;
-		const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId];
-		return db.run(sql, params);
-	},
+    const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
+    return db.run(sql, params);
+  },
 
-	async findOrCreateInterest(interest: string): Promise<number> {
-		const findSql = "SELECT id FROM interests WHERE interest = ?";
-		const interestObj = await db.get(findSql, [interest]);
-		if (interestObj) {
-			return interestObj.id;
-		} else {
-			const insertSql = "INSERT INTO interests(interest) VALUES(?)";
-			return db.run(insertSql, [interest])
-				.then((result) => result.lastID);
-		}
-	},
+  updateBio(biography: string, userId: number) {
+    const sql = `
+			UPDATE users 
+			SET biography=?
+			WHERE id=?`;
+    const params = [biography, userId]
+    return db.run(sql, params);
+  },
 
-	async updateUserInterests(userId: number, interests: string[]): Promise<void> {
-		// First, remove all current interests of this user
-		const deleteSql = "DELETE FROM user_interests WHERE user_id = ?";
-		await db.run(deleteSql, [userId]);
-		// Then, add each new interest to the database (if it's not there already)
-		// and link it to the user
-		const addInterestPromises = interests.map((interest) => this.findOrCreateInterest(interest)
-			.then((interestId) => {
-				const insertSql = "INSERT INTO user_interests(user_id, interest_id) VALUES(?, ?)";
-				return db.run(insertSql, [userId, interestId]);
-			})
-		);
-		await Promise.all(addInterestPromises);
-	},
+  async findOrCreateInterest(interest: string): Promise<number> {
+    const findSql = "SELECT id FROM interests WHERE interest = ?";
+    const interestObj = await db.get(findSql, [interest]);
+    if (interestObj) {
+      return interestObj.id;
+    } else {
+      const insertSql = "INSERT INTO interests(interest) VALUES(?)";
+      return db.run(insertSql, [interest])
+        .then((result) => result.lastID);
+    }
+  },
 
-	getAllInterests(): Promise<{ interest: string }[]> {
-		const sql = "SELECT interest FROM interests";
-		return db.all(sql);
-	},
+  async updateUserInterests(userId: number, interests: string[]): Promise<void> {
+    // First, remove all current interests of this user
+    const deleteSql = "DELETE FROM user_interests WHERE user_id = ?";
+    await db.run(deleteSql, [userId]);
+    // Then, add each new interest to the database (if it's not there already)
+    // and link it to the user
+    const addInterestPromises = interests.map((interest) => this.findOrCreateInterest(interest)
+      .then((interestId) => {
+        const insertSql = "INSERT INTO user_interests(user_id, interest_id) VALUES(?, ?)";
+        return db.run(insertSql, [userId, interestId]);
+      })
+    );
+    await Promise.all(addInterestPromises);
+  },
 
-	deleteUser(userId: number) {
-		const sql = "DELETE FROM users WHERE id = ?";
-		return db.run(sql, [userId]);
-	},
+  async getAllInterests(): Promise<string[]> {
+    const sql = "SELECT interest FROM interests";
+    const res = await db.all(sql);
+    const ret = res.map((interestObj: { interest: string }) => interestObj.interest)
+    return ret
+  },
+
+  deleteUser(userId: number) {
+    const sql = "DELETE FROM users WHERE id = ?";
+    return db.run(sql, [userId]);
+  },
+  
 	getCode(email: string) {
 		const sql = "SELECT accessCode FROM users WHERE email = ?";
 		return db.get(sql, [email]);
 	},
+  
 	valideUser(email: string) {
 		const sql = `
 		UPDATE users 

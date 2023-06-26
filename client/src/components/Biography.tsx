@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, Skeleton } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
-import fakeApiProvider from '../services/fakeApiProvider';
+import { useAuth } from '../context/AuthProvider';
 
 interface BiographyProps {
   biography: string;
@@ -12,21 +12,20 @@ const Biography: React.FC<BiographyProps> = (props) => {
   const [biography, setBiography] = useState(props.biography);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const auth = useAuth()
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsUploading(true);
-    fakeApiProvider.setBiography(biography)
-      .then(() => {
-        setIsEditing(false);
-        setIsUploading(false);
-      });
+    await auth.updateBio(biography)
+    setIsEditing(false);
+    setIsUploading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setBiography(props.biography);
   }, [props]);
 
@@ -50,8 +49,8 @@ const Biography: React.FC<BiographyProps> = (props) => {
           <Box p={2}>
             {props.isLoading ?
               <React.Fragment>
-                <Skeleton animation="wave"  style={{ marginBottom: 6 }} />
-                <Skeleton animation="wave"  width="80%" />
+                <Skeleton animation="wave" style={{ marginBottom: 6 }} />
+                <Skeleton animation="wave" width="80%" />
               </React.Fragment> :
               <Typography>
                 {biography}
