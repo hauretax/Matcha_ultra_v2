@@ -14,6 +14,7 @@ interface AuthContextType {
   user: any;
   signin: (username: string, password: string, callback: VoidFunction) => void;
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
+  valideByMail: (mail: string, code: string) => Promise<void>,
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
   getProfile: () => void;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => void;
@@ -90,7 +91,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   let updateProfile = async (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string): Promise<void> => {
     try {
       await apiProvider.updateProfile(firstName, lastName, age, gender, orientation, email)
-      const newUser = {...(user as UserProfile), firstName, lastName, email, age, gender, orientation, emailVerified: Number((user as UserProfile).email === email)}
+      const newUser = { ...(user as UserProfile), firstName, lastName, email, age, gender, orientation, emailVerified: Number((user as UserProfile).email === email) }
       setUser(newUser);
     } catch (error: any) {
       const errorMessage = (error.response?.data as ErrorPayload)?.error;
@@ -115,7 +116,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
   };
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, signout };
+  let valideByMail = async (email: string, code: string) => {
+    try {
+      await authProvider.verifyEmail(code, email)
+    } catch (error: any) {
+      const errorMessage = (error.response?.data as ErrorPayload)?.error;
+      snackBar('validation by mail failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
+
+    }
+  }
+
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

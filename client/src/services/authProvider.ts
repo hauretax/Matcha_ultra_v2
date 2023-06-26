@@ -11,8 +11,9 @@ const api = {
     })
   },
   
-  verifyEmail: (token: string) => {
-    return axios.get(`http://localhost:8080/api/verify-email?token=${token}`);
+  verifyEmail: (code: string,email:string) => {
+    console.log('jelosd')
+    return axios.get(`http://localhost:8080/api/verify_email?code=${code}&email=${email}`);
   },
   
   signin: (username: string, password: string) => {
@@ -34,7 +35,7 @@ const api = {
       newPassword,
     });
   },
-  
+
   signout: () => {
     return axios.post('http://localhost:8080/api/logout');
   }

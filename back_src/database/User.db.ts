@@ -63,8 +63,8 @@ const UserDb = {
 	async findPicturesByUserId(userId: number): Promise<string[]> {
 		const sql = "SELECT picture_path FROM pictures WHERE user_id = ?";
 		const res: ({ picture_path: string }[]) = await db.all(sql, [userId]);
-		const ret: string[] = res.map((pictureObj: { picture_path: string }) => pictureObj.picture_path)
-		return ret
+		const ret: string[] = res.map((pictureObj: { picture_path: string }) => pictureObj.picture_path);
+		return ret;
 	},
 
 	async findInterestsByUserId(userId: number): Promise<string[]> {
@@ -74,8 +74,8 @@ const UserDb = {
 			INNER JOIN user_interests ON interests.id = user_interests.interest_id
 			WHERE user_interests.user_id = ?`;
 		const res: ({ interest: string }[]) = await db.all(sql, [userId]);
-		const ret: string[] = res.map((interestObj: { interest: string }) => interestObj.interest)
-		return ret
+		const ret: string[] = res.map((interestObj: { interest: string }) => interestObj.interest);
+		return ret;
 	},
 
 	async findUser(username: string): Promise<FullUser> {
@@ -153,7 +153,7 @@ const UserDb = {
 			UPDATE users 
 			SET firstName=?, lastName=?, age=?, gender=?, sexualPreferences=?, email=?, emailVerified=?
 			WHERE id=?`;
-		const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
+		const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId];
 		return db.run(sql, params);
 	},
 
@@ -193,12 +193,17 @@ const UserDb = {
 		const sql = "DELETE FROM users WHERE id = ?";
 		return db.run(sql, [userId]);
 	},
-	getCode(email:string) {
+	getCode(email: string) {
 		const sql = "SELECT accessCode FROM users WHERE email = ?";
 		return db.get(sql, [email]);
 	},
-	valideUser() {
-		console.log
+	valideUser(email: string) {
+		const sql = `
+		UPDATE users 
+		SET emailVerified = 1
+			WHERE email = ?
+    	`;
+		return db.get(sql, [email]);
 	}
 };
 
