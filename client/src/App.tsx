@@ -20,6 +20,7 @@ import themeOptions from './theme/classical'
 import './App.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ValideMailPage from "./pages/ValideMailPage";
 
 
 const theme = createTheme(themeOptions)
@@ -35,7 +36,9 @@ function App() {
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/valide_mail" element={<ValideMailPage />} />
               <Route path="/reset_password" element={<ResetPasswordRequestPage />} />
+              <Route path='/404' element={<div>404</div>} />
               <Route element={<RequireAuth />} >
                 <Route path='/home' element={<ProtectedPage />} />
                 <Route path='/profile' element={<ProfilePage />} />

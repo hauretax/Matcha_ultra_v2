@@ -11,6 +11,7 @@ import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
+import  url  from "url";
 
 
 
@@ -25,7 +26,7 @@ export async function createProfile(req: Request, res: Response) {
 		profile.password = await bcrypt.hash(req.body.password, 10);
 		const { id, accessCode, email } = await UserDb.insertUser(profile);
 		//TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
-		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "8080/" + accessCode);
+		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email);
 		res.status(201).json({ message: "Profile created", usrId: id });
 	} catch (error) {
 		if (error instanceof UniqueConstraintError) {
@@ -51,7 +52,6 @@ export async function login(req: Request, res: Response) {
 
 	//si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
 	const fulluser = res?.locals?.fulluser || await UserDb.findUser(username);
-	console.log(fulluser)
 	if (!fulluser) {
 		res.status(404).json({ error: "account not found" });
 		return;
@@ -91,6 +91,31 @@ export function getProfile(req: Request, res: Response) {
 	res.json({ user });
 }
 
+export async function validByEmail(req: Request, res: Response) {
+	const requestUrl = req.url;
+
+	// Analyse de l'URL pour extraire les paramètres de requête
+	const parsedUrl = new URL(requestUrl, `http://${req.headers.host}`);
+	const queryParameters = parsedUrl.searchParams;
+	
+	// Récupération de l'e-mail à partir des paramètres de requête
+	const email = queryParameters.get("email");
+	const code = queryParameters.get("code");
+	if (!email || !code){
+		res.status(400).json({error: "missing parameters"});
+		return;
+	}
+	const dbCode = await UserDb.getCode(email);
+	if (dbCode.accessCode != code){
+		res.status(404).json({error:"not found"});
+		return;
+	}
+
+	UserDb.valideUser(email);
+	res.sendStatus(200);
+	return;
+}
+
 export async function updateProfile(req: Request, res: Response) {
 	if (!req.body) {
 		res.status(400).json({ error: "missing parameters" });
@@ -106,13 +131,13 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// Gender validation
-	if (!['Male', 'Female'].includes(gender)) {
+	if (!["Male", "Female"].includes(gender)) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
 
 	// Orientation validation
-	if (!['Homosexual', 'Heterosexual', 'Bisexual'].includes(orientation)) {
+	if (!["Homosexual", "Heterosexual", "Bisexual"].includes(orientation)) {
 		res.status(400).json({ error: "invalid orientation" });
 		return;
 	}
@@ -124,8 +149,8 @@ export async function updateProfile(req: Request, res: Response) {
 		return;
 	}
 
-	await UserDb.updateProfile(firstName, lastName, age, gender, orientation, email, Number(email === res.locals.fulluser.email), res.locals.fulluser.id)
-	res.status(200).json({ message: 'Profile updated successfully' });
+	await UserDb.updateProfile(firstName, lastName, age, gender, orientation, email, Number(email === res.locals.fulluser.email), res.locals.fulluser.id);
+	res.status(200).json({ message: "Profile updated successfully" });
 }
 
 // const res = {
