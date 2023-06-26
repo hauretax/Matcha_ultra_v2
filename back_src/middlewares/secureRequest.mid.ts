@@ -15,12 +15,9 @@ export async function validsecurRequest(
 
 	//TODO opti faire une variable avec une cle usrname et une variable mail valider ?
 	try {
-		console.log("hello");
 		const authHeader = req.headers.authorization as string;
 		const token = authHeader && authHeader.split(" ")[1];
 
-		console.log(authHeader, token);
-		console.log(req.headers);
 		if (!token) {
 			res.status(422).json({ error: "header missing" });
 			return;
@@ -35,7 +32,6 @@ export async function validsecurRequest(
 		}
 
 		const fulluser = await UserDb.findUserById(userId);
-		console.log(fulluser);
 		if (fulluser === undefined) {
 			res.status(404).json({ error: "user not found" });
 			return;
