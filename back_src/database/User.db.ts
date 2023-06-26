@@ -19,11 +19,12 @@ const UserDb = {
         firstName TEXT,
         password TEXT,
         gender TEXT,
+        biography TEXT,
         age INTEGER,
         sexualPreferences TEXT,
         emailVerified INTEGER,
         accessCode INTEGER,
-		token TEXT
+		    token TEXT
       )`;
     return db.run(sql);
   },
@@ -154,6 +155,15 @@ const UserDb = {
 			SET firstName=?, lastName=?, age=?, gender=?, sexualPreferences=?, email=?, emailVerified=?
 			WHERE id=?`;
     const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
+    return db.run(sql, params);
+  },
+
+  updateBio(biography: string, userId: number) {
+    const sql = `
+			UPDATE users 
+			SET biography=?
+			WHERE id=?`;
+    const params = [biography, userId]
     return db.run(sql, params);
   },
 

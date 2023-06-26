@@ -128,6 +128,23 @@ export async function updateProfile(req: Request, res: Response) {
 	res.status(200).json({ message: 'Profile updated successfully' });
 }
 
+export async function updateBio(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { biography } = req.body;
+
+	// Biography validation
+	if (typeof biography !== 'string') {
+		res.status(400).json({ error: "Invalid biography. Biography must be a string" });
+		return;
+	}
+
+	await UserDb.updateBio(biography, res.locals.fulluser.id)
+	res.status(200).json({ message: 'Profile updated successfully' });
+}
 // const res = {
 //     status: jest.fn().mockReturnThis(),
 //     json: jest.fn(),
