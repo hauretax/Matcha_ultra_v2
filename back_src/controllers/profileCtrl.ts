@@ -135,7 +135,7 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// Gender validation
-	if (!["Male", "Female"].includes(gender)) {
+	if (!["Male", "Female", "Other"].includes(gender)) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
