@@ -12,7 +12,7 @@ router.post("/login", asyncHandler(login));
 router.post("/newToken", asyncHandler(createNewJwt));
 router.get("/profile", validsecurRequest, asyncHandler((getProfile)));
 router.get("/options", validsecurRequest, asyncHandler(getOptions))
-router.patch("/profile", validsecurRequest, asyncHandler(updateProfile))
+router.patch("/profile", validsecurRequest, asyncHandler(updateProfile)) // TODO: Resend mail in case mail is updated
 router.patch("/profileBio", validsecurRequest, asyncHandler(updateBio))
 router.patch("/profileInterests", validsecurRequest, asyncHandler(updateInterests))
 
