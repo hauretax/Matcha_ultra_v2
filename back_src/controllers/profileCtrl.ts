@@ -52,7 +52,7 @@ export async function login(req: Request, res: Response) {
 	//si un middlwar a deja recuprer l'utilisateur avant darriver ici on recuprer la donner preexistante 
 	const fulluser = res?.locals?.fulluser || await UserDb.findUser(username);
 	console.log(fulluser)
-	if (fulluser === undefined) {
+	if (!fulluser) {
 		res.status(404).json({ error: "account not found" });
 		return;
 	}
