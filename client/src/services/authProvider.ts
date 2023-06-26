@@ -12,7 +12,6 @@ const api = {
   },
   
   verifyEmail: (code: string,email:string) => {
-    console.log('jelosd')
     return axios.get(`http://localhost:8080/api/verify_email?code=${code}&email=${email}`);
   },
   
