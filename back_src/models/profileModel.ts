@@ -22,6 +22,6 @@ export interface CreateProfileModel {
 export interface ProfilModel extends CreateProfileModel {
   gender: gender;
   age: number;
-  sexualPreferences: Array<gender>;
+  orientation: Array<gender>;
   emailVerified: boolean;
 }

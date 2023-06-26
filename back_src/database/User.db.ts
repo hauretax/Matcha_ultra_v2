@@ -21,7 +21,7 @@ const UserDb = {
         gender TEXT,
         biography TEXT,
         age INTEGER,
-        sexualPreferences TEXT,
+        orientation TEXT,
         emailVerified INTEGER,
         accessCode INTEGER,
 		    token TEXT
@@ -152,7 +152,7 @@ const UserDb = {
   updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number, userId: number) {
     const sql = `
 			UPDATE users 
-			SET firstName=?, lastName=?, age=?, gender=?, sexualPreferences=?, email=?, emailVerified=?
+			SET firstName=?, lastName=?, age=?, gender=?, orientation=?, email=?, emailVerified=?
 			WHERE id=?`;
     const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
     return db.run(sql, params);

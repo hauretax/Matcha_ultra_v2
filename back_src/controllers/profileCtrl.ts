@@ -59,7 +59,7 @@ export async function login(req: Request, res: Response) {
 
 	const isAutorized = await bcrypt.compare(password, fulluser.password);
 	if (isAutorized) {
-		const { id, email, username, firstName, lastName, gender, age, sexualPreferences, emailVerified, pictures, interests } = fulluser;
+		const { id, email, username, firstName, lastName, biography, gender, age, orientation, emailVerified, pictures, interests } = fulluser;
 		const payload: UserPayload = {
 			jwtToken: {
 				token: generateJwt(id),
@@ -71,9 +71,10 @@ export async function login(req: Request, res: Response) {
 				username,
 				lastName,
 				firstName,
+        biography,
 				gender,
 				age,
-				sexualPreferences,
+				orientation,
 				emailVerified,
 				pictures,
 				interests

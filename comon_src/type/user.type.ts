@@ -3,11 +3,12 @@ export type UserProfile = {
     username: string;
     lastName: string;
     firstName: string;
+    biography: string;
     emailVerified: number;
     id?: number;
     gender?: string;
     age?: number;
-    sexualPreferences?: string;
+    orientation?: string;
     pictures?: string[];
     interests?: string[];
 }
