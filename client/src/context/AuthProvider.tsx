@@ -14,6 +14,7 @@ interface AuthContextType {
   user: any;
   signin: (username: string, password: string, callback: VoidFunction) => Promise<void>;
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => Promise<void>;
+  valideByMail: (mail: string, code: string) => Promise<void>,
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
   getProfile: () => void;
   updateBio: (biography: string) => Promise<void>;
@@ -159,7 +160,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       })
   };
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout };
+  let valideByMail = async (email: string, code: string) => {
+    try {
+      await authProvider.verifyEmail(code, email)
+    } catch (error: any) {
+      const errorMessage = (error.response?.data as ErrorPayload)?.error;
+      snackBar('validation by mail failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
+    }
+  }
+
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

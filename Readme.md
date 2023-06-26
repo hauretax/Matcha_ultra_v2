@@ -16,10 +16,10 @@ flowchart TD
 give to user a way to become validate
 ```mermaid
 flowchart TD
-    A[GET /api/verify-email] 
+    A[GET /api/verify_email] 
     A-->|Error| B(JSON error message)
     A-->|SUCCES| C(JSON succes message)
-    D(token: string) -->A
+    D(email: string, code: string) -->A
 ``` 
 *
 ### user login:
