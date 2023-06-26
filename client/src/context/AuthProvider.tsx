@@ -16,7 +16,7 @@ interface AuthContextType {
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => void;
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
   getProfile: () => void;
-  updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => void;
+  updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
   signout: (callback: VoidFunction) => void;
 }
 

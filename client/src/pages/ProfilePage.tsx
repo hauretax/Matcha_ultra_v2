@@ -11,18 +11,6 @@ import { useLocation } from 'react-router-dom'
 import { useSnackbar } from '../context/SnackBar'
 import { useAuth } from '../context/AuthProvider'
 
-const initialProfile = {
-  biography: 'test',
-  interests: [],
-  firstName: '',
-  lastName: '',
-  age: 0,
-  gender: '',
-  orientation: '',
-  email: '',
-  pictures: [null, null, null, null, null]
-}
-
 function ProfilePage() {
   const auth = useAuth()
   const [options, setOptions] = useState<string[]>([])
