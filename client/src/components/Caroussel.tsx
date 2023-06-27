@@ -21,7 +21,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
     if (activeIndex === imgs.length) {
       uploadImage(file);
     } else {
-      editImage(file, imgs[activeIndex].src);
+      editImage(file, imgs[activeIndex].id);
     }
   };
 
@@ -49,8 +49,12 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
     setUploading(false);
   }
 
-  function editImage(arg0: string, id: string): void {
-    console.log('Function not implemented.');
+  async function editImage(file: File, pictureId: number): Promise<void> {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    await auth.updatePicture(formData, pictureId)
+    setUploading(false);
   }
 
   async function uploadImage(file: File): Promise<void> {

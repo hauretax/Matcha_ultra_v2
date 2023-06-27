@@ -32,6 +32,14 @@ const apiProvider = {
       },
     });
   },
+
+  updatePicture(formData: FormData, id: number) {
+    return axiosPrivate.put(`/picture/${id}/edit`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 }
 
 export default apiProvider
