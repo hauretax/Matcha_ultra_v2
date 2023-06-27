@@ -36,7 +36,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   };
 
   const goLeft = () => {
-    changeImage((activeIndex + imgs.length) % imgs.length);
+    changeImage((activeIndex + imgs.length) % (imgs.length + 1));
   };
 
   const goRight = () => {
@@ -126,7 +126,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
             accept="image/*"
           />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Button onClick={goLeft} disabled={activeIndex === 0}>
+            <Button onClick={goLeft}>
               {theme.direction === 'rtl' ? (
                 <KeyboardArrowRight />
               ) : (
@@ -160,7 +160,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
                 }}
               />
             </Box>
-            <Button onClick={goRight} disabled={activeIndex === imgs.length}>
+            <Button onClick={goRight}>
               Next
               {theme.direction === 'rtl' ? (
                 <KeyboardArrowLeft />
