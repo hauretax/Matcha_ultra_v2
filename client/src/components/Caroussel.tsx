@@ -10,7 +10,6 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
   const theme = useTheme();
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const auth = useAuth();
 
@@ -32,26 +31,9 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   };
 
 
-  const changeImage = useCallback((nextIndex: number) => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
+  const changeImage = (nextIndex: number) => {
     setActiveIndex(nextIndex);
-
-    intervalRef.current = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % imgs.length);
-    }, 5000);
-  }, [imgs.length]);
-
-  useEffect(() => {
-    changeImage(0);
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [changeImage]);
+  };
 
   const goLeft = () => {
     changeImage((activeIndex + imgs.length) % imgs.length);
