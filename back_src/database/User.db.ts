@@ -1,11 +1,12 @@
 import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
+import { generateRandomString } from "../utils/random";
 
 interface InsertedUser {
 	id: number,
 	email: string,
-	accessCode: number
+	accessCode: string
 }
 
 const UserDb = {
@@ -23,7 +24,7 @@ const UserDb = {
         age INTEGER,
         orientation TEXT,
         emailVerified INTEGER,
-        accessCode INTEGER,
+        accessCode TEXT,
 		    token TEXT
       )`;
 		return db.run(sql);
@@ -114,7 +115,7 @@ const UserDb = {
 	},
 
 	async insertUser(user: UserReqRegister): Promise<InsertedUser> {
-		const accessCode = Math.floor(Math.random() * 90000 + 10000);
+		const accessCode = generateRandomString(16);
 		const query = `
         INSERT INTO users (
 			email,
