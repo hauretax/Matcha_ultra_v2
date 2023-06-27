@@ -32,7 +32,6 @@ class App {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
 		this.app.use(requestLoggerMiddleware);
-    console.log(path.join(__dirname, '../../back_src', 'public'))
     this.app.use(express.static(path.join(__dirname, '../../back_src', 'public')));
 	}
 
