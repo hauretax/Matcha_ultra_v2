@@ -68,5 +68,6 @@ export async function isPictureOwner(req: Request, res: Response, next: NextFunc
     res.status(404).json({ error: "picture not found" });
     return;
   }
+  res.locals.picture = picture;
   next();
 }

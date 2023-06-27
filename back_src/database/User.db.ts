@@ -218,9 +218,13 @@ const UserDb = {
   },
 
   async findPictureByIdAndDelete(pictureId: number) {
-    const sql = "DELETE FROM pictures WHERE id = ?";
-    const result = await db.run(sql, [pictureId]);
-    return result.changes;
+    const selectSql = "SELECT * FROM pictures WHERE id = ?";
+    const picture = await db.get(selectSql, [pictureId]);
+
+    const deleteSql = "DELETE FROM pictures WHERE id = ?";
+    const res = await db.run(deleteSql, [pictureId]);
+
+    return res.changes === 1 ? picture : null;
   },
 
   async insertPicture(userId: number, src: string) {

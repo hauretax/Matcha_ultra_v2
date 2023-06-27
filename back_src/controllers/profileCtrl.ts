@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
+import fs from 'fs';
 
 import sendEmail from "../utils/sendMail";
 import { GenerateRefreshJwt, generateJwt } from "../utils/jwt";
@@ -13,6 +14,7 @@ import { UniqueConstraintError } from "../database/errors";
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 import  url  from "url";
 import { MulterError } from "multer";
+import path from "path";
 
 
 
@@ -207,14 +209,20 @@ export async function deletePicture(req: Request, res: Response) {
 		return;
 	}
 
-  const success = await UserDb.findPictureByIdAndDelete(parseInt(pictureId));
+  const picture = await UserDb.findPictureByIdAndDelete(parseInt(pictureId));
 
-  if (!success) {
+  if (!picture) {
     res.sendStatus(404);
 		return;
   }
 
   res.sendStatus(200);
+  const filePath = path.join(__dirname, '../../../back_src', 'public/images', picture.src);
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    console.error('Error deleting file:', error);
+  }
   return;
 }
 
@@ -244,5 +252,12 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
   await UserDb.updatePicture(parseInt(pictureId), filename);
 
   res.status(200).json({id: pictureId, src: filename});
+
+  const filePath = path.join(__dirname, '../../../back_src', 'public/images', res.locals.picture.src);
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    console.error('Error deleting file:', error);
+  }
   return;
 }
