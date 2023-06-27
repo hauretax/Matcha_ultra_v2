@@ -37,9 +37,9 @@ export type UserReqLogin = {
 
 
 export type UserPayload = {
-  jwtToken: {
+  jwt: {
     refreshToken: string,
-    token: string
+    accessToken: string
   };
   profile: UserProfile;
 }

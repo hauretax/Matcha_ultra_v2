@@ -9,11 +9,6 @@ export async function validsecurRequest(
   res: Response,
   next: NextFunction
 ) {
-  if (!req.body) {
-    res.status(400).json({ error: "no credentials provided" });
-    return;
-  }
-
   //TODO opti faire une variable avec une cle usrname et une variable mail valider ?
   try {
     const authHeader = req.headers.authorization as string;
@@ -37,12 +32,6 @@ export async function validsecurRequest(
       res.status(404).json({ error: "user not found" });
       return;
     }
-
-    // TODO: create a middleware to check if the user is verified
-    // if (!fulluser?.emailVerified) {
-    // 	res.status(422).json({ error: "unverified email" });
-    // 	return;
-    // }
 
     res.locals.fulluser = fulluser;
     delete res.locals.fulluser.email;
@@ -69,5 +58,14 @@ export async function isPictureOwner(req: Request, res: Response, next: NextFunc
     return;
   }
   res.locals.picture = picture;
+  next();
+}
+
+export async function isEmailVerified(req: Request, res: Response, next: NextFunction) {
+  const user: UserProfile = res.locals.fulluser; // from validsecurRequest
+  if (!user.emailVerified) {
+    res.status(422).json({ error: "unverified email" });
+    return;
+  }
   next();
 }

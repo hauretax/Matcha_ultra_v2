@@ -2,12 +2,6 @@ import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
 
-interface InsertedUser {
-  id: number,
-  email: string,
-  accessCode: number
-}
-
 const UserDb = {
   initializeUserTable() {
     const sql = `
@@ -78,7 +72,7 @@ const UserDb = {
     return ret;
   },
 
-  async findUser(username: string): Promise<FullUser> {
+  async findUser(username: string): Promise<FullUser | null> {
     const sql = "SELECT * FROM users WHERE username = ?";
     const user = await db.get(sql, [username]);
     if (user) {
@@ -112,7 +106,7 @@ const UserDb = {
     }
   },
 
-  async insertUser(user: UserReqRegister): Promise<InsertedUser> {
+  async insertUser(user: UserReqRegister): Promise<number> {
     const accessCode = Math.floor(Math.random() * 90000 + 10000);
     const query = `
       INSERT INTO users (
@@ -137,7 +131,7 @@ const UserDb = {
 
     try {
       const result = await db.run(query, params);
-      return { id: result.lastID, accessCode, email: user.email };
+      return accessCode;
     } catch (err) {
       if (err.message.includes("UNIQUE constraint failed")) {
         throw new UniqueConstraintError(err.message);
@@ -147,12 +141,12 @@ const UserDb = {
     }
   },
 
-  updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number, userId: number) {
+  updateProfile(profile: {firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number}, userId: number) {
     const sql = `
 			UPDATE users 
 			SET firstName=?, lastName=?, age=?, gender=?, orientation=?, email=?, emailVerified=?
 			WHERE id=?`;
-    const params = [firstName, lastName, age, gender, orientation, email, emailVerified, userId]
+    const params = [profile.firstName, profile.lastName, profile.age, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId]
     return db.run(sql, params);
   },
 

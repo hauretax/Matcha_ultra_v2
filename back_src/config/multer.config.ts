@@ -8,8 +8,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
     const filename = Date.now() + ext;
-    
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif') {
+
+    if (['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].indexOf(file.mimetype) === -1) {
       return cb(new MulterError('LIMIT_UNEXPECTED_FILE'), filename);
     }
 
