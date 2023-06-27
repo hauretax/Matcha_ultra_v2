@@ -8,6 +8,9 @@ import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import profileRoutes from "./routes/profileRoutes";
 
 import { Bport } from "../comon_src/constant";
+
+import initializeUserTable from "./creatTestDb"
+
 class App {
 	private app: Application;
 
@@ -50,6 +53,8 @@ class App {
 		return server;
 	}
 }
+
+// initializeUserTable();
 
 const app = new App();
 
