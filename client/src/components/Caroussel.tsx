@@ -6,9 +6,8 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { Skeleton } from '@mui/material';
 
-function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boolean }) {
+function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [images, setImages] = useState<string[]>([])
   const theme = useTheme();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -21,9 +20,9 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
     setActiveIndex(nextIndex);
 
     intervalRef.current = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setActiveIndex((prevIndex) => (prevIndex + 1) % imgs.length);
     }, 5000);
-  }, [images.length]);
+  }, [imgs.length]);
 
   useEffect(() => {
     changeImage(0);
@@ -35,16 +34,12 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
   }, [changeImage]);
 
   const goLeft = () => {
-    changeImage((activeIndex + images.length - 1) % images.length);
+    changeImage((activeIndex + imgs.length - 1) % imgs.length);
   };
 
   const goRight = () => {
-    changeImage((activeIndex + 1) % images.length);
+    changeImage((activeIndex + 1) % imgs.length);
   };
-
-  useEffect(() => {
-    setImages(imgs.filter(img => img !== null) as string[])
-  }, [imgs])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -61,7 +56,7 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
               objectFit: 'contain',
               backgroundColor: '#fff'
             }}
-            src={images[activeIndex]}
+            src={`http://localhost:8080/${imgs[activeIndex]}`}
             alt={'picture'}
           />
 
@@ -75,7 +70,7 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
               Back
             </Button>
             <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
-              {images.map((img, index) => (
+              {imgs.map((_img, index) => (
                 <span
                   key={index}
                   style={{
@@ -89,7 +84,7 @@ function Carousel({ imgs, isLoading }: { imgs: (string | null)[], isLoading: boo
                 />
               ))}
             </Box>
-            <Button onClick={goRight} disabled={activeIndex === images.length - 1}>
+            <Button onClick={goRight} disabled={activeIndex === imgs.length - 1}>
               Next
               {theme.direction === 'rtl' ? (
                 <KeyboardArrowLeft />
