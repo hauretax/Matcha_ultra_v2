@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { prefixBackendUrl } from '../utils';
 
 const pages = [
   {
@@ -155,7 +156,7 @@ function NavBar() {
           {auth.user ?
             <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={auth.user.pictures[0]} />
+                <Avatar alt="Remy Sharp" src={prefixBackendUrl(auth.user.pictures[0].src)} />
               </IconButton>
               <Menu
                 sx={{ mt: '45px' }}

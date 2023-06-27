@@ -5,7 +5,7 @@ import { Add, Delete, Edit, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/i
 
 import { prefixBackendUrl } from '../utils';
 
-function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
+function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], isLoading: boolean }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
   const theme = useTheme();
@@ -20,7 +20,7 @@ function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
     if (activeIndex === imgs.length) {
       uploadImage(file);
     } else {
-      editImage(file, imgs[activeIndex]);
+      editImage(file, imgs[activeIndex].src);
     }
   };
 
@@ -88,7 +88,7 @@ function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
                   objectFit: 'contain',
                   backgroundColor: '#fff'
                 }}
-                src={prefixBackendUrl(imgs[activeIndex])}
+                src={prefixBackendUrl(imgs[activeIndex].src)}
                 alt={'picture'}
               />
               <Fab
@@ -106,7 +106,7 @@ function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
                 color="primary"
                 aria-label={'delete'}
                 sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                onClick={() => deleteImage(imgs[activeIndex])}
+                onClick={() => deleteImage(imgs[activeIndex].src)}
                 disabled={uploading}>
                 {uploading ?
                   <CircularProgress size={24} /> :

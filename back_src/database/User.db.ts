@@ -34,7 +34,7 @@ const UserDb = {
         CREATE TABLE IF NOT EXISTS pictures (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
-            picture_path TEXT,
+            src TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )`;
 		return db.run(sql);
@@ -61,11 +61,10 @@ const UserDb = {
 		return db.run(sql);
 	},
 
-	async findPicturesByUserId(userId: number): Promise<string[]> {
-		const sql = "SELECT picture_path FROM pictures WHERE user_id = ?";
-		const res: ({ picture_path: string }[]) = await db.all(sql, [userId]);
-		const ret: string[] = res.map((pictureObj: { picture_path: string }) => pictureObj.picture_path);
-		return ret;
+	async findPicturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
+		const sql = "SELECT id, src FROM pictures WHERE user_id = ?";
+		const res: ({ id: number; src: string }[]) = await db.all(sql, [userId]);
+		return res;
 	},
 
 	async findInterestsByUserId(userId: number): Promise<string[]> {
