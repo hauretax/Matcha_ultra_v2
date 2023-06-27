@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import sendEmail from "../utils/sendMail";
@@ -12,6 +12,7 @@ import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 import  url  from "url";
+import { MulterError } from "multer";
 
 
 
@@ -214,5 +215,18 @@ export async function deletePicture(req: Request, res: Response) {
   }
 
   res.sendStatus(200);
+  return;
+}
+
+export async function insertPicture(req: Request, res: Response, next: NextFunction) {
+  if (!req.file) {
+    next(new MulterError('LIMIT_FILE_COUNT'));
+    return;
+  }
+  
+  const { filename } = req.file;
+  const { id } = res.locals.fulluser;
+  const pictureId = await UserDb.insertPicture(id, filename);
+  res.status(200).json({id: pictureId, src: filename});
   return;
 }

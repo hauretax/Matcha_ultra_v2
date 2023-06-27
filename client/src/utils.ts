@@ -1,1 +1,1 @@
-export const prefixBackendUrl = (path: string) => { return `${process.env.REACT_APP_BACKEND_URL}/${path}`}
+export const prefixBackendUrl = (path: string) => { return `${process.env.REACT_APP_BACKEND_URL}/images/${path}`}

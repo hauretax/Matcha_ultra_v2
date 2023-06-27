@@ -5,6 +5,7 @@ import UserDb from "./database/User.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
+import multerErrorMiddleware from "./middlewares/multerError.middleware";
 
 import profileRoutes from "./routes/profileRoutes";
 
@@ -43,6 +44,7 @@ class App {
 	}
 
 	private handleErrors(): void {
+    this.app.use(multerErrorMiddleware)
 		this.app.use(globalErrorMiddleware);
 	}
 

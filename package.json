@@ -29,6 +29,7 @@
     "imap-simple": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
     "mailparser": "^3.6.4",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.2",
     "react-swipeable-views": "^0.14.0",
     "sqlite3": "^5.1.6",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@types/express": "^4.17.1",
     "@types/jest": "^29.5.1",
+    "@types/multer": "^1.4.7",
     "@types/node": "^20.1.5",
     "@types/react-swipeable-views": "^0.13.2",
     "@types/react-swipeable-views-utils": "^0.13.4",

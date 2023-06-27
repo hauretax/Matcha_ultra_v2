@@ -24,6 +24,14 @@ const apiProvider = {
   deletePicture(id: number) {
     return axiosPrivate.delete(`/picture/${id}`);
   },
+
+  insertPicture(formData: FormData) {
+    return axiosPrivate.post('/picture/new', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 }
 
 export default apiProvider

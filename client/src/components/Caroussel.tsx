@@ -53,8 +53,12 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
     console.log('Function not implemented.');
   }
 
-  function uploadImage(arg0: string): void {
-    console.log('Function not implemented.');
+  async function uploadImage(file: File): Promise<void> {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    await auth.insertPicture(formData)
+    setUploading(false);
   }
 
   return (

@@ -20,6 +20,7 @@ interface AuthContextType {
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
+  insertPicture: (formdata: FormData) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
   signout: (callback: VoidFunction) => void;
 }
@@ -144,6 +145,21 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const insertPicture = async (formdata: FormData): Promise<void> => {
+    try {
+      const res: AxiosResponse = await apiProvider.insertPicture(formdata)
+      if (user) {
+        const newUser = {
+          ...user,
+          pictures: [...user.pictures, res.data]
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while inserting picture');
+    }
+  }
+
   const deletePicture = async (pictureId: number): Promise<void> => {
     try {
       await apiProvider.deletePicture(pictureId)
@@ -185,7 +201,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, deletePicture, signout, valideByMail };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, insertPicture, deletePicture, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

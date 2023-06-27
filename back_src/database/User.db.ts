@@ -223,7 +223,13 @@ const UserDb = {
     const sql = "DELETE FROM pictures WHERE id = ?";
     const result = await db.run(sql, [pictureId]);
     return result.changes;
-  }
+  },
+
+  async insertPicture(userId: number, src: string) {
+    const sql = "INSERT INTO pictures(user_id, src) VALUES(?, ?)";
+    const result = await db.run(sql, [userId, src]);
+    return result.lastID;
+  },
 };
 
 export default UserDb;
