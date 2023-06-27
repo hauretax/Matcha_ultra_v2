@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Add, Delete, Edit, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 import { prefixBackendUrl } from '../utils';
+import { useAuth } from '../context/AuthProvider';
 
 function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], isLoading: boolean }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -11,6 +12,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   const theme = useTheme();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const auth = useAuth();
 
   // Other functions here ...
 
@@ -59,8 +61,10 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
     changeImage((activeIndex + 1) % (imgs.length + 1));
   };
 
-  function deleteImage(arg0: string): void {
-    console.log('Function not implemented.');
+  async function deleteImage(pictureId: number): Promise<void> {
+    setUploading(true);
+    await auth.deletePicture(pictureId)
+    setUploading(false);
   }
 
   function editImage(arg0: string, id: string): void {
@@ -106,7 +110,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
                 color="primary"
                 aria-label={'delete'}
                 sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                onClick={() => deleteImage(imgs[activeIndex].src)}
+                onClick={() => deleteImage(imgs[activeIndex].id)}
                 disabled={uploading}>
                 {uploading ?
                   <CircularProgress size={24} /> :

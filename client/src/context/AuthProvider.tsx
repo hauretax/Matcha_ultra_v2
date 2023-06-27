@@ -20,6 +20,7 @@ interface AuthContextType {
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
+  deletePicture: (pictureId: number) => Promise<void>;
   signout: (callback: VoidFunction) => void;
 }
 
@@ -143,6 +144,21 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const deletePicture = async (pictureId: number): Promise<void> => {
+    try {
+      await apiProvider.deletePicture(pictureId)
+      if (user) {
+        const newUser = {
+          ...user,
+          pictures: user.pictures.filter(picture => picture.id !== pictureId)
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while deleting picture');
+    }
+  }
+
   let signout = (callback: VoidFunction) => {
     fakeAuthProvider.signout()
       .then((res: any) => {
@@ -169,7 +185,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout, valideByMail };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, deletePicture, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

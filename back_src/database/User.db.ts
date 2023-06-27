@@ -217,7 +217,13 @@ const UserDb = {
 			WHERE email = ?
     	`;
 		return db.get(sql, [email]);
-	}
+	},
+
+  async findPictureByIdAndDelete(pictureId: number) {
+    const sql = "DELETE FROM pictures WHERE id = ?";
+    const result = await db.run(sql, [pictureId]);
+    return result.changes;
+  }
 };
 
 export default UserDb;

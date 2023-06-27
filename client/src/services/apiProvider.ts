@@ -19,7 +19,11 @@ const apiProvider = {
 
   updateInterests(interests: string[]) {
     return axiosPrivate.patch('/profileInterests', { interests })
-  }
+  },
+
+  deletePicture(id: number) {
+    return axiosPrivate.delete(`/picture/${id}`);
+  },
 }
 
 export default apiProvider

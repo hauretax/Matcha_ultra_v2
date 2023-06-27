@@ -197,3 +197,22 @@ export async function updateInterests(req: Request, res: Response) {
 	await UserDb.updateUserInterests(res.locals.fulluser.id, interests)
 	res.status(200).json({ message: 'Profile updated successfully' });
 }
+
+export async function deletePicture(req: Request, res: Response) {
+  const { pictureId } = req.params;
+
+  if (!pictureId || !Number.isInteger(parseInt(pictureId))) {
+		res.sendStatus(404);
+		return;
+	}
+
+  const success = await UserDb.findPictureByIdAndDelete(parseInt(pictureId));
+
+  if (!success) {
+    res.sendStatus(404);
+		return;
+  }
+
+  res.sendStatus(200);
+  return;
+}

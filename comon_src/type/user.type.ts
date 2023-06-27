@@ -1,16 +1,16 @@
 export type UserProfile = {
+  id: number;
+  emailVerified: number;
   email: string;
   username: string;
   lastName: string;
   firstName: string;
   biography: string;
-  emailVerified: number;
-  id?: number;
-  gender?: string;
-  age?: number;
-  orientation?: string;
-  pictures?: { id: number; src: string }[];
-  interests?: string[];
+  gender: string;
+  age: number;
+  orientation: string;
+  pictures: { id: number; src: string }[];
+  interests: string[];
 }
 /**
  * 
