@@ -12,7 +12,6 @@ import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
-import  url  from "url";
 import { MulterError } from "multer";
 import path from "path";
 
