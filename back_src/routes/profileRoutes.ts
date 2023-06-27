@@ -1,8 +1,8 @@
 import express from "express";
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, deletePicture} from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture} from "../controllers/profileCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
-import { validsecurRequest } from "../middlewares/secureRequest.mid";
+import { validsecurRequest, isPictureOwner } from "../middlewares/secureRequest.mid";
 import upload from '../config/multer.config'
 
 
@@ -17,6 +17,7 @@ router.patch("/profile", validsecurRequest, asyncHandler(updateProfile)) // TODO
 router.patch("/profileBio", validsecurRequest, asyncHandler(updateBio))
 router.patch("/profileInterests", validsecurRequest, asyncHandler(updateInterests))
 router.post('/picture/new', validsecurRequest, upload.single('file'), asyncHandler(insertPicture))
+router.put('/picture/:pictureId/edit', validsecurRequest, isPictureOwner, upload.single('file'), asyncHandler(updatePicture))
 router.delete('/picture/:pictureId', validsecurRequest, asyncHandler(deletePicture))
 router.get("/verify_email",asyncHandler(validByEmail));
 
