@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Box, Button, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import { Skeleton } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+
+import { prefixBackendUrl } from '../utils';
 
 function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -56,7 +55,7 @@ function Carousel({ imgs, isLoading }: { imgs: string[], isLoading: boolean }) {
               objectFit: 'contain',
               backgroundColor: '#fff'
             }}
-            src={`http://localhost:8080/${imgs[activeIndex]}`}
+            src={prefixBackendUrl(imgs[activeIndex])}
             alt={'picture'}
           />
 
