@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import UserDb from "../database/User.db";
 import { validateJwt } from "../utils/jwt";
+import { UserProfile } from "../../comon_src/type/user.type";
 
 
 export async function validsecurRequest(
@@ -31,12 +32,13 @@ export async function validsecurRequest(
 			return;
 		}
 
-		const fulluser = await UserDb.findUserById(userId);
-		if (fulluser === undefined) {
+		const fulluser: UserProfile | null = await UserDb.findUserById(userId);
+		if (!fulluser) {
 			res.status(404).json({ error: "user not found" });
 			return;
 		}
 		
+    // TODO: create a middleware to check if the user is verified
 		// if (!fulluser?.emailVerified) {
 		// 	res.status(422).json({ error: "unverified email" });
 		// 	return;
