@@ -11,9 +11,10 @@ import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
 import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
-import  url  from "url";
+import { generateRandomString } from "../utils/random";
 
 
+const passwordResetKey = [];
 
 export async function createProfile(req: Request, res: Response) {
 	const profile: UserReqRegister = req.body;
@@ -25,8 +26,7 @@ export async function createProfile(req: Request, res: Response) {
 	try {
 		profile.password = await bcrypt.hash(req.body.password, 10);
 		const { id, accessCode, email } = await UserDb.insertUser(profile);
-		//TODO: faire un lien en front pour pouvoir verifier le mail (url est pas bon)
-		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email);
+		sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email, "Welcome");
 		res.status(201).json({ message: "Profile created", usrId: id });
 	} catch (error) {
 		if (error instanceof UniqueConstraintError) {
@@ -71,7 +71,7 @@ export async function login(req: Request, res: Response) {
 				username,
 				lastName,
 				firstName,
-        biography,
+				biography,
 				gender,
 				age,
 				orientation,
@@ -93,7 +93,7 @@ export function getProfile(req: Request, res: Response) {
 }
 
 export async function getOptions(req: Request, res: Response) {
-	const options = await UserDb.getAllInterests()
+	const options = await UserDb.getAllInterests();
 	res.json(options);
 }
 
@@ -102,16 +102,16 @@ export async function validByEmail(req: Request, res: Response) {
 
 	const parsedUrl = new URL(requestUrl, `http://${req.headers.host}`);
 	const queryParameters = parsedUrl.searchParams;
-	
+
 	const email = queryParameters.get("email");
 	const code = queryParameters.get("code");
-	if (!email || !code){
-		res.status(400).json({error: "missing parameters"});
+	if (!email || !code) {
+		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
 	const dbCode = await UserDb.getCode(email);
-	if (dbCode.accessCode != code){
-		res.status(404).json({error:"not found"});
+	if (dbCode.accessCode != code) {
+		res.status(404).json({ error: "not found" });
 		return;
 	}
 
@@ -166,13 +166,13 @@ export async function updateBio(req: Request, res: Response) {
 	const { biography } = req.body;
 
 	// Biography validation
-	if (typeof biography !== 'string') {
+	if (typeof biography !== "string") {
 		res.status(400).json({ error: "Invalid biography. Biography must be a string" });
 		return;
 	}
 
-	await UserDb.updateBio(biography, res.locals.fulluser.id)
-	res.status(200).json({ message: 'Profile updated successfully' });
+	await UserDb.updateBio(biography, res.locals.fulluser.id);
+	res.status(200).json({ message: "Profile updated successfully" });
 }
 
 export async function updateInterests(req: Request, res: Response) {
@@ -189,11 +189,58 @@ export async function updateInterests(req: Request, res: Response) {
 		return;
 	}
 
-  if (!interests.every((interest: any) => (typeof interest === 'string' && interest != ''))) {
+	if (!interests.every((interest: any) => (typeof interest === "string" && interest != ""))) {
 		res.status(400).json({ error: "Invalid interest list. Interests must be an array of non empty strings" });
 		return;
 	}
 
-	await UserDb.updateUserInterests(res.locals.fulluser.id, interests)
-	res.status(200).json({ message: 'Profile updated successfully' });
+	await UserDb.updateUserInterests(res.locals.fulluser.id, interests);
+	res.status(200).json({ message: "Profile updated successfully" });
+}
+
+export async function RequestpasswordReset(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const email = req.body.email;
+	if (!email) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const user = await UserDb.getUserbyMail(email);
+	if (!user) {
+		res.status(200).json({ message: "ok" });
+		return;
+	}
+	const code = generateRandomString(16);
+	passwordResetKey[email] = code;
+	sendEmail(email, "click on this link to create new password :http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "reset password");
+	res.status(200).json({ message: "ok" });
+
+}
+
+export async function passwordReset(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const email = req.body.email;
+	const code = req.body.code;
+	const newPassword = req.body.newPassword;
+
+	if (!email || !code || !newPassword) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	if (code !== passwordResetKey[email]) {
+		res.status(404).json({ message: "not found" });
+		return;
+	}
+	const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+	await UserDb.changePassword(encryptedPassword, email);
+
+	res.status(200).json({ message: "password reset" });
+
 }

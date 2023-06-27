@@ -16,6 +16,7 @@ interface AuthContextType {
   signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => Promise<void>;
   valideByMail: (mail: string, code: string) => Promise<void>,
   resetPasswordRequest: (email: string, callback: VoidFunction) => void;
+  resetPassword: (email: string, code: string, password: string, callback: VoidFunction) => void;
   getProfile: () => void;
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
@@ -69,7 +70,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   let resetPasswordRequest = (email: string, callback: VoidFunction) => {
-    fakeAuthProvider.resetPasswordRequest(email)
+    authProvider.resetPasswordRequest(email)
       .then((res: any) => {
         snackBar('An email has been sent to ' + email + '. Clik in the link inside to reset your password', 'success');
         callback();
@@ -79,6 +80,19 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
       })
   };
+
+  const resetPassword = (email: string, code: string, password: string, callback: VoidFunction) => {
+    authProvider.resetPassword(code, password, email)
+      .then((res: any) => {
+        snackBar('password reset', 'success');
+        callback();
+      })
+      .catch((error: AxiosError) => {
+        const errorMessage = (error.response?.data as ErrorPayload)?.error;
+        snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
+      })
+  };
+
 
   const getProfile = async () => {
     try {
@@ -169,7 +183,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout, valideByMail };
+  let value = { user, signin, signup, resetPasswordRequest,resetPassword, getProfile, updateProfile, updateBio, updateInterests, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

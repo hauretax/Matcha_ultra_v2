@@ -109,7 +109,7 @@ function LoginPage() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <MyLink to="/reset_password" variant="body2">
+              <MyLink to="/reset_password_request" variant="body2">
                 Forgot password?
               </MyLink>
             </Grid>
