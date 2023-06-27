@@ -156,7 +156,7 @@ function NavBar() {
           {auth.user ?
             <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={prefixBackendUrl(auth.user.pictures[0].src)} />
+                <Avatar alt="Remy Sharp" src={prefixBackendUrl(auth.user.pictures[0]?.src)} />
               </IconButton>
               <Menu
                 sx={{ mt: '45px' }}
