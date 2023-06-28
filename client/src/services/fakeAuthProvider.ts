@@ -32,9 +32,9 @@ const fakeAuthProvider = {
           console.log("Sign out response received")
           const response = {
             data: {
-              jwtToken: {
+              jwt: {
                 refreshToken: 'string',
-                token: 'string'
+                accessToken: 'string'
               },
               profile: profile
             }

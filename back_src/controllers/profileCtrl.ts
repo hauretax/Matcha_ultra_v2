@@ -14,7 +14,6 @@ import { UserReqRegister } from "../../comon_src/type/user.type";
 import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
-import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
 import { generateRandomString } from "../utils/random";
 
 
