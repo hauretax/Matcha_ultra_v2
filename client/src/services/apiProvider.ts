@@ -9,8 +9,8 @@ const apiProvider = {
     return axiosPrivate.get('/options')
   },
 
-  updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) {
-    return axiosPrivate.patch('/profile', { firstName, lastName, age, gender, orientation, email })
+  updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string) {
+    return axiosPrivate.patch('/profile', { firstName, lastName, birthDate, gender, orientation, email })
   },
 
   updateBio(biography: string) {

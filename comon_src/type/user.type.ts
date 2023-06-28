@@ -7,7 +7,7 @@ export type UserProfile = {
   firstName: string;
   biography: string;
   gender: string;
-  age: number;
+  birthDate: string;
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];

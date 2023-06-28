@@ -79,7 +79,7 @@ export async function login(req: Request, res: Response) {
 		return;
 	}
 
-	const { id, email, firstName, lastName, biography, gender, age, orientation, emailVerified, pictures, interests } = user;
+	const { id, email, firstName, lastName, biography, gender, birthDate, orientation, emailVerified, pictures, interests } = user;
 	const payload: UserPayload = {
 		jwt: {
 			accessToken: generateJwt(id),
@@ -93,7 +93,7 @@ export async function login(req: Request, res: Response) {
 			firstName,
 			biography,
 			gender,
-			age,
+			birthDate,
 			orientation,
 			emailVerified,
 			pictures,
@@ -104,7 +104,9 @@ export async function login(req: Request, res: Response) {
 }
 
 export function getProfile(req: Request, res: Response) {
+	console.log("XUFCIGVJHLKBMJNL")
 	const user: UserProfile = res.locals.fulluser;
+	console.log(user)
 	res.json(user);
 }
 
@@ -137,15 +139,15 @@ export async function validByEmail(req: Request, res: Response) {
 }
 
 export async function updateProfile(req: Request, res: Response) {
-	if (!validateBody(req, ["firstName", "lastName", "age", "gender", "orientation", "email"], ["string", "string", "number", "string", "string", "string"])) {
+	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "orientation", "email"], ["string", "string", "string", "string", "string", "string"])) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { firstName, lastName, age, gender, orientation, email } = req.body;
+	const { firstName, lastName, birthDate, gender, orientation, email } = req.body;
 
 	// Age validation
-	if (!validateAge(age)) {
-		res.status(400).json({ error: "invalid age" });
+	if (!validateAge(birthDate)) {
+		res.status(400).json({ error: "invalid birthDate" });
 		return;
 	}
 
@@ -170,7 +172,7 @@ export async function updateProfile(req: Request, res: Response) {
 	const profileInformation = {
 		firstName,
 		lastName,
-		age,
+		birthDate,
 		gender,
 		orientation,
 		email,

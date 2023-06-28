@@ -33,7 +33,7 @@ function ProfilePage() {
       <Caroussel imgs={auth.user!.pictures} isLoading={false} />
       <Biography biography={auth.user!.biography} isLoading={false} />
       <Interests interests={auth.user!.interests} options={options} />
-      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} age={auth.user!.age} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} isLoading={false} />
+      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} isLoading={false} />
     </Box>
 
   )
