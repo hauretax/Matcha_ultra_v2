@@ -1,6 +1,6 @@
-import fs from 'fs';
-import csv from 'csv-parser';
-import sqlite3 from 'sqlite3';
+import fs from "fs";
+import csv from "csv-parser";
+import sqlite3 from "sqlite3";
 
 // Fonction pour initialiser la table "users"
 export default async function initializeUserTable() {
@@ -26,7 +26,7 @@ export default async function initializeUserTable() {
 		if (err) {
 			console.log(err);
 		} else {
-			insertDataFromCSV()
+			insertDataFromCSV();
 		}
 	});
 }
@@ -55,10 +55,10 @@ function insertDataFromCSV() {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 		const name = (Math.random() * 65536).toString();
-		const sex = i % 2 ? 'h' : 'f';
+		const sex = i % 2 ? "h" : "f";
 		const randombio = (Math.random() * 65536).toString();
 		const age = (Math.random() * 100).toString();
-		const orientation = i % 3 ? 'straigth' : 'gay';
+		const orientation = i % 3 ? "straigth" : "gay";
 		db.run(sql, [
 			name + "oui@non.nop", name + "bot", "1", "oui", "pass", sex, randombio, age, orientation, 0, 0, ""
 		], (error) => {
