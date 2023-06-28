@@ -57,7 +57,7 @@ describe("JWT Tests", () => {
 	});
 	it("should generate and unverify a JWT", () => {
 		const token = generateJwt(usrId);
-		expect(validateJwt(token+"s")).toEqual(null);
+		expect(validateJwt(token + "s")).toEqual(null);
 	});
 	//j'imite le comportement que devrais avoir le front'
 	it("should refresh token", async () => {
@@ -69,15 +69,15 @@ describe("JWT Tests", () => {
 		expect(newToken).toHaveProperty("refreshToken");
 	});
 	it("should not refresh token", async () => {
-		let scdToken;
+		
 		try {
-		  scdToken = await askNewJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsIm5vbmNlIjowLjMyMzYxNTQ0OTMyNTUxMzY3LCJpYXQiOjE2ODc3MDk1NjYsImV4cCI6MTY4ODMxNDM2Nn0.DXaSpZPJfgPcddooLwsnSe_P-0U6PpXGoPm0weDlEf4");
+			await askNewJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsIm5vbmNlIjowLjMyMzYxNTQ0OTMyNTUxMzY3LCJpYXQiOjE2ODc3MDk1NjYsImV4cCI6MTY4ODMxNDM2Nn0.DXaSpZPJfgPcddooLwsnSe_P-0U6PpXGoPm0weDlEf4");
 		} catch (error) {
-		  // Une erreur a été renvoyée
-		  expect(error).toBeInstanceOf(Error);
-		  expect(error.message).toBe("token not valid");
+			// Une erreur a été renvoyée
+			expect(error).toBeInstanceOf(Error);
+			expect(error.message).toBe("token not valid");
 		}
-	},10000);
+	}, 10000);
 	it("should include a valid signed JWT in the request header", () => {
 		const payload = { usrId };
 		const token = jwt.sign(payload, secretKey);

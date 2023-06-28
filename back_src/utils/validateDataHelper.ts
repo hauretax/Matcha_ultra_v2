@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 export function validateBody(req: Request, expectedProperties: string[], expectedPropTypes: string[]): boolean {
-	return expectedProperties.every(prop => req.body.hasOwnProperty(prop) && req.body[prop] && typeof req.body[prop] === expectedPropTypes[expectedProperties.indexOf(prop)]);
+	return expectedProperties.every(prop => Object.prototype.hasOwnProperty.call(req.body, prop) && req.body[prop] && typeof req.body[prop] === expectedPropTypes[expectedProperties.indexOf(prop)]);
 }
 
 export function validateAge(age: number): boolean {
@@ -9,7 +9,7 @@ export function validateAge(age: number): boolean {
 }
 
 export function validateInterests(interests: string[]): boolean {
-	return Array.isArray(interests) && interests.every((interest: any) => (typeof interest === "string" && interest != ""));
+	return Array.isArray(interests) && interests.every((interest) => (typeof interest === "string" && interest != ""));
 }
 
 export function validatePictureId(pictureId: string): boolean {

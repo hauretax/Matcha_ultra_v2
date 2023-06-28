@@ -196,7 +196,7 @@ export async function updateInterests(req: Request, res: Response) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { interests } = req.body;
+	const { interests }:{interests:Array<string>} = req.body;
 
 	// interests validation
 	if (!validateInterests(interests)) {

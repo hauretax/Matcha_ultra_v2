@@ -1,5 +1,3 @@
-import fs from "fs";
-import csv from "csv-parser";
 import sqlite3 from "sqlite3";
 
 // Fonction pour initialiser la table "users"

@@ -1,7 +1,6 @@
 import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
-import { generateRandomString } from "../utils/random";
 
 const UserDb = {
 	initializeUserTable() {
@@ -132,7 +131,7 @@ const UserDb = {
 		];
 
 		try {
-			const result = await db.run(query, params);
+			await db.run(query, params);
 			return accessCode;
 		} catch (err) {
 			if (err.message.includes("UNIQUE constraint failed")) {
