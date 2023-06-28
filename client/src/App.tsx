@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import { AuthProvider, useAuth } from './context/AuthProvider';
+import { AuthProvider } from './context/AuthProvider';
 import SnackBarProvider from "./context/SnackBar";
 
 import LoginPage from "./pages/LoginPage"
@@ -12,17 +12,15 @@ import Layout from "./components/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
 import ProfilePage from './pages/ProfilePage'
+import ValideMailPage from "./pages/ValideMailPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import HomePage from "./pages/HomePage";
 
 import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
 import './App.css';
-import { useEffect, useState } from "react";
-import axios from "axios";
-import ValideMailPage from "./pages/ValideMailPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-
 
 const theme = createTheme(themeOptions)
 
@@ -42,7 +40,7 @@ function App() {
               <Route path="/reset_password" element={<ResetPasswordPage />} />
               <Route path='/404' element={<div>404</div>} />
               <Route element={<RequireAuth />} >
-                <Route path='/home' element={<ProtectedPage />} />
+                <Route path='/home' element={<HomePage />} />
                 <Route path='/profile' element={<ProfilePage />} />
               </Route>
             </Route>
@@ -56,39 +54,6 @@ function App() {
 function PublicPage() {
   return (
     <p>Public page</p>
-  )
-}
-
-function ProtectedPage() {
-  const [accessToken, setAccessToken] = useState<string | null>('')
-  const [refreshToken, setRefreshToken] = useState<string | null>('')
-  const auth = useAuth();
-
-  useEffect(() => {
-    setAccessToken(localStorage.getItem('accessToken'))
-    setRefreshToken(localStorage.getItem('refreshToken'))
-  }, [])
-
-  const getProfile = () => {
-    auth.getProfile()
-  }
-
-  const refresh = () => {
-    axios.post('http://localhost:8080/api/newToken', { 'refreshToken': refreshToken })
-      .then((res) => {
-        setAccessToken(res.data.token)
-        setRefreshToken(res.data.refreshToken)
-      })
-  }
-
-  return (
-    <>
-      <button onClick={getProfile}>get Profile</button>
-      <button onClick={refresh}>Refresh token</button>
-      <p>Protected page</p>
-      <p>Access token : {accessToken}</p>
-      <p>Refresh token : {refreshToken}</p>
-    </>
   )
 }
 

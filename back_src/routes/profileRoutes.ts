@@ -1,5 +1,5 @@
 import express from "express";
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset} from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles} from "../controllers/profileCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest, isPictureOwner } from "../middlewares/secureRequest.mid";
@@ -21,5 +21,6 @@ router.delete("/picture/:pictureId", validsecurRequest, asyncHandler(deletePictu
 router.get("/verify_email",asyncHandler(validByEmail));
 router.post("/request_password_reset",asyncHandler(RequestpasswordReset));
 router.post("/reset_password",asyncHandler(passwordReset));
+router.get("/users", validsecurRequest, asyncHandler(getProfiles));
 
 export default router;  
