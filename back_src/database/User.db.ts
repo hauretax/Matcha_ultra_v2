@@ -1,6 +1,7 @@
 import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
 import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
+import { generateRandomString } from "../utils/random";
 
 const UserDb = {
   initializeUserTable() {
@@ -17,7 +18,7 @@ const UserDb = {
         age INTEGER,
         orientation TEXT,
         emailVerified INTEGER,
-        accessCode INTEGER,
+        accessCode TEXT,
 		    token TEXT
       )`;
     return db.run(sql);
@@ -67,6 +68,7 @@ const UserDb = {
 			FROM interests
 			INNER JOIN user_interests ON interests.id = user_interests.interest_id
 			WHERE user_interests.user_id = ?`;
+
     const res: ({ interest: string }[]) = await db.all(sql, [userId]);
     const ret: string[] = res.map((interestObj: { interest: string }) => interestObj.interest);
     return ret;
@@ -150,14 +152,37 @@ const UserDb = {
     return db.run(sql, params);
   },
 
-  updateBio(biography: string, userId: number) {
-    const sql = `
+	updateBio(biography: string, userId: number) {
+		const sql = `
 			UPDATE users 
 			SET biography=?
 			WHERE id=?`;
     const params = [biography, userId]
     return db.run(sql, params);
   },
+
+	getUserbyMail(email: string) {
+		const sql = `
+		 SELECT * 
+		 FROM users
+		 WHERE email = ?
+		`;
+		return db.get(sql, [email])
+	},
+
+	getCode(email: string) {
+		const sql = "SELECT accessCode FROM users WHERE email = ?";
+		return db.get(sql, [email]);
+	},
+
+	changePassword(password: string, email: string) {
+		const sql = `
+		UPDATE users 
+		SET password = ?
+			WHERE email = ?
+    	`;
+		return db.get(sql, [password,email]);
+	},    
 
   async findOrCreateInterest(interest: string): Promise<number> {
     const findSql = "SELECT id FROM interests WHERE interest = ?";
@@ -196,11 +221,6 @@ const UserDb = {
   deleteUser(userId: number) {
     const sql = "DELETE FROM users WHERE id = ?";
     return db.run(sql, [userId]);
-  },
-
-  getCode(email: string) {
-    const sql = "SELECT accessCode FROM users WHERE email = ?";
-    return db.get(sql, [email]);
   },
 
   valideUser(email: string) {

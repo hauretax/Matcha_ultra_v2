@@ -14,6 +14,12 @@ import { UserReqRegister } from "../../comon_src/type/user.type";
 import UserDb from "../database/User.db";
 import { UniqueConstraintError } from "../database/errors";
 
+import { checkDataProfilCreate } from "./dataVerifiers/assertedUserData";
+import { generateRandomString } from "../utils/random";
+
+
+const passwordResetKey = [];
+
 export async function createProfile(req: Request, res: Response) {
   if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
     res.status(400).json({ error: "Missing parameters" });
@@ -217,7 +223,7 @@ export async function deletePicture(req: Request, res: Response) {
     res.status(404).send({ error: "Picture not found" });
     return;
   }
-
+  
   res.status(200).send({ message: "Picture deleted successfully" });
 
   // Delete picture from disk
@@ -229,6 +235,55 @@ export async function deletePicture(req: Request, res: Response) {
   }
   return;
 }
+
+
+export async function RequestpasswordReset(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const email = req.body.email;
+	if (!email) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const user = await UserDb.getUserbyMail(email);
+	if (!user) {
+		res.status(200).json({ message: "ok" });
+		return;
+	}
+	const code = generateRandomString(16);
+	passwordResetKey[email] = code;
+	sendEmail(email, "click on this link to create new password :http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "reset password");
+	res.status(200).json({ message: "ok" });
+
+}
+
+export async function passwordReset(req: Request, res: Response) {
+	if (!req.body) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const email = req.body.email;
+	const code = req.body.code;
+	const newPassword = req.body.newPassword;
+
+	if (!email || !code || !newPassword) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	if (code !== passwordResetKey[email]) {
+		res.status(404).json({ message: "not found" });
+		return;
+	}
+	const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+	await UserDb.changePassword(encryptedPassword, email);
+
+	res.status(200).json({ message: "password reset" });
+  return;
+}
+
 
 export async function insertPicture(req: Request, res: Response, next: NextFunction) {
   if (!req.file) {
