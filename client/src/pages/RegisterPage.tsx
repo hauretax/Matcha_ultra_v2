@@ -32,7 +32,7 @@ function RegisterPage() {
   let navigate = useNavigate();
   let auth = useAuth();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let formData = new FormData(event.currentTarget);
     let username = formData.get("username") as string;
@@ -104,14 +104,15 @@ function RegisterPage() {
     });
 
     if (errors.every(e => e === null)) {
-      auth.signup(username, email, firstName, lastName, password, () => navigate('/login'));
+      await auth.signup(username, email, firstName, lastName, password)
+      navigate('/login');
     }
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const prefill = () => {
-    const preFilledValues : { [key: string]: string } = {
+    const preFilledValues: { [key: string]: string } = {
       'username': "tonio",
       'firstName': "Antoine",
       'lastName': "Labalette",
@@ -119,7 +120,7 @@ function RegisterPage() {
       'password': "@Antoine1",
       'confirmPassword': "@Antoine1",
     };
-  
+
     Object.keys(preFilledValues).forEach((fieldName) => {
       const inputField = document.getElementById(fieldName) as HTMLInputElement;
       if (inputField) {

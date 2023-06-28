@@ -15,15 +15,14 @@ function ResetPasswordRequestPage() {
   let navigate = useNavigate();
   let auth = useAuth();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     let formData = new FormData(event.currentTarget);
     let email = formData.get("email") as string;
 
-    auth.resetPasswordRequest(email, () => {
-      navigate('/login')
-    });
+    await auth.resetPasswordRequest(email);
+    navigate('/login');
   }
 
   return (

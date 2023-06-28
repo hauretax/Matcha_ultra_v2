@@ -1,7 +1,6 @@
 import React from "react";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
-import { ErrorPayload } from '../../../comon_src/type/error.type'
 import { UserProfile } from "../../../comon_src/type/user.type";
 
 import fakeAuthProvider from "../services/fakeAuthProvider";
@@ -11,26 +10,26 @@ import { useSnackbar } from "./SnackBar";
 import apiProvider from "../services/apiProvider";
 
 interface AuthContextType {
-  user: any;
-  signin: (username: string, password: string, callback: VoidFunction) => Promise<void>;
-  signup: (email: string, username: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => Promise<void>;
+  user: UserProfile | null;
+  signin: (username: string, password: string) => Promise<void>;
+  signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
   valideByMail: (mail: string, code: string) => Promise<void>,
-  resetPasswordRequest: (email: string, callback: VoidFunction) => void;
-  resetPassword: (email: string, code: string, password: string, callback: VoidFunction) => void;
-  getProfile: () => void;
+  resetPasswordRequest: (email: string) => Promise<void>;
+  resetPassword: (email: string, code: string, password: string) => Promise<void>;
+  getProfile: () => Promise<void>;
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
   insertPicture: (formdata: FormData) => Promise<void>;
   updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
-  signout: (callback: VoidFunction) => void;
+  signout: () => Promise<void>;
 }
 
-let AuthContext = React.createContext<AuthContextType>(null!);
+const AuthContext = React.createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  let [user, setUser] = React.useState<UserProfile | null>(null);
+  const [user, setUser] = React.useState<UserProfile | null>(null);
   const snackBar = useSnackbar();
 
   const handleError = (error: any, defaultMessage: string) => {
@@ -41,7 +40,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     snackBar(`${defaultMessage} ${errorMessage ? `: ${errorMessage}` : ''}`, 'error');
   };
 
-  const signin = async (username: string, password: string, callback: VoidFunction) => {
+  const signin = async (username: string, password: string): Promise<void> => {
     try {
       const res: AxiosResponse = await authProvider.signin(username, password);
       const { jwt, profile }: { jwt: { refreshToken: string, accessToken: string }, profile: UserProfile } = res.data;
@@ -55,49 +54,41 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(profile);
 
       snackBar("Login successfull", 'success');
-      callback();
     } catch (error: any) {
       handleError(error, 'Login failed')
     }
   };
 
-  const signup = async (username: string, email: string, firstName: string, lastName: string, password: string, callback: VoidFunction) => {
+  const signup = async (username: string, email: string, firstName: string, lastName: string, password: string): Promise<void> => {
     try {
       await authProvider.signup(username, email, firstName, lastName, password)
 
       snackBar('Registration successful. You can now login !', 'success');
-      callback();
     } catch (error: any) {
       handleError(error, 'Registration failed')
     }
   };
 
-  let resetPasswordRequest = (email: string, callback: VoidFunction) => {
-    authProvider.resetPasswordRequest(email)
-      .then((res: any) => {
-        snackBar('An email has been sent to ' + email + '. Clik in the link inside to reset your password', 'success');
-        callback();
-      })
-      .catch((error: AxiosError) => {
-        const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
-      })
+  const resetPasswordRequest = async (email: string): Promise<void> => {
+    try {
+      await authProvider.resetPasswordRequest(email)
+      snackBar('An email has been sent to ' + email + '. Clik in the link inside to reset your password', 'success');
+    } catch (error: any) {
+      handleError(error, 'Request failed')
+    }
   };
 
-  const resetPassword = (email: string, code: string, password: string, callback: VoidFunction) => {
-    authProvider.resetPassword(code, password, email)
-      .then((res: any) => {
-        snackBar('password reset', 'success');
-        callback();
-      })
-      .catch((error: AxiosError) => {
-        const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        snackBar('Registration failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
-      })
+  const resetPassword = async (email: string, code: string, password: string): Promise<void> => {
+    try {
+      await authProvider.resetPassword(code, password, email)
+      snackBar('Password reseted successfully', 'success');
+    } catch (error: any) {
+      handleError(error, 'Reset failed')
+    }
   };
 
 
-  const getProfile = async () => {
+  const getProfile = async (): Promise<void> => {
     try {
       const res: AxiosResponse = await apiProvider.getProfile()
       setUser(res.data);
@@ -201,37 +192,32 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(newUser);
       }
     } catch (error: any) {
-      handleError(error, 'Error while deleting picture');
+      handleError(error, 'Error while deconsting picture');
     }
   }
 
-  let signout = (callback: VoidFunction) => {
-    fakeAuthProvider.signout()
-      .then((res: any) => {
-        // Store the JWT token in local storage
-        localStorage.removeItem("jwtToken");
-        // Update the user state
-        setUser(null);
+  // TODO: handle remember me
+  const signout = async (): Promise<void> => {
+    try {
 
-        snackBar("Logout successfull", 'success');
-        callback();
-      })
-      .catch((error: AxiosError) => {
-        const errorMessage = (error.response?.data as ErrorPayload)?.error;
-        snackBar('Logout failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
-      })
+      await fakeAuthProvider.signout()
+      localStorage.removeItem("jwtToken");
+      setUser(null);
+      snackBar("Logout successfull", 'success');
+    } catch (error: any) {
+      handleError(error, 'Logout failed')
+    }
   };
 
-  let valideByMail = async (email: string, code: string) => {
+  const valideByMail = async (email: string, code: string): Promise<void> => {
     try {
       await authProvider.verifyEmail(code, email)
     } catch (error: any) {
-      const errorMessage = (error.response?.data as ErrorPayload)?.error;
-      snackBar('validation by mail failed' + (errorMessage ? ': ' + errorMessage : ''), 'error');
+      handleError(error, 'Error while validating email')
     }
   }
-  
-  let value = { user, signin, signup, resetPasswordRequest, resetPassword, getProfile, updateProfile, updateBio, updateInterests, insertPicture, updatePicture, deletePicture, signout, valideByMail };
+
+  const value = { user, signin, signup, resetPasswordRequest, resetPassword, getProfile, updateProfile, updateBio, updateInterests, insertPicture, updatePicture, deletePicture, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
