@@ -75,7 +75,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
               <Box
                 component="img"
                 sx={{
-                  maxHeight: '300px',
+                  height: '300px',
                   display: 'block',
                   overflow: 'hidden',
                   width: '100%',
@@ -83,7 +83,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
                   backgroundColor: '#fff'
                 }}
                 src={prefixBackendUrl(imgs[activeIndex].src)}
-                alt={'picture'}
+                alt={'Issue while fetching picture'}
               />
               <Fab
                 color="primary"
