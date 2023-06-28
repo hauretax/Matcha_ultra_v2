@@ -15,7 +15,7 @@ export function generateJwt(userId: number): string {
 	return jwt.sign({ userId: userId, nonce: Math.random() }, secretKey, { expiresIn: "1h" });
 }
 
-export async function GenerateRefreshJwt(id: number): Promise<string> {
+export async function generateRefreshJwt(id: number): Promise<string> {
 	const token = jwt.sign({ userId: id, nonce: Math.random() }, secretKeyR, { expiresIn: "1week" });
 	await JwtDb.insertToken(token, id);
 	return token;
@@ -49,7 +49,7 @@ export async function askNewJwt(refreshToken: string): Promise<accessTokenList> 
 		throw new Error("token not valid");
 	}
 
-	const newRefreshToken = await GenerateRefreshJwt(userId);
+	const newRefreshToken = await generateRefreshJwt(userId);
 	const newToken = generateJwt(userId);
 
 	return { refreshToken: newRefreshToken, token: newToken };

@@ -1,13 +1,18 @@
 import express, { Application, Request, Response } from "express";
+import path from 'path'
 
 import UserDb from "./database/User.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
+import multerErrorMiddleware from "./middlewares/multerError.middleware";
 
 import profileRoutes from "./routes/profileRoutes";
 
 import { Bport } from "../comon_src/constant";
+
+import initializeUserTable from "./creatTestDb"
+
 class App {
 	private app: Application;
 
@@ -30,6 +35,7 @@ class App {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
 		this.app.use(requestLoggerMiddleware);
+    this.app.use(express.static(path.join(__dirname, '../../back_src', 'public')));
 	}
 
 	private configureRoutes(): void {
@@ -40,6 +46,7 @@ class App {
 	}
 
 	private handleErrors(): void {
+    this.app.use(multerErrorMiddleware)
 		this.app.use(globalErrorMiddleware);
 	}
 
@@ -50,6 +57,8 @@ class App {
 		return server;
 	}
 }
+
+// initializeUserTable();
 
 const app = new App();
 

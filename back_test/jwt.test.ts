@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { generateJwt, GenerateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
+import { generateJwt, generateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
 import UserDb from "../back_src/database/User.db";
 import { createProfile } from "../back_src/controllers/profileCtrl";
 import { Fakexpress } from "./FackExpress";
@@ -63,7 +63,7 @@ describe("JWT Tests", () => {
 	it("should refresh token", async () => {
 		const token = jwt.sign({ usrId }, secretKey, { expiresIn: "1ms" });
 		expect(validateJwt(token)).toEqual(null);
-		const refreshToken = await GenerateRefreshJwt(usrId);
+		const refreshToken = await generateRefreshJwt(usrId);
 		const newToken = await askNewJwt(refreshToken);
 		expect(newToken).toHaveProperty("token");
 		expect(newToken).toHaveProperty("refreshToken");
