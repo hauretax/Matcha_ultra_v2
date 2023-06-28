@@ -10,3 +10,6 @@ ma-base-de-donnees.db
 
 # Env files
 .env
+
+# Backend public files
+back_src/public

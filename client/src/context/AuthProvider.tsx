@@ -20,6 +20,9 @@ interface AuthContextType {
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
+  insertPicture: (formdata: FormData) => Promise<void>;
+  updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
+  deletePicture: (pictureId: number) => Promise<void>;
   signout: (callback: VoidFunction) => void;
 }
 
@@ -40,11 +43,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const signin = async (username: string, password: string, callback: VoidFunction) => {
     try {
       const res: AxiosResponse = await authProvider.signin(username, password);
-      const { jwtToken, profile }: { jwtToken: { refreshToken: string, token: string }, profile: UserProfile } = res.data;
-      const { token, refreshToken } = jwtToken
+      const { jwt, profile }: { jwt: { refreshToken: string, accessToken: string }, profile: UserProfile } = res.data;
+      const { accessToken, refreshToken } = jwt
 
       // Store the JWT token in local storage
-      localStorage.setItem("accessToken", token);
+      localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
       // Update the user state
@@ -143,6 +146,51 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const insertPicture = async (formdata: FormData): Promise<void> => {
+    try {
+      const res: AxiosResponse = await apiProvider.insertPicture(formdata)
+      if (user) {
+        const newUser = {
+          ...user,
+          pictures: [...user.pictures, res.data]
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while inserting picture');
+    }
+  }
+
+  const updatePicture = async (formdata: FormData, pictureId: number): Promise<void> => {
+    try {
+      const res: AxiosResponse = await apiProvider.updatePicture(formdata, pictureId)
+      if (user) {
+        const newUser = {
+          ...user,
+          pictures: user.pictures.map(picture => picture.id === pictureId ? res.data : picture)
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while updating picture');
+    }
+  }
+
+  const deletePicture = async (pictureId: number): Promise<void> => {
+    try {
+      await apiProvider.deletePicture(pictureId)
+      if (user) {
+        const newUser = {
+          ...user,
+          pictures: user.pictures.filter(picture => picture.id !== pictureId)
+        }
+        setUser(newUser);
+      }
+    } catch (error: any) {
+      handleError(error, 'Error while deleting picture');
+    }
+  }
+
   let signout = (callback: VoidFunction) => {
     fakeAuthProvider.signout()
       .then((res: any) => {
@@ -169,7 +217,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, signout, valideByMail };
+  let value = { user, signin, signup, resetPasswordRequest, getProfile, updateProfile, updateBio, updateInterests, insertPicture, updatePicture, deletePicture, signout, valideByMail };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

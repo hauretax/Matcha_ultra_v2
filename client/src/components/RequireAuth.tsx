@@ -1,13 +1,12 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import { isProfileIncomplete } from "../utils";
 
 function RequireAuth() {
-    
     let auth = useAuth();
     let location = useLocation();
-    let u = auth.user;
 
-    if (!u) {
+    if (!auth.user) {
         // Redirect them to the /login page, but save the current location they were
         // trying to go to when they were redirected. This allows us to send them
         // along to that page after they login, which is a nicer user experience
@@ -16,15 +15,8 @@ function RequireAuth() {
     }
 
     if (location.pathname !== '/profile') {
-        if (
-            u.gender === '' ||
-            u.age === 0 ||
-            u.orientation === '' ||
-            u.interests.length === 0 ||
-            u.biography === '' ||
-            u.pictures.every((pic: (string | null)) => pic === null)
-        ) {
-            return <Navigate to="/profile" state={{ profileIncomplete: true }} />;
+        if (isProfileIncomplete(auth.user)) {
+          return <Navigate to="/profile" state={{ profileIncomplete: true }} />;
         }
     }
 
