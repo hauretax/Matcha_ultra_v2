@@ -1,10 +1,9 @@
 import express from "express";
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture} from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset} from "../controllers/profileCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest, isPictureOwner } from "../middlewares/secureRequest.mid";
 import upload from '../config/multer.config'
-
 
 const router = express.Router();
 
@@ -20,5 +19,7 @@ router.post('/picture/new', validsecurRequest, upload.single('file'), asyncHandl
 router.put('/picture/:pictureId/edit', validsecurRequest, isPictureOwner, upload.single('file'), asyncHandler(updatePicture))
 router.delete('/picture/:pictureId', validsecurRequest, asyncHandler(deletePicture))
 router.get("/verify_email",asyncHandler(validByEmail));
+router.post("/request_password_reset",asyncHandler(RequestpasswordReset));
+router.post("/reset_password",asyncHandler(passwordReset));
 
 export default router;  
