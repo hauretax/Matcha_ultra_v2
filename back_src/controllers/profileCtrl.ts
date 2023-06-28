@@ -104,9 +104,7 @@ export async function login(req: Request, res: Response) {
 }
 
 export function getProfile(req: Request, res: Response) {
-	console.log("XUFCIGVJHLKBMJNL")
 	const user: UserProfile = res.locals.fulluser;
-	console.log(user)
 	res.json(user);
 }
 

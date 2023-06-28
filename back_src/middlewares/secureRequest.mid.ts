@@ -34,7 +34,6 @@ export async function validsecurRequest(
 		}
 
 		res.locals.fulluser = fulluser;
-		console.log	('qsdqsdqsdqsdqds')
 		delete res.locals.fulluser.email;
 		next();
 
