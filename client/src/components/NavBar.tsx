@@ -58,9 +58,10 @@ function NavBar() {
     navigate(url);
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     handleCloseUserMenu();
-    auth.signout(() => { navigate('/') })
+    await auth.signout();
+    navigate('/')
   }
 
   return (

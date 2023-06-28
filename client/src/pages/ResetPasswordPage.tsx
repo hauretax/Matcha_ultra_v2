@@ -30,7 +30,7 @@ function ResetPasswordPage() {
     let navigate = useNavigate();
     let auth = useAuth();
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
 
         event.preventDefault();
@@ -77,7 +77,8 @@ function ResetPasswordPage() {
         });
 
         if (errors.every(e => e === null)) {
-            auth.resetPassword(email, code, password, () => navigate('/login'))
+            await auth.resetPassword(email, code, password)
+            navigate('/login')
         }
     }
 
