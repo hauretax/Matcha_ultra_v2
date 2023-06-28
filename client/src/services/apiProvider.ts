@@ -40,6 +40,10 @@ const apiProvider = {
       },
     });
   },
+
+  getUsers() {
+    return axiosPrivate.get('/users');
+  }
 }
 
 export default apiProvider
