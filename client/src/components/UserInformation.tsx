@@ -39,10 +39,25 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     setEmail(props.email || '')
     setFirstName(props.firstName || '')
     setLastName(props.lastName || '')
-    setBirthDate(props.birthDate ||'')
+    setBirthDate(props.birthDate || '')
     setGender(props.gender || '')
     setOrientation(props.orientation || '')
   }, [props]);
+
+  const handlDateChange = async (dateEl: any) => {
+    const date = dateEl.target.value;
+
+    if (date.length < birthDate.length) {
+      if (date.length === 3 || date.length === 6) {
+        setBirthDate(birthDate.slice(0, -2));
+        return;
+      }
+      setBirthDate(date);
+    }
+    setBirthDate(date)
+    if (date.length === 2 || date.length === 5)
+      setBirthDate(date + "/")
+  };
 
   return (
     <Box>
@@ -113,9 +128,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
                 fullWidth
                 disabled={!isEditing}
                 variant="standard"
-                label="BirthDate"
+                label="BirthDate (jj/mm/yyyy)"
                 value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
+                onChange={(e) => handlDateChange(e)}
                 sx={{ my: 1 }}
               /> :
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>

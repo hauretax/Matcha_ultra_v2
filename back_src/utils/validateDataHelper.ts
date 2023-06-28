@@ -5,8 +5,8 @@ export function validateBody(req: Request, expectedProperties: string[], expecte
 }
 
 export function validateAge(birthDate: string): boolean {
-	//TODO verification date
-	return true;
+	const regex =  /(\d{1,2})\/(\d{1,2})\/(\d{4})/;
+	return regex.test(birthDate);
 }
 
 export function validateInterests(interests: string[]): boolean {
