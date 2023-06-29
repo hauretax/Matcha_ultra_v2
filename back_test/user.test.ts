@@ -5,7 +5,8 @@ import { Fakexpress } from "./FackExpress";
 import { UserProfile, UserReqRegister } from "../comon_src/type/user.type";
 
 import { checkDataProfilCreate } from "../back_src/controllers/dataVerifiers/assertedUserData";
-import UserDb from "../back_src/database/User.db";
+import DeletDb from "../back_src/database/Delet.db";
+import InitializeDb from "../back_src/database/Initialize.db";
 
 const FE = new Fakexpress();
 const name = (Math.random() * 65536).toString();
@@ -29,10 +30,10 @@ const goodReq = {
 //TODO test mailler
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;
-	UserDb.initializeUserTable();
+	InitializeDb.userTable();
 
 	afterAll((done) => {
-		UserDb.deleteUser(usrId || 0);
+		DeletDb.user(usrId || 0);
 		done();
 	});
 
@@ -112,7 +113,7 @@ const creationReq = {
 } as Request;
 describe("user login", () => {
 
-	UserDb.initializeUserTable();
+	InitializeDb.userTable();
 	let usrId: number | undefined = 0;
 	// TODO
 	/**
@@ -124,7 +125,7 @@ describe("user login", () => {
 	});
 
 	afterAll((done) => {
-		UserDb.deleteUser(usrId || 0);
+		DeletDb.user(usrId || 0);
 		done();
 	});
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import UserDb from "../database/User.db";
 import { validateJwt } from "../utils/jwt";
 import { UserProfile } from "../../comon_src/type/user.type";
+import FindDb from "../database/Find.db";
 
 
 export async function validsecurRequest(
@@ -27,7 +27,7 @@ export async function validsecurRequest(
 			return;
 		}
 
-		const fulluser: UserProfile | null = await UserDb.findUserById(userId);
+		const fulluser: UserProfile | null = await FindDb.userById(userId);
 		if (!fulluser) {
 			res.status(404).json({ error: "user not found" });
 			return;

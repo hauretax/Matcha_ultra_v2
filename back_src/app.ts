@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import path from "path";
 
-import UserDb from "./database/User.db";
+import InitializeDb from "./database/Initialize.db"
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
@@ -56,15 +56,15 @@ class App {
 	}
 }
 
-// initializeUserTable();
+// initUser();
 
 const app = new App();
 
 const initFunctions = [
-	UserDb.initializeUserTable,
-	UserDb.initializePictureTable,
-	UserDb.initializeInterestsTable,
-	UserDb.initializeUserInterestsTable
+	InitializeDb.userTable,
+	InitializeDb.pictureTable,
+	InitializeDb.interestsTable,
+	InitializeDb.userInterestsTable
 	// ... add any additional table initializers here
 ];
 

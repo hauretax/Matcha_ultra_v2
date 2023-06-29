@@ -11,10 +11,15 @@ import { validateAge, validateBody, validateInterests, validateMail, validatePic
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
-import UserDb from "../database/User.db";
-import { UniqueConstraintError } from "../database/errors";
 
+import { UniqueConstraintError } from "../database/errors";
 import { generateRandomString } from "../utils/random";
+
+import FindDb from "../database/Find.db";
+import UpdateDb from "../database/Update.db";
+import GetDb from "../database/Get.db";
+import InsertDb from "../database/Insert.db";
+import DeletDb from "../database/Delet.db";
 
 
 const passwordResetKey = [];
@@ -46,7 +51,7 @@ export async function createProfile(req: Request, res: Response) {
 			password: await bcrypt.hash(password, 10),
 		};
 
-		const accessCode = await UserDb.insertUser(user);
+		const accessCode = await InsertDb.user(user);
 
 		await sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email);
 
@@ -67,7 +72,7 @@ export async function login(req: Request, res: Response) {
 	}
 	const { username, password } = req.body;
 
-	const user = await UserDb.findUser(username);
+	const user = await FindDb.user(username);
 	if (!user) {
 		res.status(404).json({ error: "account not found" });
 		return;
@@ -109,7 +114,7 @@ export function getProfile(req: Request, res: Response) {
 }
 
 export async function getOptions(req: Request, res: Response) {
-	const options = await UserDb.getAllInterests();
+	const options = await GetDb.allInterests();
 	res.json(options);
 }
 
@@ -125,13 +130,13 @@ export async function validByEmail(req: Request, res: Response) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const dbCode = await UserDb.getCode(email);
+	const dbCode = await GetDb.code(email);
 	if (dbCode.accessCode != code) {
 		res.status(404).json({ error: "not found" });
 		return;
 	}
 
-	await UserDb.valideUser(email);
+	await UpdateDb.valideUser(email);
 	res.sendStatus(200);
 	return;
 }
@@ -176,7 +181,7 @@ export async function updateProfile(req: Request, res: Response) {
 		email,
 		emailVerified: Number(email === res.locals.fulluser.email)
 	};
-	await UserDb.updateProfile(profileInformation, res.locals.fulluser.id);
+	await UpdateDb.profile(profileInformation, res.locals.fulluser.id);
 	res.status(200).json({ message: "Profile updated successfully" });
 }
 
@@ -187,7 +192,7 @@ export async function updateBio(req: Request, res: Response) {
 	}
 	const { biography } = req.body;
 
-	await UserDb.updateBio(biography, res.locals.fulluser.id);
+	await UpdateDb.bio(biography, res.locals.fulluser.id);
 	res.status(200).json({ message: "Profile updated successfully" });
 }
 
@@ -204,7 +209,7 @@ export async function updateInterests(req: Request, res: Response) {
 		return;
 	}
 
-	await UserDb.updateUserInterests(res.locals.fulluser.id, interests);
+	await InsertDb.userInterests(res.locals.fulluser.id, interests);
 	res.status(200).json({ message: "Profile updated successfully" });
 }
 
@@ -216,7 +221,7 @@ export async function deletePicture(req: Request, res: Response) {
 		return;
 	}
 
-	const picture = await UserDb.findPictureByIdAndDelete(parseInt(pictureId));
+	const picture = await DeletDb.PictureById(parseInt(pictureId));
 
 	if (!picture) {
 		res.status(404).send({ error: "Picture not found" });
@@ -246,7 +251,7 @@ export async function RequestpasswordReset(req: Request, res: Response) {
 		res.status(400).json({ error: "need argument" });
 		return;
 	}
-	const user = await UserDb.getUserbyMail(email);
+	const user = await GetDb.userbyMail(email);
 	if (!user) {
 		res.status(200).json({ message: "ok" });
 		return;
@@ -277,7 +282,7 @@ export async function passwordReset(req: Request, res: Response) {
 	}
 	const encryptedPassword = await bcrypt.hash(newPassword, 10);
 
-	await UserDb.changePassword(encryptedPassword, email);
+	await UpdateDb.changePassword(encryptedPassword, email);
 
 	res.status(200).json({ message: "password reset" });
 	return;
@@ -293,7 +298,7 @@ export async function insertPicture(req: Request, res: Response, next: NextFunct
 	const { filename } = req.file;
 	const { id } = res.locals.fulluser;
 
-	const pictureId = await UserDb.insertPicture(id, filename);
+	const pictureId = await InsertDb.insertPicture(id, filename);
 
 	res.status(200).json({ id: pictureId, src: filename });
 	return;
@@ -309,7 +314,7 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 	const { filename } = req.file;
 	const { pictureId } = req.params;
 
-	await UserDb.updatePicture(parseInt(pictureId), filename);
+	await UpdateDb.picture(parseInt(pictureId), filename);
 
 	res.status(200).json({ id: pictureId, src: filename });
 
@@ -324,7 +329,7 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-	const profiles = await UserDb.findAllUsers();
+	const profiles = await FindDb.allUsers();
 
 	res.status(200).json(profiles);
 	return;

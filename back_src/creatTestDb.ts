@@ -1,7 +1,6 @@
 import sqlite3 from "sqlite3";
 
-// Fonction pour initialiser la table "users"
-export default async function initializeUserTable() {
+export default async function initUser() {
 	const db = new sqlite3.Database("testDatabase.db");
 
 	const sql = `
@@ -29,7 +28,6 @@ export default async function initializeUserTable() {
 	});
 }
 
-// Fonction pour insérer les données depuis le fichier CSV
 function insertDataFromCSV() {
 	const db = new sqlite3.Database("testDatabase.db");
 
@@ -67,5 +65,3 @@ function insertDataFromCSV() {
 	}
 }
 
-// Appel de la fonction pour initialiser la table "users"
-initializeUserTable();
