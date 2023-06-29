@@ -298,7 +298,7 @@ export async function insertPicture(req: Request, res: Response, next: NextFunct
 	const { filename } = req.file;
 	const { id } = res.locals.fulluser;
 
-	const pictureId = await InsertDb.insertPicture(id, filename);
+	const pictureId = await InsertDb.picture(id, filename);
 
 	res.status(200).json({ id: pictureId, src: filename });
 	return;

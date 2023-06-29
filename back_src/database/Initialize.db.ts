@@ -33,7 +33,7 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-  interestsTable() {
+	interestsTable() {
 		const sql = `
             CREATE TABLE IF NOT EXISTS interests (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-  userInterestsTable() {
+	userInterestsTable() {
 		const sql = `
             CREATE TABLE IF NOT EXISTS user_interests (
                 user_id INTEGER,

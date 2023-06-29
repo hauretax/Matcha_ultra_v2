@@ -1,5 +1,4 @@
-import FindDb from "./Find.db";
-import db from "./db"
+import db from "./db";
 
 const UpdateDb = {
 
@@ -23,7 +22,7 @@ const UpdateDb = {
 		return db.run(sql, params);
 	},
 	// TODO: Harmonize what's returned by functions in this file
-    async picture(userId: number, src: string) {
+	async picture(userId: number, src: string) {
 		const sql = `
       UPDATE pictures
       SET src = ?
@@ -31,7 +30,7 @@ const UpdateDb = {
 		return db.run(sql, [src, userId]);
 	},
 
-    valideUser(email: string) {
+	valideUser(email: string) {
 		const sql = `
       UPDATE users 
       SET emailVerified = 1
@@ -39,7 +38,7 @@ const UpdateDb = {
 		return db.get(sql, [email]);
 	},
 
-    changePassword(password: string, email: string) {
+	changePassword(password: string, email: string) {
 		const sql = `
 		UPDATE users 
 		SET password = ?
@@ -47,6 +46,6 @@ const UpdateDb = {
     	`;
 		return db.get(sql, [password, email]);
 	},
-}
+};
 
 export default UpdateDb;

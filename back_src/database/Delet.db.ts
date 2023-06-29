@@ -18,6 +18,6 @@ const DeletDb = {
 		return res.changes === 1 ? picture : null;
 	},
 
-}
+};
 
-export default DeletDb
+export default DeletDb;

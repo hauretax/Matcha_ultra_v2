@@ -16,7 +16,9 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   // Other functions here ...
 
   const handleFileInput = (event: any) => {
+    
     const file = event.target.files[0];
+    console.log(file);
     if (!file) return;
     if (activeIndex === imgs.length) {
       uploadImage(file);

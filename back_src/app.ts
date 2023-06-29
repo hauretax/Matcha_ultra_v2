@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import path from "path";
 
-import InitializeDb from "./database/Initialize.db"
+import InitializeDb from "./database/Initialize.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";

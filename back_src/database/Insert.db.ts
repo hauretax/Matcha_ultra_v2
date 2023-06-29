@@ -1,6 +1,6 @@
 import { UserReqRegister } from "../../comon_src/type/user.type";
 import FindDb from "./Find.db";
-import db from "./db"
+import db from "./db";
 import { DatabaseError, UniqueConstraintError } from "./errors";
 
 const InsertDb = {
@@ -58,11 +58,20 @@ const InsertDb = {
 	},
 
 
-    async insertPicture(userId: number, src: string) {
+	async picture(userId: number, src: string) {
 		const sql = "INSERT INTO pictures(user_id, src) VALUES(?, ?)";
 		const result = await db.run(sql, [userId, src]);
 		return result.lastID;
 	},
-}
 
-export default InsertDb
+	async jwtToken(token: string, userId: number): Promise<void> {
+		const sql = `
+		UPDATE users 
+		SET token = ?
+			WHERE id = ?
+    	`;
+		await db.run(sql, [token, userId]);
+	},
+};
+
+export default InsertDb;
