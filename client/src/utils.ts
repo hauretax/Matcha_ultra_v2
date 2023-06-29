@@ -1,4 +1,5 @@
 import { UserProfile } from "../../comon_src/type/user.type";
+import axios from 'axios';
 
 export const prefixBackendUrl = (path: string) => { 
   return path ? `${process.env.REACT_APP_BACKEND_URL}/images/${path}` : '';
@@ -30,6 +31,9 @@ function showPosition(position:any) {
   alert("Latitude: " + latitude + "\nLongitude: " + longitude);
 }
 
-export function getLocationByIp() {
-
+export async function getLocationByIp() {
+  const ipAddress = window.location?.hostname;
+  console.log(ipAddress)
+  const data = await axios.get("https://api.ip2location.io/?key=AB4DE8353DFB2A72E2650F5C872F0724&ip=62.210.33.170")
+  console.log(data)
 }

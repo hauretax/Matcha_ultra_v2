@@ -37,7 +37,7 @@ function App() {
               <Route path='/test' element={
                 <>
               <button onClick={getLocation}>Obtenir la géolocalisation</button>
-              <button onClick={getLocationByIp}>Obtenir la géolocalisation</button>
+              <button onClick={getLocationByIp}>ip2</button>
               </> }/>
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
