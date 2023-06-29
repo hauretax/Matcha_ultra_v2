@@ -21,22 +21,9 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import './App.css';
+import { getLocation, getLocationByIp } from "./utils";
 
 const theme = createTheme(themeOptions)
-
-function getLocation() {
-  if (navigator.geolocation) {
-    let t = navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
-  }
-}
-
-function showPosition(position:any) {
-  var latitude = position.coords.latitude;
-  var longitude = position.coords.longitude;
-  alert("Latitude: " + latitude + "\nLongitude: " + longitude);
-}
 
 function App() {
   return (
@@ -47,7 +34,11 @@ function App() {
           
           <Routes>
             <Route element={<Layout />}>
-              <Route path='/test' element={<button onClick={getLocation}>Obtenir la géolocalisation</button>}/>
+              <Route path='/test' element={
+                <>
+              <button onClick={getLocation}>Obtenir la géolocalisation</button>
+              <button onClick={getLocationByIp}>Obtenir la géolocalisation</button>
+              </> }/>
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

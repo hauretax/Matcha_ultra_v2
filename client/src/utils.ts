@@ -16,3 +16,20 @@ export const isProfileIncomplete = (user: UserProfile) => {
             user.pictures.length === 0;
 }
 
+export function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+  }
+}
+
+function showPosition(position:any) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+  alert("Latitude: " + latitude + "\nLongitude: " + longitude);
+}
+
+export function getLocationByIp() {
+
+}
