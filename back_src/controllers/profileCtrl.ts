@@ -196,7 +196,7 @@ export async function updateInterests(req: Request, res: Response) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { interests }:{interests:Array<string>} = req.body;
+	const { interests }: { interests: Array<string> } = req.body;
 
 	// interests validation
 	if (!validateInterests(interests)) {
@@ -222,7 +222,7 @@ export async function deletePicture(req: Request, res: Response) {
 		res.status(404).send({ error: "Picture not found" });
 		return;
 	}
-  
+
 	res.status(200).send({ message: "Picture deleted successfully" });
 
 	// Delete picture from disk
@@ -320,5 +320,12 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 	} catch (error) {
 		console.error("Error deleting file:", error);
 	}
+	return;
+}
+
+export async function getProfiles(req: Request, res: Response) {
+	const profiles = await UserDb.findAllUsers();
+
+	res.status(200).json(profiles);
 	return;
 }

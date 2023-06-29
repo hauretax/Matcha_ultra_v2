@@ -1,6 +1,6 @@
 import db from "./db";
 import { UniqueConstraintError, DatabaseError } from "./errors";
-import { FullUser, UserReqRegister } from "../../comon_src/type/user.type";
+import { FullUser, UserProfile, UserReqRegister } from "../../comon_src/type/user.type";
 
 const UserDb = {
 	initializeUserTable() {
@@ -142,7 +142,9 @@ const UserDb = {
 		}
 	},
 
+
 	updateProfile(profile: {firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number}, userId: number) {
+
 		const sql = `
 			UPDATE users 
 			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?
@@ -180,8 +182,8 @@ const UserDb = {
 		SET password = ?
 			WHERE email = ?
     	`;
-		return db.get(sql, [password,email]);
-	},    
+		return db.get(sql, [password, email]);
+	},
 
 	async findOrCreateInterest(interest: string): Promise<number> {
 		const findSql = "SELECT id FROM interests WHERE interest = ?";
@@ -253,6 +255,24 @@ const UserDb = {
       SET src = ?
       WHERE user_id = ?`;
 		return db.run(sql, [src, userId]);
+	},
+
+	async findAllUsers(): Promise<UserProfile[]> {
+		const sql = `
+      SELECT id, emailVerified, email, username, lastName, firstName, biography, gender, age, orientation
+      FROM users
+      `;
+		const users = await db.all(sql);
+		const fullUSers = await Promise.all(users.map(async (user: UserProfile) => {
+			const [pictures, interests] = await Promise.all([
+				this.findPicturesByUserId(user.id),
+				this.findInterestsByUserId(user.id)
+			]);
+			user.pictures = pictures;
+			user.interests = interests;
+			return user;
+		}));
+		return fullUSers;
 	},
 };
 
