@@ -24,14 +24,30 @@ import './App.css';
 
 const theme = createTheme(themeOptions)
 
+function getLocation() {
+  if (navigator.geolocation) {
+    let t = navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+  }
+}
+
+function showPosition(position:any) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+  alert("Latitude: " + latitude + "\nLongitude: " + longitude);
+}
+
 function App() {
   return (
     <SnackBarProvider>
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          
           <Routes>
             <Route element={<Layout />}>
+              <Route path='/test' element={<button onClick={getLocation}>Obtenir la géolocalisation</button>}/>
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

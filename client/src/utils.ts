@@ -15,3 +15,4 @@ export const isProfileIncomplete = (user: UserProfile) => {
             user.biography === '' ||
             user.pictures.length === 0;
 }
+
