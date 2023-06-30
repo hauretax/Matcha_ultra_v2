@@ -1,5 +1,4 @@
 import { UserProfile } from "../../comon_src/type/user.type";
-import axios from 'axios';
 import apiProvider from "./services/apiProvider";
 
 export const prefixBackendUrl = (path: string) => {
