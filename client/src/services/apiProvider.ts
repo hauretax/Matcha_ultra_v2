@@ -9,6 +9,22 @@ const apiProvider = {
     return axiosPrivate.get('/options')
   },
 
+  updatePositionByIp(ip: string) {
+    return axiosPrivate.post('/setLocalisation', {
+      ip
+    })
+  },
+
+  /*
+  * update position by longitude and latitude
+  */
+  updatePositionByLL(latitude: string, longitude: string) {
+    return axiosPrivate.post('/setLocalisation', {
+      latitude,
+      longitude
+    })
+  },
+
   updateProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) {
     return axiosPrivate.patch('/profile', { firstName, lastName, age, gender, orientation, email })
   },

@@ -2,7 +2,6 @@ import db from "./db";
 
 const DeletDb = {
 
-
 	user(userId: number) {
 		const sql = "DELETE FROM users WHERE id = ?";
 		return db.run(sql, [userId]);

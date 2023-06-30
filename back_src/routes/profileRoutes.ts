@@ -5,11 +5,12 @@ import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isPictureOwner } from "../middlewares/protectRequest.mid";
 import upload from "../config/multer.config";
-
+import setUserPosition from "../controllers/localisationCtrl";
 const router = express.Router();
 
 router.post("/register", asyncHandler(createProfile));
 router.post("/login", asyncHandler(login));
+router.post("/setLocalisation",validsecurRequest, asyncHandler(setUserPosition));
 router.post("/newToken", asyncHandler(createNewJwt));
 router.get("/profile", validsecurRequest, asyncHandler((getProfile)));
 router.get("/options", validsecurRequest, asyncHandler(getOptions));
