@@ -17,8 +17,6 @@ export const isProfileIncomplete = (user: UserProfile) => {
     user.pictures.length === 0;
 }
 
-
-
 export function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) =>
@@ -31,6 +29,5 @@ export function getLocation() {
 
 export async function getLocationByIp() {
   const ip = window.location?.hostname;
-  console.log(ip)
   apiProvider.updatePositionByIp(ip)
 }

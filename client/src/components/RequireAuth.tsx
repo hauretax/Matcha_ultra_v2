@@ -1,6 +1,6 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { isProfileIncomplete } from "../utils";
+import { getLocation, isProfileIncomplete } from "../utils";
 
 function RequireAuth() {
     let auth = useAuth();
@@ -13,7 +13,7 @@ function RequireAuth() {
         // than dropping them off on the home page.
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
-
+    getLocation();
     if (location.pathname !== '/profile') {
         if (isProfileIncomplete(auth.user)) {
           return <Navigate to="/profile" state={{ profileIncomplete: true }} />;

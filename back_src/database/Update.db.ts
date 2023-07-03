@@ -16,7 +16,6 @@ const UpdateDb = {
 			UPDATE users 
 			SET latitude=?, longitude=?
 			WHERE id=?`;
-		console.log(sql, latitude, longitude,userId);
 		const params = [latitude, longitude, userId];
 		return db.run(sql, params);
 	},
