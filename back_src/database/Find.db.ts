@@ -20,7 +20,6 @@ const FindDb = {
 		return ret;
 	},
 
-
 	async user(username: string): Promise<FullUser | null> {
 		const sql = "SELECT * FROM users WHERE username = ?";
 		const user = await db.get(sql, [username]);

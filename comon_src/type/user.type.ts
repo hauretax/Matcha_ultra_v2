@@ -1,3 +1,5 @@
+import { Vector } from "./utils.type";
+
 export type UserProfile = {
   id: number;
   emailVerified: number;
@@ -11,6 +13,7 @@ export type UserProfile = {
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];
+  localisation?: Vector;
 }
 /**
  * 

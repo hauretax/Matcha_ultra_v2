@@ -17,7 +17,9 @@ const InitializeDb = {
         orientation TEXT,
         emailVerified INTEGER,
         accessCode TEXT,
-		    token TEXT
+		token TEXT, 
+        latitude DECIMAL(9, 6),
+        longitude DECIMAL(9, 6)
       )`;
 		return db.run(sql);
 	},

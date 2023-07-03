@@ -21,6 +21,7 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import './App.css';
+import { getLocation, getLocationByIp } from "./utils";
 
 const theme = createTheme(themeOptions)
 
@@ -30,8 +31,14 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          
           <Routes>
             <Route element={<Layout />}>
+              <Route path='/test' element={
+                <>
+              <button onClick={getLocation}>Obtenir la géolocalisation</button>
+              <button onClick={getLocationByIp}>ip2</button>
+              </> }/>
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

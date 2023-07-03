@@ -4,8 +4,7 @@ import db from "./db";
 import { DatabaseError, UniqueConstraintError } from "./errors";
 
 const InsertDb = {
-
-
+	
 	async user(user: UserReqRegister): Promise<number> {
 		const accessCode = Math.floor(Math.random() * 90000 + 10000);
 		const query = `
