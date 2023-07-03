@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import { validateAge, validateBody, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import {  validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -149,7 +149,7 @@ export async function updateProfile(req: Request, res: Response) {
 	const { firstName, lastName, birthDate, gender, orientation, email } = req.body;
 
 	// Age validation
-	if (!validateAge(birthDate)) {
+	if (!validateDate(birthDate)) {
 		res.status(400).json({ error: "invalid birthDate" });
 		return;
 	}

@@ -48,7 +48,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     const date = dateEl.target.value;
 
     if (date.length < birthDate.length) {
-      if (date.length === 3 || date.length === 6) {
+      if (date.length === 2 || date.length === 5) {
         setBirthDate(birthDate.slice(0, -2));
         return;
       }
@@ -56,7 +56,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     }
     setBirthDate(date)
     if (date.length === 2 || date.length === 5)
-      setBirthDate(date + "/")
+      setBirthDate(date + "/")    
   };
 
   return (
@@ -128,7 +128,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
                 fullWidth
                 disabled={!isEditing}
                 variant="standard"
-                label="BirthDate (jj/mm/yyyy)"
+                label="BirthDate (mm/jj/yyyy)"
                 value={birthDate}
                 onChange={(e) => handlDateChange(e)}
                 sx={{ my: 1 }}
