@@ -12,7 +12,7 @@ const profile = {
   firstName: 'Antoine',
   emailVerified: 0,
   gender: '',
-  age: 26,
+  birthDate: '19/12/1999',
   orientation: 'Heterosexual',
   interests: ['sport', 'philosophy', 'dev', 'techno', 'board games'],
   biography: 'What\'s amazing about life is that you are ALL IN. Whether you want it or not. It WILL kill you at the end. So why not live the most amazing life you can ?',

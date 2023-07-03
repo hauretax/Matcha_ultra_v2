@@ -19,7 +19,7 @@ interface AuthContextType {
   getProfile: () => Promise<void>;
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
-  updateProfile: (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) => Promise<void>;
+  updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string) => Promise<void>;
   insertPicture: (formdata: FormData) => Promise<void>;
   updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
@@ -97,16 +97,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateProfile = async (firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string): Promise<void> => {
+  const updateProfile = async (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string): Promise<void> => {
     try {
-      await apiProvider.updateProfile(firstName, lastName, age, gender, orientation, email)
+      await apiProvider.updateProfile(firstName, lastName, birthDate, gender, orientation, email)
 
       if (user) {
         const newUser = {
           ...user,
           firstName,
           lastName,
-          age,
+          birthDate,
           gender,
           orientation,
           email,

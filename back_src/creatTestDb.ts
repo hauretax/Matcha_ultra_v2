@@ -13,7 +13,7 @@ export default async function initUser() {
         password TEXT,
         gender TEXT,
         biography TEXT,
-        age INTEGER,
+        birthDate TEXT,
         orientation TEXT,
         emailVerified INTEGER,
         accessCode INTEGER,
@@ -42,7 +42,7 @@ function insertDataFromCSV() {
 			password,
 			gender,
 			biography,
-			age,
+			birthDate,
 			orientation,
 			emailVerified,
 			accessCode,
@@ -53,10 +53,10 @@ function insertDataFromCSV() {
 		const name = (Math.random() * 65536).toString();
 		const sex = i % 2 ? "h" : "f";
 		const randombio = (Math.random() * 65536).toString();
-		const age = (Math.random() * 100).toString();
+		const birthDate = (Math.random() * 100).toString();
 		const orientation = i % 3 ? "straigth" : "gay";
 		db.run(sql, [
-			name + "oui@non.nop", name + "bot", "1", "oui", "pass", sex, randombio, age, orientation, 0, 0, ""
+			name + "oui@non.nop", name + "bot", "1", "oui", "pass", sex, randombio, birthDate, orientation, 0, 0, ""
 		], (error) => {
 			if (error) {
 				console.error("Erreur lors de l'insertion des données :", error.message);

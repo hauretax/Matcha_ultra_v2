@@ -12,7 +12,7 @@ router.post("/register", asyncHandler(createProfile));
 router.post("/login", asyncHandler(login));
 router.post("/setLocalisation",validsecurRequest, asyncHandler(setUserPosition));
 router.post("/newToken", asyncHandler(createNewJwt));
-router.get("/profile", validsecurRequest, asyncHandler((getProfile)));
+router.get("/profile", validsecurRequest, asyncHandler(getProfile));
 router.get("/options", validsecurRequest, asyncHandler(getOptions));
 router.patch("/profile", validsecurRequest, asyncHandler(updateProfile));
 router.patch("/profileBio", validsecurRequest, asyncHandler(updateBio));

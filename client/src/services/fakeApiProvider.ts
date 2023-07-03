@@ -5,7 +5,7 @@ const profile = {
     firstName: 'Antoine',
     emailVerified: false,
     gender: 'Male',
-    age: 26,
+    birthDate: "3/12/1990",
     orientation: 'Heterosexual',
     interests: ['sport', 'philosophy', 'dev', 'techno', 'board games'],
     biography: 'What\'s amazing about life is that you are ALL IN. Whether you want it or not. It WILL kill you at the end. So why not live the most amazing life you can ?',
@@ -52,12 +52,12 @@ const fakeApiProvider = {
         })
     },
 
-    setProfile(firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string) {
+    setProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 profile.firstName = firstName
                 profile.lastName = lastName
-                profile.age = age
+                profile.birthDate = birthDate
                 profile.gender = gender
                 profile.orientation = orientation
                 profile.email = email

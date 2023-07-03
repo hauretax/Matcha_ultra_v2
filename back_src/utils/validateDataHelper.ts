@@ -4,8 +4,9 @@ export function validateBody(req: Request, expectedProperties: string[], expecte
 	return expectedProperties.every(prop => Object.prototype.hasOwnProperty.call(req.body, prop) && req.body[prop] && typeof req.body[prop] === expectedPropTypes[expectedProperties.indexOf(prop)]);
 }
 
-export function validateAge(age: number): boolean {
-	return Number.isInteger(age) && age >= 18 && age <= 120;
+export function validateAge(birthDate: string): boolean {
+	const regex =  /(\d{1,2})\/(\d{1,2})\/(\d{4})/;
+	return regex.test(birthDate);
 }
 
 export function validateInterests(interests: string[]): boolean {

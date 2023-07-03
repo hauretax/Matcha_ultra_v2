@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthProvider';
 interface UserInformationProps {
   firstName: string;
   lastName: string;
-  age: number;
+  birthDate: string;
   gender: string;
   orientation: string;
   email: string;
@@ -17,7 +17,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [email, setEmail] = useState(props.email);
   const [firstName, setFirstName] = useState(props.firstName);
   const [lastName, setLastName] = useState(props.lastName);
-  const [age, setAge] = useState(props.age);
+  const [birthDate, setBirthDate] = useState(props.birthDate);
   const [gender, setGender] = useState(props.gender);
   const [orientation, setOrientation] = useState(props.orientation);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,7 +30,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
 
   const handleSave = async () => {
     setIsUploading(true);
-    await auth.updateProfile(firstName, lastName, age, gender, orientation, email);
+    await auth.updateProfile(firstName, lastName, birthDate, gender, orientation, email);
     setIsEditing(false);
     setIsUploading(false);
   };
@@ -39,10 +39,25 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     setEmail(props.email || '')
     setFirstName(props.firstName || '')
     setLastName(props.lastName || '')
-    setAge(props.age || 0)
+    setBirthDate(props.birthDate || '')
     setGender(props.gender || '')
     setOrientation(props.orientation || '')
   }, [props]);
+
+  const handlDateChange = async (dateEl: any) => {
+    const date = dateEl.target.value;
+
+    if (date.length < birthDate.length) {
+      if (date.length === 3 || date.length === 6) {
+        setBirthDate(birthDate.slice(0, -2));
+        return;
+      }
+      setBirthDate(date);
+    }
+    setBirthDate(date)
+    if (date.length === 2 || date.length === 5)
+      setBirthDate(date + "/")
+  };
 
   return (
     <Box>
@@ -113,15 +128,15 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
                 fullWidth
                 disabled={!isEditing}
                 variant="standard"
-                label="Age"
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
+                label="BirthDate (jj/mm/yyyy)"
+                value={birthDate}
+                onChange={(e) => handlDateChange(e)}
                 sx={{ my: 1 }}
               /> :
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Age</Typography>
+                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>BirthDate</Typography>
                 <Box>
-                  <SkeletonTypo text={age} isLoading={props.isLoading} />
+                  <SkeletonTypo text={birthDate} isLoading={props.isLoading} />
                 </Box>
               </Box>
             }

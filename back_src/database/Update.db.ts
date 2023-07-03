@@ -2,12 +2,12 @@ import db from "./db";
 
 const UpdateDb = {
 
-	profile(profile: { firstName: string, lastName: string, age: number, gender: string, orientation: string, email: string, emailVerified: number }, userId: number) {
+	profile(profile: { firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number }, userId: number) {
 		const sql = `
 			UPDATE users 
-			SET firstName=?, lastName=?, age=?, gender=?, orientation=?, email=?, emailVerified=?
+			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?
 			WHERE id=?`;
-		const params = [profile.firstName, profile.lastName, profile.age, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId];
+		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId];
 		return db.run(sql, params);
 	},
 
