@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { accessTokenList } from "../../comon_src/type/jwt.type";
-import JwtDb from "../database/Jwt.db";
+import InsertDb from "../database/Insert.db";
+import GetDb from "../database/Get.db";
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET || "";
@@ -17,14 +18,14 @@ export function generateJwt(userId: number): string {
 
 export async function generateRefreshJwt(id: number): Promise<string> {
 	const token = jwt.sign({ userId: id, nonce: Math.random() }, secretKeyR, { expiresIn: "1week" });
-	await JwtDb.insertToken(token, id);
+	await InsertDb.jwtToken(token, id);
 	return token;
 }
 
 
 export async function validaterefreshJwt(token: string): Promise<number | null> {
 	const decoded = jwt.verify(token, secretKeyR) as jwt.JwtPayload;
-	const validToken = await JwtDb.getToken(decoded.userId);
+	const validToken = await GetDb.jwtToken(decoded.userId);
 	if (validToken && validToken.token === token)
 		return decoded.userId;
 	return null;

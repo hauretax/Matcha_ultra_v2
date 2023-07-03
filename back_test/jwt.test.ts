@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import { generateJwt, generateRefreshJwt, askNewJwt, validateJwt } from "../back_src/utils/jwt";
-import UserDb from "../back_src/database/User.db";
 import { createProfile } from "../back_src/controllers/profileCtrl";
 import { Fakexpress } from "./FackExpress";
 import { Request } from "express";
+import InitializeDb from "../back_src/database/Initialize.db";
+import DeletDb from "../back_src/database/Delet.db";
 
 const FE = new Fakexpress();
 const secretKey = process.env.JWT_SECRET;
@@ -40,13 +41,13 @@ describe("JWT Tests", () => {
 	 * verification of usr in db
 	 */
 	beforeAll(async () => {
-		UserDb.initializeUserTable();
+		InitializeDb.userTable();
 		await createProfile(creationReq, FE.res as never);
 		usrId = FE.responseData?.usrId || 0;
 	});
 
 	afterAll((done) => {
-		UserDb.deleteUser(usrId || 0);
+		DeletDb.user(usrId || 0);
 		done();
 	});
 
