@@ -22,6 +22,7 @@ import themeOptions from './theme/classical'
 
 import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
+import FinderPage from "./pages/FinderPage";
 
 const theme = createTheme(themeOptions)
 
@@ -49,6 +50,7 @@ function App() {
               <Route element={<RequireAuth />} >
                 <Route path='/home' element={<HomePage />} />
                 <Route path='/profile' element={<ProfilePage />} />
+                <Route path='/finder' element={<FinderPage />} />
               </Route>
             </Route>
           </Routes>
