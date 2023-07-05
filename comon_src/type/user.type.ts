@@ -53,5 +53,5 @@ export type UserPublic = {
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];
-  localisation?: Vector;
+  distance: number;
 }

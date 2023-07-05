@@ -86,7 +86,6 @@ const FindDb = {
 		LIMIT 10 OFFSET 0;
 		`;
 		const users = await db.all(sql, interest);
-		// console.log(users[0].latitude, users[0].longitude, users[0].distance,);
 		console.log('--------------------users----------------------')
 		users.map((row) => console.log(row.id, ':', row.age, row.distance, row.gender, row.orientation));
 		const fullUSers = await Promise.all(users.map(async (user: UserProfile) => {
