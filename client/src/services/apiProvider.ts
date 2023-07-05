@@ -57,8 +57,14 @@ const apiProvider = {
     });
   },
 
-  getUsers() {
-    return axiosPrivate.get('/users');
+  /*
+  *age|birthdate
+  *localisation : latitude, longitude
+  * interests array
+  * genderFind array
+  */
+  getUsers(latitude:number, longitude:number) {
+    return axiosPrivate.get(`/users?latitude=${latitude}&longitude=${longitude}`);
   }
 }
 

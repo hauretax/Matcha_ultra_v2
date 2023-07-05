@@ -1,5 +1,5 @@
 import db from "./db";
-import { FullUser, UserProfile } from "../../comon_src/type/user.type";
+import { FullUser, UserProfile, UserPublic } from "../../comon_src/type/user.type";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -66,12 +66,29 @@ const FindDb = {
 		}
 	},
 
-	async allUsers(): Promise<UserProfile[]> {
+	async tenUsers(): Promise<UserPublic[]> {
+		const latitude = 48.8566;
+		const longitude = 2.3522;
+		const distanceMax = 500;
+		const ageMin = 18;
+		const ageMax = 35;
+		const interest = ["Male"];
+
 		const sql = `
-      SELECT id, emailVerified, email, username, lastName, firstName, biography, gender, age, orientation
-      FROM users
-      `;
-		const users = await db.all(sql);
+		SELECT id, username, biography, gender, birthDate, orientation, latitude, longitude,age,
+		(6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance
+		FROM users
+		WHERE distance < ${distanceMax}
+		AND age <= ${ageMax}
+		AND age >= ${ageMin}
+		AND gender IN (${interest.map(() => "?").join(",")})
+		ORDER BY distance ASC
+		LIMIT 10 OFFSET 0;
+		`;
+		const users = await db.all(sql, interest);
+		// console.log(users[0].latitude, users[0].longitude, users[0].distance,);
+		console.log('--------------------users----------------------')
+		users.map((row) => console.log(row.id, ':', row.age, row.distance, row.gender, row.orientation));
 		const fullUSers = await Promise.all(users.map(async (user: UserProfile) => {
 			const [pictures, interests] = await Promise.all([
 				this.picturesByUserId(user.id),

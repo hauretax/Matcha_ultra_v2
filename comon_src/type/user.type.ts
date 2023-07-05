@@ -37,8 +37,6 @@ export type UserReqLogin = {
   password: string;
 }
 
-
-
 export type UserPayload = {
   jwt: {
     refreshToken: string,
@@ -47,4 +45,13 @@ export type UserPayload = {
   profile: UserProfile;
 }
 
-//TODO modifier les import coter front
+export type UserPublic = {
+  username: string;
+  biography: string;
+  gender: string;
+  birthDate: string;
+  orientation: string;
+  pictures: { id: number; src: string }[];
+  interests: string[];
+  localisation?: Vector;
+}

@@ -329,7 +329,7 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-	const profiles = await FindDb.allUsers();
+	const profiles = await FindDb.tenUsers();
 
 	res.status(200).json(profiles);
 	return;

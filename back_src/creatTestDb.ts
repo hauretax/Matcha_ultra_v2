@@ -21,10 +21,10 @@ function generateRandomDateOfBirth(): string {
 	const maxBirthYear = currentYear - 18;
 	const minBirthYear = currentYear - 55;
 	const randomBirthYear = Math.floor(Math.random() * (maxBirthYear - minBirthYear + 1)) + minBirthYear;
-	const randomMonth = Math.floor(Math.random() * 12);
+	const randomMonth = Math.floor(Math.random() * 12) + 1;
 	const randomDay = Math.floor(Math.random() * 28) + 1;
 
-	return randomMonth.toString().padStart(2, "0") + "/" + randomDay.toString().padStart(2, "0") + "/" + randomBirthYear.toString();
+	return randomBirthYear.toString() + "-" + randomMonth.toString().padStart(2, "0") + "-" + randomDay.toString().padStart(2, "0");
 }
 
 export default async function insertDataInDb() {
@@ -39,20 +39,23 @@ export default async function insertDataInDb() {
 			gender,
 			orientation,
 			birthDate,
+			age,
 			latitude,
 			longitude
 		)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?,
+		STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?))
+		, ?, ?)
       `;
 		const name = (Math.random() * 65536).toString();
 		const gender = genderTab[i % 3];
 		const orientation = orientationTab[i % 3];
 		const birthDate = generateRandomDateOfBirth();
 		const { latitude, longitude } = generateRandomPoint(latitudeRange, longitudeRange);
-		
+
 		try {
 			db.run(sql, [
-				name, name, "1", gender, orientation, birthDate, latitude, longitude
+				name, name, "1", gender, orientation, birthDate, birthDate, birthDate, latitude, longitude
 			]);
 		} catch (error) {
 			console.error("Erreur lors de l'insertion des données :", error);
@@ -71,8 +74,8 @@ export default async function insertDataInDb() {
 // (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance,
 // strftime('%Y', 'now') - strftime('%Y', birthdate) AS age
 // FROM users
-// WHERE strftime('%Y', birthdate) >= strftime('%Y', 'now', '-${ageMax} years')
-//   AND strftime('%Y', birthdate) <= strftime('%Y', 'now', '-${ageMin} years')		
+// AND age >= ${ageMin}
+// AND age <= ${ageMax}	
 // AND distance < ${distanceMax}
 // AND gender IN (${interest.map(() => "?").join(",")})
 // ORDER BY distance ASC

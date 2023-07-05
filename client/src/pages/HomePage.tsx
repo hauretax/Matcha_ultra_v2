@@ -11,8 +11,8 @@ function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const res = await apiProvider.getUsers()
-      setUsers(res.data)
+      // const res = await apiProvider.getUsers()
+      // setUsers(res.data)
       setIsLoading(false)
     };
 

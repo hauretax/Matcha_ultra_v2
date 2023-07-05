@@ -13,7 +13,7 @@ const InitializeDb = {
         password TEXT,
         gender TEXT,
         biography TEXT,
-        birthDate TEXT,
+        birthDate DATE,
         age INTEGER,
         orientation TEXT,
         emailVerified INTEGER,

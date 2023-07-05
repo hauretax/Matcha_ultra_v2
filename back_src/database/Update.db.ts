@@ -5,9 +5,10 @@ const UpdateDb = {
 	profile(profile: { firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number }, userId: number) {
 		const sql = `
 			UPDATE users 
-			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?
+			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?,
+			age=STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?))
 			WHERE id=?`;
-		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId];
+		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId, profile.birthDate,profile.birthDate];
 		return db.run(sql, params);
 	},
 

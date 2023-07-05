@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from 'react'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,23 +24,34 @@ import themeOptions from './theme/classical'
 import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
 import FinderPage from "./pages/FinderPage";
+import apiProvider from "./services/apiProvider";
 
 const theme = createTheme(themeOptions)
 
+
+
 function App() {
+
+  useEffect(() => {
+    apiProvider.getUsers(48.7932202, 3.27131)
+      .then((res: any) => {
+        console.log(res.data)
+      })
+  }, [])
+
   return (
     <SnackBarProvider>
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          
+
           <Routes>
             <Route element={<Layout />}>
               <Route path='/test' element={
                 <>
-              <button onClick={getLocation}>Obtenir la géolocalisation</button>
-              <button onClick={getLocationByIp}>ip2</button>
-              </> }/>
+                  <button onClick={getLocation}>Obtenir la géolocalisation</button>
+                  <button onClick={getLocationByIp}>ip2</button>
+                </>} />
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />

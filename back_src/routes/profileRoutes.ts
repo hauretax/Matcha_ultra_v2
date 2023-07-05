@@ -23,6 +23,7 @@ router.delete("/picture/:pictureId", validsecurRequest, asyncHandler(deletePictu
 router.get("/verify_email",asyncHandler(validByEmail));
 router.post("/request_password_reset",asyncHandler(RequestpasswordReset));
 router.post("/reset_password",asyncHandler(passwordReset));
-router.get("/users", validsecurRequest, asyncHandler(getProfiles));
+//TODO secure this 
+router.get("/users", asyncHandler(getProfiles));
 
 export default router;  
