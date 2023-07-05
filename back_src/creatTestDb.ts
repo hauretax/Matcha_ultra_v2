@@ -15,7 +15,7 @@ function generateRandomPoint(latitudeRange: { minLatitude: number, maxLatitude: 
 	return { latitude: randomLatitude, longitude: randomLongitude };
 }
 
-function generateRandomDateOfBirth(): Date {
+function generateRandomDateOfBirth(): string {
 	const currentDate = new Date();
 	const currentYear = currentDate.getFullYear();
 	const maxBirthYear = currentYear - 18;
@@ -23,9 +23,8 @@ function generateRandomDateOfBirth(): Date {
 	const randomBirthYear = Math.floor(Math.random() * (maxBirthYear - minBirthYear + 1)) + minBirthYear;
 	const randomMonth = Math.floor(Math.random() * 12);
 	const randomDay = Math.floor(Math.random() * 28) + 1;
-	const randomDateOfBirth = new Date(randomBirthYear, randomMonth, randomDay);
 
-	return randomDateOfBirth;
+	return randomMonth.toString().padStart(2, "0") + "/" + randomDay.toString().padStart(2, "0") + "/" + randomBirthYear.toString();
 }
 
 export default async function insertDataInDb() {
@@ -50,6 +49,7 @@ export default async function insertDataInDb() {
 		const orientation = orientationTab[i % 3];
 		const birthDate = generateRandomDateOfBirth();
 		const { latitude, longitude } = generateRandomPoint(latitudeRange, longitudeRange);
+		
 		try {
 			db.run(sql, [
 				name, name, "1", gender, orientation, birthDate, latitude, longitude
@@ -62,3 +62,18 @@ export default async function insertDataInDb() {
 	}
 }
 
+
+
+
+
+
+// SELECT id, username, biography, gender, birthDate, orientation, latitude, longitude,
+// (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance,
+// strftime('%Y', 'now') - strftime('%Y', birthdate) AS age
+// FROM users
+// WHERE strftime('%Y', birthdate) >= strftime('%Y', 'now', '-${ageMax} years')
+//   AND strftime('%Y', birthdate) <= strftime('%Y', 'now', '-${ageMin} years')		
+// AND distance < ${distanceMax}
+// AND gender IN (${interest.map(() => "?").join(",")})
+// ORDER BY distance ASC
+// LIMIT 10 OFFSET 0;
