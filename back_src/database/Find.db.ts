@@ -80,6 +80,7 @@ const FindDb = {
 // TODO find url picture in request
 // TODO make a big tab with all params actually in ${blabla} toa void sql insertion
 // TODO link all to request get
+// TODO protect route
 // TODO make a nice design for it on client .
 // TODO test who many request we can make befor it crash
 
