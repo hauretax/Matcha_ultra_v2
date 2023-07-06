@@ -73,7 +73,16 @@ const FindDb = {
 		const ageMin = 18;
 		const ageMax = 35;
 		const orientation = ["Male"];
-		// const interestWanted = ['video-game']
+		const interestWanted = ['video-game']
+
+// TODO interestWanted link to HAVING . 
+// TODO add picture to fake useres 
+// TODO find url picture in request
+// TODO make a big tab with all params actually in ${blabla} toa void sql insertion
+// TODO link all to request get
+// TODO make a nice design for it on client .
+// TODO test who many request we can make befor it crash
+
 
 		const sql = `
 		SELECT u.id, u.username, u.biography, u.gender, u.birthDate, u.orientation, u.latitude, u.longitude, u.age,
@@ -87,6 +96,7 @@ const FindDb = {
 		AND age >= ${ageMin}
 		AND gender IN (${orientation.map(() => "?").join(",")})
 		GROUP BY u.id
+		HAVING interests LIKE '%video-game%'
 	  	ORDER BY distance ASC
 	  	LIMIT 10 OFFSET 0;
 		`;
