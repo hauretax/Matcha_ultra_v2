@@ -14,6 +14,8 @@ export type UserProfile = {
   pictures: { id: number; src: string }[];
   interests: string[];
   localisation?: Vector;
+  distance?:number;
+  age?:number;
 }
 /**
  * 
@@ -49,7 +51,7 @@ export type UserPublic = {
   username: string;
   biography: string;
   gender: string;
-  birthDate: string;
+  age: string;
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];

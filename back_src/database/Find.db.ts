@@ -72,32 +72,42 @@ const FindDb = {
 		const distanceMax = 500;
 		const ageMin = 18;
 		const ageMax = 35;
-		const interest = ["Male"];
+		const orientation = ["Male"];
+		// const interestWanted = ['video-game']
 
 		const sql = `
-		SELECT id, username, biography, gender, birthDate, orientation, latitude, longitude,age,
-		(6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance
-		FROM users
-		WHERE distance < ${distanceMax}
+		SELECT u.id, u.username, u.biography, u.gender, u.birthDate, u.orientation, u.latitude, u.longitude, u.age,
+		(6371 * acos(cos(radians(${latitude})) * cos(radians(u.latitude)) * cos(radians(u.longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(u.latitude)))) AS distance,
+		GROUP_CONCAT(i.interest, ',') AS interests
+	  	FROM users AS u
+	  	LEFT JOIN user_interests AS u_i ON u.id = u_i.user_id
+		LEFT JOIN interests AS i ON u_i.interest_id = i.id
+	  	WHERE distance < ${distanceMax}
 		AND age <= ${ageMax}
 		AND age >= ${ageMin}
-		AND gender IN (${interest.map(() => "?").join(",")})
-		ORDER BY distance ASC
-		LIMIT 10 OFFSET 0;
+		AND gender IN (${orientation.map(() => "?").join(",")})
+		GROUP BY u.id
+	  	ORDER BY distance ASC
+	  	LIMIT 10 OFFSET 0;
 		`;
-		const users = await db.all(sql, interest);
-		console.log('--------------------users----------------------')
-		users.map((row) => console.log(row.id, ':', row.age, row.distance, row.gender, row.orientation));
-		const fullUSers = await Promise.all(users.map(async (user: UserProfile) => {
-			const [pictures, interests] = await Promise.all([
-				this.picturesByUserId(user.id),
-				this.interestsByUserId(user.id)
-			]);
-			user.pictures = pictures;
-			user.interests = interests;
-			return user;
-		}));
-		return fullUSers;
+		const users = await db.all(sql, orientation);
+		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
+			// console.log('user', user.id);
+			const newUser: UserPublic = {
+				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
+				pictures: user.pictureUrl ? [user.pictureUrl] : [],
+				interests: user.interests ? user.interests.split(",") : [],
+				username: user.username,
+				gender: user.gender,
+				orientation: user.orientation,
+				age: user.age,
+				biography: user.biography,
+			};
+			result.push(newUser);
+			return result;
+		}, []);
+		console.log(publicUsers)
+		return publicUsers;
 	},
 };
 

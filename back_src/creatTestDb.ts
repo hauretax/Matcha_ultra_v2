@@ -1,12 +1,24 @@
 
+import GetDb from "./database/Get.db";
 import db from "./database/db";
 // Plage de latitudes et de longitudes
 const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960767524 };
 const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.395843454044868 };
 const orientationTab = ["Heterosexual", "Bisexual", "Homosexual"];
 const genderTab = ["Male", "Female", "Other"];
+const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"]
+/*
+* use for first instantiation .depend of randomInterest tab
+*/
+async function insertInterests() {
+	const values = randomInterest.map((interest) => `('${interest}')`).join(",");
 
+	const query = `INSERT OR IGNORE INTO interests (interest) VALUES ${values}`;
 
+	await db.run(query);
+
+	console.log("Interests inserted successfully");
+}
 
 function generateRandomPoint(latitudeRange: { minLatitude: number, maxLatitude: number }, longitudeRange: { minLongitude: number, maxLongitude: number }): { latitude: number, longitude: number } {
 	const randomLatitude = Math.random() * (latitudeRange.maxLatitude - latitudeRange.minLatitude) + latitudeRange.minLatitude;
@@ -28,7 +40,9 @@ function generateRandomDateOfBirth(): string {
 }
 
 export default async function insertDataInDb() {
-
+	if ((await GetDb.allInterests()).length === 0) {
+		insertInterests();
+	}
 	for (let i = 0; i < 10000; i++) {
 
 		const sql = `
@@ -54,9 +68,21 @@ export default async function insertDataInDb() {
 		const { latitude, longitude } = generateRandomPoint(latitudeRange, longitudeRange);
 
 		try {
-			db.run(sql, [
+			await db.run(sql, [
 				name, name, "1", gender, orientation, birthDate, birthDate, birthDate, latitude, longitude
 			]);
+			const userId = await db.get("SELECT last_insert_rowid() as id");
+			// console.log(userId)
+
+			const randomInterestsCount = Math.floor(Math.random() * 5) + 1; // Nombre aléatoire d'intérêts (entre 1 et 5)
+			const interests = await db.all("SELECT id FROM interests ORDER BY RANDOM() LIMIT ?", [randomInterestsCount]);
+			// console.log('interests id:', interests)
+			interests.forEach((interest) => {
+				db.run(`INSERT OR IGNORE INTO  user_interests (user_id, interest_id)
+				VALUES (?,?)`, [userId.id, interest.id])
+			})
+					
+
 		} catch (error) {
 			console.error("Erreur lors de l'insertion des données :", error);
 		}
