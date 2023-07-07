@@ -72,7 +72,7 @@ const FindDb = {
 		const distanceMax = 500;
 		const ageMin = 18;
 		const ageMax = 35;
-		const orientation = ["Male"];
+		const orientation = ["Male", "Female"];
 		const interestWanted = ['video-game', 'sex']
 
 
@@ -119,8 +119,8 @@ const FindDb = {
 	  	ORDER BY distance ASC
 	  	LIMIT 10 OFFSET 0;
 		`;
-		console.log(sql)
-		const users = await db.all(sql, [...orientation, ...interestWanted]);
+
+		const users = await db.all(sql, [...orientation, ...interestWanted.map(interest => `%${interest}%`)]);
 		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
 			// console.log('user', user.id);
 			const newUser: UserPublic = {
