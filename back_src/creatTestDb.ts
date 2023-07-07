@@ -45,7 +45,7 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
-	for (let i = 0; i < 10000; i++) {
+	for (let i = 1; i < 100; i++) {
 
 		const sql = `
         INSERT INTO users (
@@ -71,7 +71,7 @@ export default async function insertDataInDb() {
 
 		try {
 			await db.run(sql, [
-				name, name, "1", gender, orientation, birthDate, birthDate, birthDate, latitude, longitude
+				name, i, "1", gender, orientation, birthDate, birthDate, birthDate, latitude, longitude
 			]);
 			const userId = await db.get("SELECT last_insert_rowid() as id");
 			// console.log(userId)
@@ -92,16 +92,16 @@ export default async function insertDataInDb() {
 				const randomIndex = Math.floor(Math.random() * randomPicture.length);
 				Pictures.push(randomPicture[randomIndex]);
 			}
-
-			[...new Set(Pictures)].forEach((url) => {
-				db.run(`INSERT OR IGNORE INTO pictures (user_id, src)
-				VALUES (?,?)`, [userId.id, url]);
-			});
+			const values = [...new Set(Pictures)]
+				.map(url => `SELECT '${userId.id}', '${url}'`)
+				.join(" UNION ALL ");
+			const insertQuery = `INSERT OR IGNORE INTO pictures (user_id, src) ${values}`;
+			await db.run(insertQuery);
 
 		} catch (error) {
 			console.error("Erreur lors de l'insertion des données :", error);
 		}
-		console.log(name, ", added");
+		console.log(i, ", added");
 
 	}
 }
