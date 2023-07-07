@@ -73,16 +73,34 @@ const FindDb = {
 		const ageMin = 18;
 		const ageMax = 35;
 		const orientation = ["Male"];
-		const interestWanted = ['video-game']
+		const interestWanted = ['video-game', 'sex']
 
-// TODO interestWanted link to HAVING . 
-// TODO add picture to fake useres 
-// TODO find url picture in request
-// TODO make a big tab with all params actually in ${blabla} toa void sql insertion
-// TODO link all to request get
-// TODO protect route
-// TODO make a nice design for it on client .
-// TODO test who many request we can make befor it crash
+
+		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
+
+
+		const completTab = [
+			//line 2
+			latitude, longitude, latitude,
+			// line 7 
+			distanceMax,
+			//line 8
+			ageMax,
+			//line 9 
+			ageMin,
+			//line 10 
+			...orientation
+			//line 12
+
+		]
+ 
+		// TODO add picture to fake useres 
+		// TODO find url picture in request
+		// TODO make a big tab with all params actually in ${blabla} toa void sql insertion
+		// TODO link all to request get
+		// TODO protect route
+		// TODO make a nice design for it on client .
+		// TODO test who many request we can make befor it crash
 
 
 		const sql = `
@@ -97,11 +115,12 @@ const FindDb = {
 		AND age >= ${ageMin}
 		AND gender IN (${orientation.map(() => "?").join(",")})
 		GROUP BY u.id
-		HAVING interests LIKE '%video-game%'
+		HAVING ${interestConditions}
 	  	ORDER BY distance ASC
 	  	LIMIT 10 OFFSET 0;
 		`;
-		const users = await db.all(sql, orientation);
+		console.log(sql)
+		const users = await db.all(sql, [...orientation, ...interestWanted]);
 		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
 			// console.log('user', user.id);
 			const newUser: UserPublic = {
