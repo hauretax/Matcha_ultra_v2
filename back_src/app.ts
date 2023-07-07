@@ -72,7 +72,7 @@ Promise.all(initFunctions.map(initFunc => initFunc()))
 	.then(() => {
 		app.start(Bport);
 		// generate user for test
-		// insertDataInDb();
+		insertDataInDb();
 	})
 	.catch(err => {
 		console.error("An error occurred while initializing the tables:", err);

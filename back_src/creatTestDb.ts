@@ -6,7 +6,9 @@ const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960
 const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.395843454044868 };
 const orientationTab = ["Heterosexual", "Bisexual", "Homosexual"];
 const genderTab = ["Male", "Female", "Other"];
-const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"]
+const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"];
+const randomPicture = ["gF.jpg", "gH.jpg", "sF.jpg", "sH.jpg", "st1F.jpg", "stF.jpg", "stH.jpg"];
+
 /*
 * use for first instantiation .depend of randomInterest tab
 */
@@ -76,12 +78,25 @@ export default async function insertDataInDb() {
 
 			const randomInterestsCount = Math.floor(Math.random() * 5) + 1; // Nombre aléatoire d'intérêts (entre 1 et 5)
 			const interests = await db.all("SELECT id FROM interests ORDER BY RANDOM() LIMIT ?", [randomInterestsCount]);
+
 			// console.log('interests id:', interests)
 			interests.forEach((interest) => {
 				db.run(`INSERT OR IGNORE INTO  user_interests (user_id, interest_id)
-				VALUES (?,?)`, [userId.id, interest.id])
-			})
-					
+				VALUES (?,?)`, [userId.id, interest.id]);
+			});
+			const randomCount = Math.floor(Math.random() * 5) + 1;
+
+			// Récupérer les éléments aléatoires du tableau
+			const Pictures = [];
+			for (let i = 0; i < randomCount; i++) {
+				const randomIndex = Math.floor(Math.random() * randomPicture.length);
+				Pictures.push(randomPicture[randomIndex]);
+			}
+
+			[...new Set(Pictures)].forEach((url) => {
+				db.run(`INSERT OR IGNORE INTO pictures (user_id, src)
+				VALUES (?,?)`, [userId.id, url]);
+			});
 
 		} catch (error) {
 			console.error("Erreur lors de l'insertion des données :", error);
