@@ -33,7 +33,14 @@ const theme = createTheme(themeOptions)
 function App() {
 
   useEffect(() => {
-    apiProvider.getUsers(48.7932202, 3.27131)
+    apiProvider.getUsers({
+      latitude:48.7932202, 
+      longitude:3.27131, 
+      distanceMax:500, 
+      ageMin:18, 
+      ageMax:23, 
+      orientation:["Female","Male"], 
+      interestWanted:["video-game"]})
       .then((res: any) => {
         console.log(res.data)
       })

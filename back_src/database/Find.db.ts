@@ -1,5 +1,6 @@
 import db from "./db";
-import { FullUser, UserProfile, UserPublic } from "../../comon_src/type/user.type";
+import { FullUser, UserPublic } from "../../comon_src/type/user.type";
+import { findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -66,36 +67,26 @@ const FindDb = {
 		}
 	},
 
-	async tenUsers(): Promise<UserPublic[]> {
-		const latitude = 48.8566;
-		const longitude = 2.3522;
-		const distanceMax = 500;
-		const ageMin = 18;
-		const ageMax = 55;
-		const orientation = ["Male", "Female"];
-		const interestWanted = ["video-game"];
 
+	async tenUsers({latitude, longitude,distanceMax,ageMin,ageMax,orientation,interestWanted}:findTenUsersParams): Promise<UserPublic[]> {
+		// const latitude = 48.8566;
+		// const longitude = 2.3522;
+		// const distanceMax = 500;
+		// const ageMin = 18;
+		// const ageMax = 55;
+		// const orientation = ["Male", "Female"];
+		// const interestWanted = ["video-game"];
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
-
 		const completTab = [
-			//line 2
 			latitude, longitude, latitude,
-			// line 7 
 			distanceMax,
-			//line 8
 			ageMax,
-			//line 9 
 			ageMin,
-			//line 10 
-			...orientation
-			//line 12
-
+			...orientation,
+			...interestWanted.map(interest => `%${interest}%`)
 		];
-
-		// TODO find url picture in request
-		// TODO make a big tab with all params actually in ${blabla} toa void sql insertion
 		// TODO link all to request get
 		// TODO protect route
 		// TODO make a nice design for it on client .
@@ -142,16 +133,16 @@ const FindDb = {
 					id,
 					(
 						6371 * acos(
-							cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude))
+							cos(radians( ? )) * cos(radians(latitude)) * cos(radians(longitude) - radians( ? )) + sin(radians( ? )) * sin(radians(latitude))
 						)
 					) AS distance
 				FROM
 					users
 			) AS d ON u.id = d.id
 		WHERE
-			d.distance < ${distanceMax}
-			AND u.age <= ${ageMax}
-			AND u.age >= ${ageMin}
+			d.distance < ?
+			AND u.age <= ?
+			AND u.age >= ?
 			AND u.gender IN (${orientation.map(() => "?").join(",")})
 			AND ${interestConditions}
 		ORDER BY
@@ -161,11 +152,10 @@ const FindDb = {
 		OFFSET
 			0;
 		`;
-		console.log(sql)
-		const users = await db.all(sql, [...orientation, ...interestWanted.map(interest => `%${interest}%`)]);
+		const users = await db.all(sql, completTab);
 		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
-			 console.log('user', user.interests);
-			
+			console.log("user", user.interests);
+
 			const newUser: UserPublic = {
 				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
 				pictures: user.image_srcs ? user.image_srcs.split(",") : [],
