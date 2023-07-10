@@ -45,7 +45,7 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
-	for (let i = 1; i < 100; i++) {
+	for (let i = 1; i < 10000; i++) {
 
 		const sql = `
         INSERT INTO users (

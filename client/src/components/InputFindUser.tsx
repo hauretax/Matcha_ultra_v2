@@ -44,7 +44,6 @@ export default function InputFindUser(props: any) {
 
     const changeOrentiation = (event: any) => {
         const { checked, value } = event.target as HTMLInputElement;
-        console.log(checked, value)
         updatedOrientation((prevOrientation) => {
             let updatedOrientation: string[];
 
