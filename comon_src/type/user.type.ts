@@ -47,13 +47,16 @@ export type UserPayload = {
   profile: UserProfile;
 }
 
+type Gender = "Female" | "Male" | "Other";
+
+
 export type UserPublic = {
   username: string;
   biography: string;
-  gender: string;
+  gender: Gender;
   age: string;
   orientation: string;
-  pictures: { id: number; src: string }[];
+  pictures: string[];
   interests: string[];
   distance: number;
 }

@@ -69,13 +69,6 @@ const FindDb = {
 
 
 	async tenUsers({latitude, longitude,distanceMax,ageMin,ageMax,orientation,interestWanted}:findTenUsersParams): Promise<UserPublic[]> {
-		// const latitude = 48.8566;
-		// const longitude = 2.3522;
-		// const distanceMax = 500;
-		// const ageMin = 18;
-		// const ageMax = 55;
-		// const orientation = ["Male", "Female"];
-		// const interestWanted = ["video-game"];
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
@@ -87,7 +80,8 @@ const FindDb = {
 			...orientation,
 			...interestWanted.map(interest => `%${interest}%`)
 		];
-		// TODO link all to request get
+
+		
 		// TODO protect route
 		// TODO make a nice design for it on client .
 		// TODO test who many request we can make befor it crash
@@ -154,8 +148,6 @@ const FindDb = {
 		`;
 		const users = await db.all(sql, completTab);
 		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
-			console.log("user", user.interests);
-
 			const newUser: UserPublic = {
 				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
 				pictures: user.image_srcs ? user.image_srcs.split(",") : [],
@@ -169,7 +161,6 @@ const FindDb = {
 			result.push(newUser);
 			return result;
 		}, []);
-		console.log(publicUsers);
 		return publicUsers;
 	},
 };

@@ -24,27 +24,12 @@ import themeOptions from './theme/classical'
 import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
 import FinderPage from "./pages/FinderPage";
-import apiProvider from "./services/apiProvider";
 
 const theme = createTheme(themeOptions)
 
 
 
 function App() {
-
-  useEffect(() => {
-    apiProvider.getUsers({
-      latitude:48.7932202, 
-      longitude:3.27131, 
-      distanceMax:500, 
-      ageMin:18, 
-      ageMax:23, 
-      orientation:["Female","Male"], 
-      interestWanted:["video-game"]})
-      .then((res: any) => {
-        console.log(res.data)
-      })
-  }, [])
 
   return (
     <SnackBarProvider>
@@ -65,11 +50,11 @@ function App() {
               <Route path="/valide_mail" element={<ValideMailPage />} />
               <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
               <Route path="/reset_password" element={<ResetPasswordPage />} />
+              <Route path='/finder' element={<FinderPage />} />
               <Route path='/404' element={<div>404</div>} />
               <Route element={<RequireAuth />} >
                 <Route path='/home' element={<HomePage />} />
                 <Route path='/profile' element={<ProfilePage />} />
-                <Route path='/finder' element={<FinderPage />} />
               </Route>
             </Route>
           </Routes>
