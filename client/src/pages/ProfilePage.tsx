@@ -23,7 +23,7 @@ function ProfilePage() {
         setOptions(res.data)
       })
       console.log(auth.user!.pictures)
-  }, [])
+  }, [auth.user])
 
   useEffect(() => {
     if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")

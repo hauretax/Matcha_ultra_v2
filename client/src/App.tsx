@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from 'react'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,7 +14,6 @@ import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
 import ProfilePage from './pages/ProfilePage'
 import ValideMailPage from "./pages/ValideMailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import HomePage from "./pages/HomePage";
 
 import RequireAuth from "./components/RequireAuth";
 
@@ -50,10 +48,9 @@ function App() {
               <Route path="/valide_mail" element={<ValideMailPage />} />
               <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
               <Route path="/reset_password" element={<ResetPasswordPage />} />
-              <Route path='/finder' element={<FinderPage />} />
               <Route path='/404' element={<div>404</div>} />
               <Route element={<RequireAuth />} >
-                <Route path='/home' element={<HomePage />} />
+                <Route path='/home' element={<FinderPage />} />
                 <Route path='/profile' element={<ProfilePage />} />
               </Route>
             </Route>

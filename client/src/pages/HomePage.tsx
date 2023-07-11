@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Skeleton } from "@mui/material";
 
 import { UserProfile } from "../../../comon_src/type/user.type";
-import apiProvider from "../services/apiProvider";
 
 function HomePage() {
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -12,7 +11,7 @@ function HomePage() {
     const fetchData = async () => {
       setIsLoading(true);
       // const res = await apiProvider.getUsers()
-      // setUsers(res.data)
+      setUsers([])
       setIsLoading(false)
     };
 
