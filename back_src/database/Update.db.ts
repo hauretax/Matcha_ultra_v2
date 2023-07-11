@@ -1,7 +1,7 @@
 import db from "./db";
 
 const UpdateDb = {
-
+	//TODO #5 
 	profile(profile: { firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number }, userId: number) {
 		const sql = `
 			UPDATE users 
