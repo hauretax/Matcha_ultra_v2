@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
@@ -9,21 +9,54 @@ import { Button } from '@mui/material';
 
 export default function FinderPage() {
     const [profiles, setprofiles] = useState<UserPublic[]>([])
+    const [end, setEnd] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [index, setIndex] = useState(0);
-    const setupeProfile = (profile: any) => {
-        setprofiles(profile)
+    const setupeProfile = (newProfile: UserPublic[]) => {
+        setIndex(0)
+        setLoading(false)
+        setEnd(false)
+        setprofiles(newProfile)
     }
+
+    const addProfile = (newProfile: UserPublic[]) => {
+
+        setprofiles((prevValues) => {
+            const size = prevValues.length
+            const newValue = [...prevValues, ...newProfile]
+            console.log(size, newValue.length)
+            if (size === newValue.length) {
+                setEnd(true)
+            }
+            setLoading(false)
+            return (newValue)
+        })
+
+    }
+
+    const showMore = () => {
+        if (end || loading) {
+            return;
+        }
+        setLoading(true)
+        setIndex((index) => index + 10)
+    }
+
+    //TODO #6
+
+
     return (
         <>
             <InputFindUser
                 setupeProfile={setupeProfile}
+                addProfile={addProfile}
                 index={index}
             />
             <Button onClick={() => {
                 setIndex((index) => index + 10);
             }} variant="contained">test</Button >
 
-            <ImageList>
+            <ImageList >
                 {profiles.map((item) => (
                     <ImageListItem key={item.username}>
                         <img
@@ -42,6 +75,10 @@ export default function FinderPage() {
                     </ImageListItem>
                 ))}
             </ImageList>
+            {
+                (!end && !loading && profiles.length ) &&
+                <Button onClick={showMore} variant="contained">show More</Button>
+            }
         </>
     );
 }

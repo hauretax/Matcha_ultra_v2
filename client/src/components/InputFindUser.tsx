@@ -20,7 +20,7 @@ export default function InputFindUser(props: any) {
 
     useEffect(() => {
         if (props.index) {
-            searchUsers();
+            searchUsers(false);
         }
     }, [props.index]);
 
@@ -32,10 +32,14 @@ export default function InputFindUser(props: any) {
             })
     }, [])
 
+    const handleClick = () => {
+        searchUsers(true)
+    }
+
 
     //TODO #3
 
-    const searchUsers = () => {
+    const searchUsers = (newrequest?: boolean) => {
         console.log(searchValues, props.index)
         apiProvider.getUsers({
             latitude: 0,
@@ -45,10 +49,13 @@ export default function InputFindUser(props: any) {
             ageMax: searchValues.ageMax,
             orientation: orientation,
             interestWanted: interestWanted,
-            index: props.index
+            index: newrequest ? 0 : props.index
         })
             .then((res: any) => {
-                props.setupeProfile(res.data)
+                if (newrequest) {
+                    props.setupeProfile(res.data)
+                } else
+                    props.addProfile(res.data)
             })
     }
 
@@ -154,7 +161,7 @@ export default function InputFindUser(props: any) {
             </FormGroup>
             <Interests setOptions={setinterestWanted} interests={interestWanted} options={options} updateDb={false} />
 
-            <Button onClick={searchUsers} variant="contained">Search</Button>
+            <Button onClick={handleClick} variant="contained">Search</Button>
         </>
     )
 }
