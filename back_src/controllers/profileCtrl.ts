@@ -332,10 +332,11 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 export async function getProfiles(req: Request, res: Response) {
 
 	//TODO verifier le contenue de req
-
+	// const localistaion = GetDb.userLocalisation();
+	// console.log(localistaion);
 	const paramsForSearch: findTenUsersParams = {
-		latitude: parseFloat(req.query.latitude as string),
-		longitude: parseFloat(req.query.longitude as string),
+		latitude: parseFloat(res.locals.fulluser.latitude),
+		longitude: parseFloat(res.locals.fulluser.longitude),
 		distanceMax: parseFloat(req.query.distanceMax as string),
 		ageMin: parseInt(req.query.ageMin as string, 10),
 		ageMax: parseInt(req.query.ageMax as string, 10),
@@ -343,7 +344,7 @@ export async function getProfiles(req: Request, res: Response) {
 		interestWanted: (req.query.interestWanted as string).split(",").map((value) => value.trim()),
 	};
 
-console.log('------------------', paramsForSearch);
+	console.log('------------------', paramsForSearch);
 
 	const profiles = await FindDb.tenUsers(paramsForSearch);
 

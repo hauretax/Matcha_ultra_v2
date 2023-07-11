@@ -9,7 +9,6 @@ export async function validsecurRequest(
 	res: Response,
 	next: NextFunction
 ) {
-	//TODO opti faire une variable avec une cle usrname et une variable mail valider ?
 	try {
 		const authHeader = req.headers.authorization as string;
 		const token = authHeader && authHeader.split(" ")[1];

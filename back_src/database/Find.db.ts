@@ -82,7 +82,6 @@ const FindDb = {
 		];
 
 		
-		// TODO protect route
 		// TODO make a nice design for it on client .
 		// TODO test who many request we can make befor it crash
 
