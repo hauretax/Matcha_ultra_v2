@@ -36,10 +36,6 @@ if (!secretKey) {
 describe("JWT Tests", () => {
 
 	let usrId: number;
-	// TODO
-	/**
-	 * verification of usr in db
-	 */
 	beforeAll(async () => {
 		InitializeDb.userTable();
 		await createProfile(creationReq, FE.res as never);
