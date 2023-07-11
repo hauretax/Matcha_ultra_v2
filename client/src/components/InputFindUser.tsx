@@ -22,6 +22,7 @@ export default function InputFindUser(props: any) {
         if (props.index) {
             searchUsers(false);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.index]);
 
 
