@@ -8,7 +8,7 @@ const UpdateDb = {
 			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?,
 			age=STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?))
 			WHERE id=?`;
-		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, userId, profile.birthDate,profile.birthDate];
+		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, profile.birthDate, profile.birthDate, userId];
 		return db.run(sql, params);
 	},
 
