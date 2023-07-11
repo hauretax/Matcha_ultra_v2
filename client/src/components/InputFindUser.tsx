@@ -41,7 +41,6 @@ export default function InputFindUser(props: any) {
     //TODO #3
 
     const searchUsers = (newrequest?: boolean) => {
-        console.log(searchValues, props.index)
         apiProvider.getUsers({
             latitude: 0,
             longitude: 0,

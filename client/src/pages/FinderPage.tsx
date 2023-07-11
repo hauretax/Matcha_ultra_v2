@@ -24,7 +24,6 @@ export default function FinderPage() {
         setprofiles((prevValues) => {
             const size = prevValues.length
             const newValue = [...prevValues, ...newProfile]
-            console.log(size, newValue.length)
             if (size === newValue.length) {
                 setEnd(true)
             }
