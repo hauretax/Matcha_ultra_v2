@@ -68,7 +68,7 @@ const FindDb = {
 	},
 
 
-	async tenUsers({latitude, longitude,distanceMax,ageMin,ageMax,orientation,interestWanted}:findTenUsersParams): Promise<UserPublic[]> {
+	async tenUsers({latitude, longitude,distanceMax,ageMin,ageMax,orientation,interestWanted,index}:findTenUsersParams): Promise<UserPublic[]> {
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
@@ -78,7 +78,8 @@ const FindDb = {
 			ageMax,
 			ageMin,
 			...orientation,
-			...interestWanted.map(interest => `%${interest}%`)
+			...interestWanted.map(interest => `%${interest}%`),
+			index
 		];
 
 		const sql = `
@@ -138,7 +139,7 @@ const FindDb = {
 		LIMIT
 			10
 		OFFSET
-			0;
+			?;
 		`;
 		const users = await db.all(sql, completTab);
 		const publicUsers = users.reduce((result: UserPublic[], user: userInDb) => {

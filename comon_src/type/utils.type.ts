@@ -26,4 +26,5 @@ export type findTenUsersParams = {
     ageMax:number;
     orientation:Array<string>;
     interestWanted:Array<string>;
+    index:number;
 }

@@ -18,6 +18,12 @@ export default function InputFindUser(props: any) {
     const [interestWanted, setinterestWanted] = useState<string[]>([])
     const [options, setOptions] = useState<string[]>([])
 
+    useEffect(() => {
+        if (props.index) {
+            searchUsers();
+        }
+    }, [props.index]);
+
 
     useEffect(() => {
         apiProvider.getOptions()
@@ -30,6 +36,7 @@ export default function InputFindUser(props: any) {
     //TODO #3
 
     const searchUsers = () => {
+        console.log(searchValues, props.index)
         apiProvider.getUsers({
             latitude: 0,
             longitude: 0,
@@ -37,7 +44,8 @@ export default function InputFindUser(props: any) {
             ageMin: searchValues.ageMin,
             ageMax: searchValues.ageMax,
             orientation: orientation,
-            interestWanted: interestWanted
+            interestWanted: interestWanted,
+            index: props.index
         })
             .then((res: any) => {
                 props.setupeProfile(res.data)

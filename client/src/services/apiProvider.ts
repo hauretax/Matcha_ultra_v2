@@ -64,14 +64,16 @@ const apiProvider = {
   * interests array
   * genderFind array
   */
-  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted }: findTenUsersParams) {
+  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index }: findTenUsersParams) {
     return axiosPrivate.get(`/users?latitude=${latitude}
     &longitude=${longitude}
     &distanceMax=${distanceMax}
     &ageMin=${ageMin}
     &ageMax=${ageMax}
     &orientation=${encodeURIComponent(orientation.toString())}
-    &interestWanted=${encodeURIComponent(interestWanted.toString())}`);
+    &interestWanted=${encodeURIComponent(interestWanted.toString())}
+    &index=${index}`);
+  
   }
 }
 

@@ -342,6 +342,7 @@ export async function getProfiles(req: Request, res: Response) {
 		ageMax: parseInt(req.query.ageMax as string, 10),
 		orientation: (req.query.orientation as string).split(",").map((value) => value.trim()),
 		interestWanted: (req.query.interestWanted as string).split(",").map((value) => value.trim()),
+		index: parseInt(req.query.index as string )
 	};
 
 	console.log("------------------", paramsForSearch);
