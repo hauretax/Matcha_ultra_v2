@@ -182,8 +182,8 @@ export async function updateProfile(req: Request, res: Response) {
 		email,
 		emailVerified: Number(email === res.locals.fulluser.email)
 	};
-	const t = await UpdateDb.profile(profileInformation, res.locals.fulluser.id);
-	console.log(t)
+	await UpdateDb.profile(profileInformation, res.locals.fulluser.id);
+
 	res.status(200).json({ message: "Profile updated successfully" });
 }
 
