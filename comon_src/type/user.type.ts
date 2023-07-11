@@ -14,8 +14,8 @@ export type UserProfile = {
   pictures: { id: number; src: string }[];
   interests: string[];
   localisation?: Vector;
-  distance?:number;
-  age?:number;
+  distance?: number;
+  age?: number;
 }
 /**
  * 
@@ -47,14 +47,19 @@ export type UserPayload = {
   profile: UserProfile;
 }
 
-type Gender = "Female" | "Male" | "Other";
+export type userInDb = UserProfile & {
+  image_srcs: string;
+  interests: string;
+  gender:Gender;
+}
 
+type Gender = "Female" | "Male" | "Other";
 
 export type UserPublic = {
   username: string;
   biography: string;
   gender: Gender;
-  age: string;
+  age: number;
   orientation: string;
   pictures: string[];
   interests: string[];

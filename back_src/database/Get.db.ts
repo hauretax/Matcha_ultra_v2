@@ -26,7 +26,7 @@ const GetDb = {
 	async userLocalisation(id:number): Promise<{ latitude: number, longitude: number }>{
 		const sql = `SELECT latitude, longitude 
 		FROM "users"
-		WHERE id = ?`
+		WHERE id = ?`;
 		return db.get(sql, [id]);
 	},
 

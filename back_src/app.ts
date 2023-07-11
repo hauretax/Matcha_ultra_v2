@@ -8,7 +8,6 @@ import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import multerErrorMiddleware from "./middlewares/multerError.middleware";
 
 import profileRoutes from "./routes/profileRoutes";
-import insertDataInDb from "./creatTestDb";
 import { Bport } from "../comon_src/constant";
 
 class App {
@@ -67,6 +66,7 @@ const initFunctions = [
 ];
 
 
+// import insertDataInDb from "./creatTestDb";
 
 Promise.all(initFunctions.map(initFunc => initFunc()))
 	.then(() => {

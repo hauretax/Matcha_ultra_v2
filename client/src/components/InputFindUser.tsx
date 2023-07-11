@@ -2,7 +2,6 @@ import { Button, Checkbox, FormControlLabel, FormGroup, Slider } from "@mui/mate
 import { useState, useEffect } from 'react'
 import apiProvider from "../services/apiProvider";
 import Interests from "./Interests";
-import { useAuth } from "../context/AuthProvider";
 function valuetext(value: number) {
     return `${value}`;
 }
@@ -109,7 +108,7 @@ export default function InputFindUser(props: any) {
                 aria-label="distance"
                 value={searchValues.distanceMax}
                 getAriaValueText={valuetext}
-                valueLabelDisplay="on"
+                valueLabelDisplay="auto"
                 min={1}
                 max={500}
                 onChange={handleSearchChange}
@@ -117,7 +116,7 @@ export default function InputFindUser(props: any) {
             <Slider
                 value={[searchValues.ageMin, searchValues.ageMax]}
                 onChange={handleAgeChange}
-                valueLabelDisplay="on"
+                valueLabelDisplay="auto"
                 getAriaValueText={valuetext}
                 disableSwap
                 min={18}

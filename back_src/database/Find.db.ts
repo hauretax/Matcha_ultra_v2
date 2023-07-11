@@ -1,5 +1,5 @@
 import db from "./db";
-import { FullUser, UserPublic } from "../../comon_src/type/user.type";
+import { FullUser, UserPublic, userInDb } from "../../comon_src/type/user.type";
 import { findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
@@ -81,11 +81,6 @@ const FindDb = {
 			...interestWanted.map(interest => `%${interest}%`)
 		];
 
-		
-		// TODO make a nice design for it on client .
-		// TODO test who many request we can make befor it crash
-
-
 		const sql = `
 		SELECT
 			u.id,
@@ -146,7 +141,7 @@ const FindDb = {
 			0;
 		`;
 		const users = await db.all(sql, completTab);
-		const publicUsers = users.reduce((result: UserPublic[], user: any) => {
+		const publicUsers = users.reduce((result: UserPublic[], user: userInDb) => {
 			const newUser: UserPublic = {
 				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
 				pictures: user.image_srcs ? user.image_srcs.split(",") : [],

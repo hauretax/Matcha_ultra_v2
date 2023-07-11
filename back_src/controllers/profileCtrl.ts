@@ -344,7 +344,7 @@ export async function getProfiles(req: Request, res: Response) {
 		interestWanted: (req.query.interestWanted as string).split(",").map((value) => value.trim()),
 	};
 
-	console.log('------------------', paramsForSearch);
+	console.log("------------------", paramsForSearch);
 
 	const profiles = await FindDb.tenUsers(paramsForSearch);
 
