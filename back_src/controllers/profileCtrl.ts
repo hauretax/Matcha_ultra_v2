@@ -331,9 +331,8 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 
 export async function getProfiles(req: Request, res: Response) {
 
-	//TODO verifier le contenue de req
-	// const localistaion = GetDb.userLocalisation();
-	// console.log(localistaion);
+	//TODO #1
+
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
 		longitude: parseFloat(res.locals.fulluser.longitude),

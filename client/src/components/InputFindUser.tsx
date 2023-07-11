@@ -27,10 +27,8 @@ export default function InputFindUser(props: any) {
     }, [])
 
 
-    /*TODO
-    * latitde et longitude non pas d'interet (ils sont mit coter back) 
-    * mais j'ai la flemme de fair un type qui les exclue
-    */
+    //TODO #3
+
     const searchUsers = () => {
         apiProvider.getUsers({
             latitude: 0,

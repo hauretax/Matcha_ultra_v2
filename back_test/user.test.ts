@@ -27,7 +27,6 @@ const goodReq = {
 } as Request;
 
 
-//TODO test mailler
 describe("user create Profile", () => {
 	let usrId: number | undefined = 0;
 	InitializeDb.userTable();
@@ -115,10 +114,7 @@ describe("user login", () => {
 
 	InitializeDb.userTable();
 	let usrId: number | undefined = 0;
-	// TODO
-	/**
-	 * verification of usr in db
-	 */
+
 	beforeAll(async () => {
 		await createProfile(creationReq, FE.res as never);
 		usrId = FE.responseData?.usrId;

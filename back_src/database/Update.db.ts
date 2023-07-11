@@ -29,7 +29,7 @@ const UpdateDb = {
 		const params = [biography, userId];
 		return db.run(sql, params);
 	},
-	// TODO: Harmonize what's returned by functions in this file
+	// TODO #2
 	picture(userId: number, src: string) {
 		const sql = `
       UPDATE pictures

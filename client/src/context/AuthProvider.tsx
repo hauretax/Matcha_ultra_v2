@@ -196,7 +196,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // TODO: handle remember me
+  // TODO #4
   const signout = async (): Promise<void> => {
     try {
 
