@@ -8,7 +8,6 @@ import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import multerErrorMiddleware from "./middlewares/multerError.middleware";
 
 import profileRoutes from "./routes/profileRoutes";
-
 import { Bport } from "../comon_src/constant";
 
 class App {
@@ -56,8 +55,6 @@ class App {
 	}
 }
 
-// initUser();
-
 const app = new App();
 
 const initFunctions = [
@@ -68,9 +65,14 @@ const initFunctions = [
 	// ... add any additional table initializers here
 ];
 
+
+// import insertDataInDb from "./creatTestDb";
+
 Promise.all(initFunctions.map(initFunc => initFunc()))
 	.then(() => {
 		app.start(Bport);
+		// generate user for test
+		// insertDataInDb();
 	})
 	.catch(err => {
 		console.error("An error occurred while initializing the tables:", err);

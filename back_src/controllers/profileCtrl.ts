@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import {  validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import { validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -20,6 +20,7 @@ import UpdateDb from "../database/Update.db";
 import GetDb from "../database/Get.db";
 import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
+import { findTenUsersParams } from "../../comon_src/type/utils.type";
 
 
 const passwordResetKey = [];
@@ -329,7 +330,23 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-	const profiles = await FindDb.allUsers();
+
+	//TODO verifier le contenue de req
+	// const localistaion = GetDb.userLocalisation();
+	// console.log(localistaion);
+	const paramsForSearch: findTenUsersParams = {
+		latitude: parseFloat(res.locals.fulluser.latitude),
+		longitude: parseFloat(res.locals.fulluser.longitude),
+		distanceMax: parseFloat(req.query.distanceMax as string),
+		ageMin: parseInt(req.query.ageMin as string, 10),
+		ageMax: parseInt(req.query.ageMax as string, 10),
+		orientation: (req.query.orientation as string).split(",").map((value) => value.trim()),
+		interestWanted: (req.query.interestWanted as string).split(",").map((value) => value.trim()),
+	};
+
+	console.log("------------------", paramsForSearch);
+
+	const profiles = await FindDb.tenUsers(paramsForSearch);
 
 	res.status(200).json(profiles);
 	return;

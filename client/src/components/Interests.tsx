@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthProvider';
 interface InterestsProps {
   interests: string[];
   options: string[];
+  updateDb:boolean;
+  setOptions?: Function;
 }
 
 const Interests: React.FC<InterestsProps> = (props) => {
@@ -19,8 +21,12 @@ const Interests: React.FC<InterestsProps> = (props) => {
   };
 
   const handleSave = async () => {
+    if (props.setOptions) {
+      props.setOptions(interests)
+    }
     setIsUploading(true);
-    await auth.updateInterests(interests)
+    if(props.updateDb)
+      await auth.updateInterests(interests)
     setIsEditing(false);
     setIsUploading(false);
   };

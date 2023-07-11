@@ -1,3 +1,4 @@
+import { findTenUsersParams } from '../../../comon_src/type/utils.type'
 import axiosPrivate from './axiosPrivate'
 
 const apiProvider = {
@@ -57,8 +58,20 @@ const apiProvider = {
     });
   },
 
-  getUsers() {
-    return axiosPrivate.get('/users');
+  /*
+  *age|birthdate
+  *localisation : latitude, longitude
+  * interests array
+  * genderFind array
+  */
+  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted }: findTenUsersParams) {
+    return axiosPrivate.get(`/users?latitude=${latitude}
+    &longitude=${longitude}
+    &distanceMax=${distanceMax}
+    &ageMin=${ageMin}
+    &ageMax=${ageMax}
+    &orientation=${encodeURIComponent(orientation.toString())}
+    &interestWanted=${encodeURIComponent(interestWanted.toString())}`);
   }
 }
 

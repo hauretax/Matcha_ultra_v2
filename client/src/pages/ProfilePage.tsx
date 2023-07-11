@@ -22,7 +22,8 @@ function ProfilePage() {
       .then((res: any) => {
         setOptions(res.data)
       })
-  }, [])
+      console.log(auth.user!.pictures)
+  }, [auth.user])
 
   useEffect(() => {
     if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")
@@ -32,7 +33,7 @@ function ProfilePage() {
     <Box>
       <Caroussel imgs={auth.user!.pictures} isLoading={false} />
       <Biography biography={auth.user!.biography} isLoading={false} />
-      <Interests interests={auth.user!.interests} options={options} />
+      <Interests interests={auth.user!.interests} options={options} updateDb={true} />
       <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} isLoading={false} />
     </Box>
 

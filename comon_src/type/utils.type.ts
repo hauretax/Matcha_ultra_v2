@@ -17,3 +17,13 @@ export type Ip2Location = {
     as: string;
     is_proxy: boolean;
 };
+
+export type findTenUsersParams = {
+    latitude:number;
+    longitude:number;
+    distanceMax:number;
+    ageMin:number;
+    ageMax:number;
+    orientation:Array<string>;
+    interestWanted:Array<string>;
+}
