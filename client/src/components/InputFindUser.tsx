@@ -2,6 +2,7 @@ import { Button, Checkbox, FormControlLabel, FormGroup, Slider } from "@mui/mate
 import { useState, useEffect } from 'react'
 import apiProvider from "../services/apiProvider";
 import Interests from "./Interests";
+import { OrderBy } from "../../../comon_src/type/utils.type";
 function valuetext(value: number) {
     return `${value}`;
 }
@@ -17,12 +18,12 @@ export default function InputFindUser(props: any) {
     const [orientation, updatedOrientation] = useState<string[]>([]);
     const [interestWanted, setinterestWanted] = useState<string[]>([])
     const [options, setOptions] = useState<string[]>([])
-
+    const [orderBy, setOrderBy] = useState<OrderBy>("distance")
     useEffect(() => {
         if (props.index) {
             searchUsers(false);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.index]);
 
 
@@ -32,11 +33,6 @@ export default function InputFindUser(props: any) {
                 setOptions(res.data)
             })
     }, [])
-
-    const handleClick = () => {
-        searchUsers(true)
-    }
-
 
     //TODO #3
 
@@ -50,7 +46,7 @@ export default function InputFindUser(props: any) {
             orientation: orientation,
             interestWanted: interestWanted,
             index: newrequest ? 0 : props.index,
-            orderBy: "tag"
+            orderBy: orderBy
         })
             .then((res: any) => {
                 if (newrequest) {
@@ -161,8 +157,11 @@ export default function InputFindUser(props: any) {
                 />
             </FormGroup>
             <Interests setOptions={setinterestWanted} interests={interestWanted} options={options} updateDb={false} />
-
-            <Button onClick={handleClick} variant="contained">Search</Button>
+            {/*TODO #7 */ }
+            <Button onClick={() => { searchUsers(true); setOrderBy("distance") }} variant="contained">distance</Button>
+            <Button onClick={() => { searchUsers(true); setOrderBy("age") }} variant="contained">age</Button>
+            <Button onClick={() => { searchUsers(true); setOrderBy("tag") }} variant="contained">tag</Button>
+            <Button onClick={() => alert('not implemented')/*{ searchUsers(true);setOrderBy("popularity")}*/} variant="contained">popularity</Button>
         </>
     )
 }

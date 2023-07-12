@@ -51,9 +51,6 @@ export default function FinderPage() {
                 addProfile={addProfile}
                 index={index}
             />
-            <Button onClick={() => {
-                setIndex((index) => index + 10);
-            }} variant="contained">test</Button >
 
             <ImageList >
                 {profiles.map((item) => (

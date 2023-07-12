@@ -1,6 +1,6 @@
 import db from "./db";
 import { FullUser, UserPublic, userInDb } from "../../comon_src/type/user.type";
-import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
+import { findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -86,21 +86,22 @@ const FindDb = {
 		];
 
 		let orderByClause = "";
+		/*TODO #7 */
 		switch (orderBy) {
-			case "distance":
-				orderByClause = "d.distance ASC";
-				break;
-			case "age":
-				orderByClause = "u.age ASC";
-				break;
-			case "popularity":
-				orderByClause = "u.popularity DESC";
-				break;
-			case "tag":
-				orderByClause = "interestCount DESC";
-				break;
-			default:
-				throw new Error("Invalid order by");
+		case "distance":
+			orderByClause = "d.distance ASC";
+			break;
+		case "age":
+			orderByClause = "u.age ASC";
+			break;
+		case "popularity":
+			orderByClause = "u.popularity DESC";
+			break;
+		case "tag":
+			orderByClause = "interestCount DESC";
+			break;
+		default:
+			throw new Error("Invalid order by");
 		}
 
 		const sql = `
@@ -166,9 +167,7 @@ const FindDb = {
 		OFFSET
 			?;
 		`;
-		console.log(sql)
 		const users = await db.all(sql, completTab);
-		console.log(users)
 		const publicUsers = users.reduce((result: UserPublic[], user: userInDb) => {
 			const newUser: UserPublic = {
 				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
