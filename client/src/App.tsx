@@ -37,11 +37,6 @@ function App() {
 
           <Routes>
             <Route element={<Layout />}>
-              <Route path='/test' element={
-                <>
-                  <button onClick={getLocation}>Obtenir la géolocalisation</button>
-                  <button onClick={getLocationByIp}>ip2</button>
-                </>} />
               <Route path="/" element={<PublicPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
