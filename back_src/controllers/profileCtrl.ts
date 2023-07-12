@@ -333,16 +333,25 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 export async function getProfiles(req: Request, res: Response) {
 
 	//TODO #1
+	if (!req.query) {
+		res.status(400).json({ error: "need argument" });
+		return;
+	}
+	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index } = req.query;
+	if (!ageMin || !ageMax || !orientation || !index || !distanceMax) {
+		res.status(400).json({ error: "invalid gender" });
+		return;
+	}
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
 		longitude: parseFloat(res.locals.fulluser.longitude),
-		distanceMax: parseFloat(req.query.distanceMax as string),
-		ageMin: parseInt(req.query.ageMin as string, 10),
-		ageMax: parseInt(req.query.ageMax as string, 10),
-		orientation: (req.query.orientation as string).split(",").map((value) => value.trim()),
-		interestWanted: (req.query.interestWanted as string).split(",").map((value) => value.trim()),
-		index: parseInt(req.query.index as string )
+		distanceMax: parseFloat(distanceMax as string),
+		ageMin: parseInt(ageMin as string, 10),
+		ageMax: parseInt(ageMax as string, 10),
+		orientation: (orientation as string).split(",").map((value) => value.trim()),
+		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
+		index: parseInt(index as string)
 	};
 
 	console.log("------------------", paramsForSearch);
