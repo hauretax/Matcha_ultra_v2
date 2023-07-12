@@ -20,7 +20,7 @@ import UpdateDb from "../database/Update.db";
 import GetDb from "../database/Get.db";
 import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
-import { findTenUsersParams } from "../../comon_src/type/utils.type";
+import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 
 
 const passwordResetKey = [];
@@ -332,13 +332,12 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 
 export async function getProfiles(req: Request, res: Response) {
 
-	//TODO #1
 	if (!req.query) {
 		res.status(400).json({ error: "need argument" });
 		return;
 	}
-	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index } = req.query;
-	if (!ageMin || !ageMax || !orientation || !index || !distanceMax) {
+	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
+	if (!ageMin || !ageMax || !orientation || !index || !distanceMax || !orderBy) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
@@ -351,7 +350,8 @@ export async function getProfiles(req: Request, res: Response) {
 		ageMax: parseInt(ageMax as string, 10),
 		orientation: (orientation as string).split(",").map((value) => value.trim()),
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
-		index: parseInt(index as string)
+		index: parseInt(index as string),
+		orderBy: orderBy as OrderBy
 	};
 
 	console.log("------------------", paramsForSearch);

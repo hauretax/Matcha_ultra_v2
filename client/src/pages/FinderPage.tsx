@@ -71,6 +71,7 @@ export default function FinderPage() {
                         />
                         <div>{item.gender}</div>
                         <p>{item.distance} km</p>
+                        <div>{item.interests}</div>
                     </ImageListItem>
                 ))}
             </ImageList>

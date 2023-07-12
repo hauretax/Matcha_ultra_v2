@@ -49,7 +49,8 @@ export default function InputFindUser(props: any) {
             ageMax: searchValues.ageMax,
             orientation: orientation,
             interestWanted: interestWanted,
-            index: newrequest ? 0 : props.index
+            index: newrequest ? 0 : props.index,
+            orderBy: "tag"
         })
             .then((res: any) => {
                 if (newrequest) {

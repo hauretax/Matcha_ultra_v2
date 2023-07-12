@@ -1,6 +1,6 @@
 import db from "./db";
 import { FullUser, UserPublic, userInDb } from "../../comon_src/type/user.type";
-import { findTenUsersParams } from "../../comon_src/type/utils.type";
+import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -68,11 +68,14 @@ const FindDb = {
 	},
 
 
-	async tenUsers({latitude, longitude,distanceMax,ageMin,ageMax,orientation,interestWanted,index}:findTenUsersParams): Promise<UserPublic[]> {
+
+
+	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams): Promise<UserPublic[]> {
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
 		const completTab = [
+			...interestWanted,
 			latitude, longitude, latitude,
 			distanceMax,
 			ageMax,
@@ -81,6 +84,24 @@ const FindDb = {
 			...interestWanted.map(interest => `%${interest}%`),
 			index
 		];
+
+		let orderByClause = "";
+		switch (orderBy) {
+			case "distance":
+				orderByClause = "d.distance ASC";
+				break;
+			case "age":
+				orderByClause = "u.age ASC";
+				break;
+			case "popularity":
+				orderByClause = "u.popularity DESC";
+				break;
+			case "tag":
+				orderByClause = "interestCount DESC";
+				break;
+			default:
+				throw new Error("Invalid order by");
+		}
 
 		const sql = `
 		SELECT
@@ -94,6 +115,10 @@ const FindDb = {
 			u.longitude,
 			u.age,
 			d.distance,
+			(
+				SELECT COUNT(*) FROM user_interests ui
+				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${interestWanted.map(() => "?").join(",")}))
+			) AS interestCount,
 			interests,
 			image_srcs
 		FROM
@@ -135,13 +160,15 @@ const FindDb = {
 			AND u.gender IN (${orientation.map(() => "?").join(",")})
 			AND ${interestConditions}
 		ORDER BY
-			d.distance ASC
+			${orderByClause}
 		LIMIT
 			10
 		OFFSET
 			?;
 		`;
+		console.log(sql)
 		const users = await db.all(sql, completTab);
+		console.log(users)
 		const publicUsers = users.reduce((result: UserPublic[], user: userInDb) => {
 			const newUser: UserPublic = {
 				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,

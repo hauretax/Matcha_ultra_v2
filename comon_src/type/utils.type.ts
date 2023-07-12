@@ -18,6 +18,8 @@ export type Ip2Location = {
     is_proxy: boolean;
 };
 
+export type OrderBy = "distance" | "age" | "popularity" | "tag"
+
 export type findTenUsersParams = {
     latitude:number;
     longitude:number;
@@ -27,4 +29,5 @@ export type findTenUsersParams = {
     orientation:Array<string>;
     interestWanted:Array<string>;
     index:number;
+    orderBy: OrderBy;
 }
