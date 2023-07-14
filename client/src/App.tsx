@@ -34,7 +34,6 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<PublicPage />} />

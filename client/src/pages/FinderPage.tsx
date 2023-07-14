@@ -5,7 +5,8 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { UserPublic } from '../../../comon_src/type/user.type';
 import { prefixBackendUrl } from '../utils';
 import InputFindUser from '../components/InputFindUser';
-import { Button } from '@mui/material';
+import { Button, Slider } from '@mui/material';
+import MinimalUser from '../components/MinimalUser';
 
 export default function FinderPage() {
     const [profiles, setprofiles] = useState<UserPublic[]>([])
@@ -41,9 +42,9 @@ export default function FinderPage() {
         setIndex((index) => index + 10)
     }
 
+
+
     //TODO #6
-
-
     return (
         <>
             <InputFindUser
@@ -54,26 +55,13 @@ export default function FinderPage() {
 
             <ImageList >
                 {profiles.map((item) => (
-                    <ImageListItem key={item.username}>
-                        <img
-                            src={prefixBackendUrl(item.pictures[0])}
-                            srcSet={prefixBackendUrl(item.pictures[0])}
-                            alt={"profile"}
-                            loading="lazy"
-                        />
-                        <ImageListItemBar
-                            title={item.username}
-                            subtitle={<span> {item.age} : years</span>}
-                            position="below"
-                        />
-                        <div>{item.gender}</div>
-                        <p>{item.distance} km</p>
-                        <div>{item.interests}</div>
-                    </ImageListItem>
+                    <MinimalUser
+                        user={item}
+                    />
                 ))}
             </ImageList>
             {
-                (!end && !loading && profiles.length ) &&
+                (!end && !loading && profiles.length) &&
                 <Button onClick={showMore} variant="contained">show More</Button>
             }
         </>
