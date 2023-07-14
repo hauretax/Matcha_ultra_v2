@@ -1,19 +1,28 @@
-import { ImageListItem, ImageListItemBar, Slider } from "@mui/material"
+import { Button, ImageListItem, ImageListItemBar, Slider } from "@mui/material"
 import { UserPublic } from "../../../comon_src/type/user.type"
 import { prefixBackendUrl } from "../utils"
+import { useState } from "react"
+import apiProvider from "../services/apiProvider"
 
 interface MUserProps {
     user: UserPublic
 }
+//TODO #8
 
 export default function MinimalUser(props: MUserProps) {
     const user = props.user
-    const noteChange = (note: number, username: string) => {
-        console.log(note, username)
+    const [note, setnote] = useState(0)
+    const [isActive, setActive] = useState(false)
+    const noteChange = () => {
+        console.log(note, user.username)
+        apiProvider.noteUsers({
+            note:note,
+            userTo:user.username
+        })
     }
 
     return (
-        <ImageListItem key={user.username} >
+        <ImageListItem key={user.username}>
             <img
                 src={prefixBackendUrl(user.pictures[0])}
                 srcSet={prefixBackendUrl(user.pictures[0])}
@@ -32,9 +41,14 @@ export default function MinimalUser(props: MUserProps) {
                     valueLabelDisplay="auto"
                     min={0}
                     max={10}
-                    onChange={(event: any) => noteChange(event.target.value, user.username)}
+                    value={note}
+                    onChange={(event: any) => { setnote(event.target.value); setActive(true) }}
                 />
-                <button></button>
+                {
+                    isActive && (
+                        <Button onClick={() => { noteChange(); setActive(false) }} variant="contained">save</Button>
+                    )
+                }
             </div>
             <div>{user.gender}</div>
             <p>{user.distance} km</p>

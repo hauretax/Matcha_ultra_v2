@@ -58,13 +58,17 @@ const apiProvider = {
     });
   },
 
+  noteUsers({ note, userTo }: { note: number, userTo: string }) {
+    return axiosPrivate.post(`/note/userTo`,{note, userTo})
+  },
+
   /*
   *age|birthdate
   *localisation : latitude, longitude
   * interests array
   * genderFind array
   */
-  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index,orderBy }: findTenUsersParams) {
+  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams) {
     return axiosPrivate.get(`/users?latitude=${latitude}
     &longitude=${longitude}
     &distanceMax=${distanceMax}
@@ -74,7 +78,7 @@ const apiProvider = {
     &interestWanted=${encodeURIComponent(interestWanted.toString())}
     &index=${index}
     &orderBy=${orderBy}`);
-  
+
   }
 }
 
