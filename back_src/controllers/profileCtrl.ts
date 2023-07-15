@@ -347,7 +347,8 @@ export async function getProfiles(req: Request, res: Response) {
 		orientation: (orientation as string).split(",").map((value) => value.trim()),
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
 		index: parseInt(index as string),
-		orderBy: orderBy as OrderBy
+		orderBy: orderBy as OrderBy,
+		userId: res.locals.fulluser.id,
 	};
 
 	console.log("------------------", paramsForSearch);

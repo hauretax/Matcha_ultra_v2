@@ -11,13 +11,12 @@ interface MUserProps {
 
 export default function MinimalUser(props: MUserProps) {
     const user = props.user
-    const [note, setnote] = useState(0)
+    const [note, setnote] = useState(user.note || 0)
     const [isActive, setActive] = useState(false)
     const noteChange = () => {
-        console.log(note, user.username)
         apiProvider.noteUsers({
-            note:note,
-            userTo:user.username
+            note: note,
+            userTo: user.userId || 0
         })
     }
 

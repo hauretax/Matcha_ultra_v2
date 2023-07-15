@@ -59,7 +59,7 @@ const UpdateDb = {
 		const sql = `
 			INSERT OR REPLACE INTO user_notes (from_id, to_id, note)
 			VALUES (?, ?, ?);
-		`
+		`;
 		return db.get(sql, [userFrom, userTo,note]);
 	}
 

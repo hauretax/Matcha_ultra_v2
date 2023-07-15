@@ -70,18 +70,20 @@ const FindDb = {
 
 
 
-	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams): Promise<UserPublic[]> {
+	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy, userId }: findTenUsersParams): Promise<UserPublic[]> {
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
 		const completTab = [
 			...interestWanted,
 			latitude, longitude, latitude,
+			userId,
 			distanceMax,
 			ageMax,
 			ageMin,
 			...orientation,
 			...interestWanted.map(interest => `%${interest}%`),
+			userId,
 			index
 		];
 
@@ -121,7 +123,8 @@ const FindDb = {
 				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${interestWanted.map(() => "?").join(",")}))
 			) AS interestCount,
 			interests,
-			image_srcs
+			image_srcs,
+			un.note AS user_note
 		FROM
 			users AS u
 			LEFT JOIN (
@@ -154,12 +157,14 @@ const FindDb = {
 				FROM
 					users
 			) AS d ON u.id = d.id
+			LEFT JOIN user_notes AS un ON un.from_id = ? AND un.to_id = u.id
 		WHERE
 			d.distance < ?
 			AND u.age <= ?
 			AND u.age >= ?
 			AND u.gender IN (${orientation.map(() => "?").join(",")})
 			AND ${interestConditions}
+			AND u.id <> ?
 		ORDER BY
 			${orderByClause}
 		LIMIT
@@ -178,6 +183,8 @@ const FindDb = {
 				orientation: user.orientation,
 				age: user.age,
 				biography: user.biography,
+				note: user.user_note,
+				userId: user.id
 			};
 			result.push(newUser);
 			return result;

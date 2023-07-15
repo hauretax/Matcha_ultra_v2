@@ -49,6 +49,7 @@ export default function FinderPage() {
             <ImageList >
                 {profiles.map((item) => (
                     <MinimalUser
+                        key = {item.userId}
                         user={item}
                     />
                 ))}

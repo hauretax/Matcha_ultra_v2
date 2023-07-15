@@ -30,4 +30,5 @@ export type findTenUsersParams = {
     interestWanted:Array<string>;
     index:number;
     orderBy: OrderBy;
+    userId?:number;
 }

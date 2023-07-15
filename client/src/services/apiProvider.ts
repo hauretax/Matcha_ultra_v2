@@ -58,7 +58,7 @@ const apiProvider = {
     });
   },
 
-  noteUsers({ note, userTo }: { note: number, userTo: string }) {
+  noteUsers({ note, userTo }: { note: number, userTo: number }) {
     return axiosPrivate.post(`/note/userTo`,{note, userTo})
   },
 
