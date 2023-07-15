@@ -54,6 +54,15 @@ const UpdateDb = {
     	`;
 		return db.get(sql, [password, email]);
 	},
+
+	noteUserTo(userFrom: string, userTo: string, note: number) {
+		const sql = `
+			INSERT OR REPLACE INTO user_notes (from_id, to_id, note)
+			VALUES (?, ?, ?);
+		`;
+		return db.get(sql, [userFrom, userTo,note]);
+	}
+
 };
 
 export default UpdateDb;

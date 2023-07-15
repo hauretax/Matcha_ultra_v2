@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { UserPublic } from '../../../comon_src/type/user.type';
-import { prefixBackendUrl } from '../utils';
 import InputFindUser from '../components/InputFindUser';
 import { Button } from '@mui/material';
+import MinimalUser from '../components/MinimalUser';
 
 export default function FinderPage() {
     const [profiles, setprofiles] = useState<UserPublic[]>([])
@@ -20,7 +18,6 @@ export default function FinderPage() {
     }
 
     const addProfile = (newProfile: UserPublic[]) => {
-
         setprofiles((prevValues) => {
             const size = prevValues.length
             const newValue = [...prevValues, ...newProfile]
@@ -30,7 +27,6 @@ export default function FinderPage() {
             setLoading(false)
             return (newValue)
         })
-
     }
 
     const showMore = () => {
@@ -42,8 +38,6 @@ export default function FinderPage() {
     }
 
     //TODO #6
-
-
     return (
         <>
             <InputFindUser
@@ -54,26 +48,14 @@ export default function FinderPage() {
 
             <ImageList >
                 {profiles.map((item) => (
-                    <ImageListItem key={item.username}>
-                        <img
-                            src={prefixBackendUrl(item.pictures[0])}
-                            srcSet={prefixBackendUrl(item.pictures[0])}
-                            alt={"profile"}
-                            loading="lazy"
-                        />
-                        <ImageListItemBar
-                            title={item.username}
-                            subtitle={<span> {item.age} : years</span>}
-                            position="below"
-                        />
-                        <div>{item.gender}</div>
-                        <p>{item.distance} km</p>
-                        <div>{item.interests}</div>
-                    </ImageListItem>
+                    <MinimalUser
+                        key = {item.userId}
+                        user={item}
+                    />
                 ))}
             </ImageList>
             {
-                (!end && !loading && profiles.length ) &&
+                (!end && !loading && profiles.length) &&
                 <Button onClick={showMore} variant="contained">show More</Button>
             }
         </>

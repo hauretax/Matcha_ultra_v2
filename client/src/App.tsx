@@ -20,7 +20,6 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import './App.css';
-import { getLocation, getLocationByIp } from "./utils";
 import FinderPage from "./pages/FinderPage";
 
 const theme = createTheme(themeOptions)
@@ -34,7 +33,6 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<PublicPage />} />

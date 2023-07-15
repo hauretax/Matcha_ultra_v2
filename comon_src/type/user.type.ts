@@ -51,6 +51,7 @@ export type userInDb = UserProfile & {
   image_srcs: string;
   interests: string;
   gender:Gender;
+  user_note:number;
 }
 
 type Gender = "Female" | "Male" | "Other";
@@ -64,4 +65,6 @@ export type UserPublic = {
   pictures: string[];
   interests: string[];
   distance: number;
+  note:number;
+  userId?:number;
 }

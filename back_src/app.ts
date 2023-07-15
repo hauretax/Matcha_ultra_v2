@@ -8,6 +8,7 @@ import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import multerErrorMiddleware from "./middlewares/multerError.middleware";
 
 import profileRoutes from "./routes/profileRoutes";
+import noteRoutes from "./routes/noteRoutes";
 import { Bport } from "../comon_src/constant";
 
 class App {
@@ -40,6 +41,7 @@ class App {
 			res.status(200).send("Bienvenue sur le site");
 		});
 		this.app.use("/api", profileRoutes);
+		this.app.use("/api", noteRoutes);
 	}
 
 	private handleErrors(): void {
@@ -61,7 +63,8 @@ const initFunctions = [
 	InitializeDb.userTable,
 	InitializeDb.pictureTable,
 	InitializeDb.interestsTable,
-	InitializeDb.userInterestsTable
+	InitializeDb.userInterestsTable,
+	InitializeDb.userNoteTable
 	// ... add any additional table initializers here
 ];
 

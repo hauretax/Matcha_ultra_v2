@@ -22,7 +22,6 @@ import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 
-
 const passwordResetKey = [];
 
 export async function createProfile(req: Request, res: Response) {
@@ -242,7 +241,6 @@ export async function deletePicture(req: Request, res: Response) {
 	return;
 }
 
-
 export async function RequestpasswordReset(req: Request, res: Response) {
 	if (!req.body) {
 		res.status(400).json({ error: "need argument" });
@@ -262,7 +260,6 @@ export async function RequestpasswordReset(req: Request, res: Response) {
 	passwordResetKey[email] = code;
 	sendEmail(email, "click on this link to create new password :http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "reset password");
 	res.status(200).json({ message: "ok" });
-
 }
 
 export async function passwordReset(req: Request, res: Response) {
@@ -289,7 +286,6 @@ export async function passwordReset(req: Request, res: Response) {
 	res.status(200).json({ message: "password reset" });
 	return;
 }
-
 
 export async function insertPicture(req: Request, res: Response, next: NextFunction) {
 	if (!req.file) {
@@ -351,7 +347,8 @@ export async function getProfiles(req: Request, res: Response) {
 		orientation: (orientation as string).split(",").map((value) => value.trim()),
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
 		index: parseInt(index as string),
-		orderBy: orderBy as OrderBy
+		orderBy: orderBy as OrderBy,
+		userId: res.locals.fulluser.id,
 	};
 
 	console.log("------------------", paramsForSearch);

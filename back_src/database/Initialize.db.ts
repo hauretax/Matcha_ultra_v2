@@ -57,6 +57,18 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
+	userNoteTable() {
+		const sql = `
+        CREATE TABLE IF NOT EXISTS user_notes (
+            from_id INTEGER,
+            to_id INTEGER,
+            note INTEGER,
+            UNIQUE (from_id, to_id)
+        )
+        `;
+		return db.run(sql);
+	}
+
 };
 
 
