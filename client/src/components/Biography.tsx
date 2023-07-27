@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
+import EditButton from './EditButton';
 
 interface BiographyProps {
   biography: string;
@@ -53,18 +54,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
             </Typography>
           </Box>
         )}
-        <Fab color="primary" aria-label={isEditing ? 'save' : 'edit'}
-          sx={{ position: 'absolute', bottom: 16, right: 16 }}
-          onClick={isEditing ? handleSave : handleEdit}
-          disabled={isUploading}>
-          {isUploading ? (
-            <CircularProgress size={24} />
-          ) : isEditing ? (
-            <Save />
-          ) : (
-            <Edit />
-          )}
-        </Fab>
+        <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
       </Paper>
     </Box>
   );

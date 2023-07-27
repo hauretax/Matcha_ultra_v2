@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
+import EditButton from './EditButton';
 
 interface UserInformationProps {
   firstName: string;
@@ -189,20 +190,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               </Box>
             }
           </Grid>
-          <Fab
-            color="primary"
-            aria-label={isEditing ? 'save' : 'edit'}
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            onClick={isEditing ? handleSave : handleEdit}
-            disabled={isUploading}>
-            {isUploading ? (
-              <CircularProgress size={24} />
-            ) : isEditing ? (
-              <Save />
-            ) : (
-              <Edit />
-            )}
-          </Fab>
+          <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
         </Grid>
       </Paper>
     </Box>

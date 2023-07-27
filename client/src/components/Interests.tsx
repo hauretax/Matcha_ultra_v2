@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Paper, Fab, CircularProgress, Chip, Autocomplete } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
+import EditButton from './EditButton';
 
 interface InterestsProps {
   interests: string[];
@@ -72,20 +73,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
             />
           ) : null}
         </Box>
-        <Fab
-          color="primary"
-          aria-label={isEditing ? 'save' : 'edit'}
-          sx={{ position: 'absolute', bottom: 16, right: 16 }}
-          onClick={isEditing ? handleSave : handleEdit}
-          disabled={isUploading}>
-          {isUploading ? (
-            <CircularProgress size={24} />
-          ) : isEditing ? (
-            <Save />
-          ) : (
-            <Edit />
-          )}
-        </Fab>
+        <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
       </Paper>
     </Box>
   );
