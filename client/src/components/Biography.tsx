@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, Skeleton } from '@mui/material';
+import { Box, TextField, Typography, Paper, Fab, CircularProgress } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
 
@@ -9,10 +9,11 @@ interface BiographyProps {
 }
 
 const Biography: React.FC<BiographyProps> = (props) => {
-  const [biography, setBiography] = useState(props.biography);
+  const [biography, setBiography] = useState(props.biography || "");
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const auth = useAuth()
+  console.log(props.biography, biography)
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -26,7 +27,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
   };
 
   useEffect(() => {
-    setBiography(props.biography);
+    setBiography(props.biography || "");
   }, [props]);
 
   return (
@@ -47,16 +48,9 @@ const Biography: React.FC<BiographyProps> = (props) => {
           />
         ) : (
           <Box p={2}>
-            {props.isLoading ?
-              <React.Fragment>
-                <Skeleton animation="wave" style={{ marginBottom: 6 }} />
-                <Skeleton animation="wave" width="80%" />
-              </React.Fragment> :
-              <Typography>
-                {biography}
-              </Typography>
-            }
-
+            <Typography>
+              {biography}
+            </Typography>
           </Box>
         )}
         <Fab color="primary" aria-label={isEditing ? 'save' : 'edit'}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid, Skeleton } from '@mui/material';
+import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import { Save, Edit } from '@mui/icons-material';
 import { useAuth } from '../context/AuthProvider';
 
@@ -56,7 +56,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     }
     setBirthDate(date)
     if (date.length === 4 || date.length === 7)
-      setBirthDate(date + "-")    
+      setBirthDate(date + "-")
   };
 
   return (
@@ -80,7 +80,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Email</Typography>
                 <Box>
-                  <SkeletonTypo text={email} isLoading={props.isLoading} />
+                  <StyledTypo text={email} />
                 </Box>
               </Box>
             }
@@ -99,7 +99,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>First Name</Typography>
                 <Box>
-                  <SkeletonTypo text={firstName} isLoading={props.isLoading} />
+                  <StyledTypo text={firstName} />
                 </Box>
               </Box>
             }
@@ -117,7 +117,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Last Name</Typography>
                 <Box>
-                  <SkeletonTypo text={lastName} isLoading={props.isLoading} />
+                  <StyledTypo text={lastName} />
                 </Box>
               </Box>
             }
@@ -136,7 +136,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>BirthDate</Typography>
                 <Box>
-                  <SkeletonTypo text={birthDate} isLoading={props.isLoading} />
+                  <StyledTypo text={birthDate} />
                 </Box>
               </Box>
             }
@@ -160,7 +160,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Gender</Typography>
                 <Box>
-                  <SkeletonTypo text={gender} isLoading={props.isLoading} />
+                  <StyledTypo text={gender} />
                 </Box>
               </Box>
             }
@@ -184,7 +184,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
                 <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Sexual Orientation</Typography>
                 <Box>
-                  <SkeletonTypo text={orientation} isLoading={props.isLoading} />
+                  <StyledTypo text={orientation} />
                 </Box>
               </Box>
             }
@@ -209,8 +209,8 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   );
 };
 
-const SkeletonTypo = ({ text, isLoading }: { text: (string | number), isLoading: boolean }) => (
-  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}>{isLoading ? <Skeleton /> : <span>{text || "-"}</span>}</Typography>
+const StyledTypo = ({ text }: { text: (string | number) }) => (
+  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}><span>{text || "-"}</span></Typography>
 )
 
 export default UserInformation;

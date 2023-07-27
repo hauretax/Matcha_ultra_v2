@@ -1,5 +1,5 @@
-import React, { useState, useRef} from 'react';
-import { Box, Button, CircularProgress, Fab, Skeleton, Typography } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, Button, CircularProgress, Fab, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Add, Delete, Edit, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
@@ -16,7 +16,7 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
   // Other functions here ...
 
   const handleFileInput = (event: any) => {
-    
+
     const file = event.target.files[0];
     console.log(file);
     if (!file) return;
@@ -69,114 +69,110 @@ function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], is
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {isLoading ?
-        <Skeleton variant="rectangular" height={300} /> :
-        <>
-          {activeIndex < imgs.length ?
-            <Box sx={{ position: 'relative' }}>
-              <Box
-                component="img"
-                sx={{
-                  height: '300px',
-                  display: 'block',
-                  overflow: 'hidden',
-                  width: '100%',
-                  objectFit: 'contain',
-                  backgroundColor: '#fff'
-                }}
-                src={prefixBackendUrl(imgs[activeIndex].src)}
-                alt={'Issue while fetching picture'}
-              />
-              <Fab
-                color="primary"
-                aria-label={'edit'}
-                sx={{ position: 'absolute', bottom: 16, right: 84 }}
-                onClick={handleClick}
-                disabled={uploading}>
-                {uploading ?
-                  <CircularProgress size={24} /> :
-                  <Edit />
-                }
-              </Fab>
-              <Fab
-                color="primary"
-                aria-label={'delete'}
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                onClick={() => deleteImage(imgs[activeIndex].id)}
-                disabled={uploading}>
-                {uploading ?
-                  <CircularProgress size={24} /> :
-                  <Delete />
-                }
-              </Fab>
-            </Box> :
-            <Box sx={{ height: '300px', backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Fab color="primary" aria-label="add" disabled={uploading} onClick={handleClick}>
-                <Add />
-              </Fab>
-              <Typography
-                sx={{
-                  marginTop: '10px',
-                  textAlign: 'center'
-                }}
-              >
-                Click here to add a picture
-              </Typography>
-            </Box>
-          }
-          <input
-            ref={fileInputRef}
-            type="file"
-            hidden
-            onChange={handleFileInput}
-            accept="image/*"
+
+      {activeIndex < imgs.length ?
+        <Box sx={{ position: 'relative' }}>
+          <Box
+            component="img"
+            sx={{
+              height: '300px',
+              display: 'block',
+              overflow: 'hidden',
+              width: '100%',
+              objectFit: 'contain',
+              backgroundColor: '#fff'
+            }}
+            src={prefixBackendUrl(imgs[activeIndex].src)}
+            alt={'Issue while fetching picture'}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Button onClick={goLeft}>
-              {theme.direction === 'rtl' ? (
-                <KeyboardArrowRight />
-              ) : (
-                <KeyboardArrowLeft />
-              )}
-              Back
-            </Button>
-            <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
-              {imgs.map((_img, index) => (
-                <span
-                  key={index}
-                  style={{
-                    height: '10px',
-                    width: '10px',
-                    margin: '0 5px',
-                    backgroundColor: index === activeIndex ? 'black' : 'gray',
-                    borderRadius: '50%',
-                    display: 'inline-block'
-                  }}
-                />
-              ))}
-              <span
-                key={imgs.length}
-                style={{
-                  height: '10px',
-                  width: '10px',
-                  margin: '0 5px',
-                  backgroundColor: imgs.length === activeIndex ? 'black' : 'gray',
-                  borderRadius: '50%',
-                  display: 'inline-block'
-                }}
-              />
-            </Box>
-            <Button onClick={goRight}>
-              Next
-              {theme.direction === 'rtl' ? (
-                <KeyboardArrowLeft />
-              ) : (
-                <KeyboardArrowRight />
-              )}
-            </Button>
-          </Box>
-        </>
+          <Fab
+            color="primary"
+            aria-label={'edit'}
+            sx={{ position: 'absolute', bottom: 16, right: 84 }}
+            onClick={handleClick}
+            disabled={uploading}>
+            {uploading ?
+              <CircularProgress size={24} /> :
+              <Edit />
+            }
+          </Fab>
+          <Fab
+            color="primary"
+            aria-label={'delete'}
+            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+            onClick={() => deleteImage(imgs[activeIndex].id)}
+            disabled={uploading}>
+            {uploading ?
+              <CircularProgress size={24} /> :
+              <Delete />
+            }
+          </Fab>
+        </Box> :
+        <Box sx={{ height: '300px', backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+          <Fab color="primary" aria-label="add" disabled={uploading} onClick={handleClick}>
+            <Add />
+          </Fab>
+          <Typography
+            sx={{
+              marginTop: '10px',
+              textAlign: 'center'
+            }}
+          >
+            Click here to add a picture
+          </Typography>
+        </Box>
       }
+      <input
+        ref={fileInputRef}
+        type="file"
+        hidden
+        onChange={handleFileInput}
+        accept="image/*"
+      />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Button onClick={goLeft}>
+          {theme.direction === 'rtl' ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+          Back
+        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
+          {imgs.map((_img, index) => (
+            <span
+              key={index}
+              style={{
+                height: '10px',
+                width: '10px',
+                margin: '0 5px',
+                backgroundColor: index === activeIndex ? 'black' : 'gray',
+                borderRadius: '50%',
+                display: 'inline-block'
+              }}
+            />
+          ))}
+          <span
+            key={imgs.length}
+            style={{
+              height: '10px',
+              width: '10px',
+              margin: '0 5px',
+              backgroundColor: imgs.length === activeIndex ? 'black' : 'gray',
+              borderRadius: '50%',
+              display: 'inline-block'
+            }}
+          />
+        </Box>
+        <Button onClick={goRight}>
+          Next
+          {theme.direction === 'rtl' ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </Button>
+      </Box>
     </Box >
   );
 }
