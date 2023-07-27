@@ -6,7 +6,11 @@ import { Add, Delete, Edit, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/i
 import { prefixBackendUrl } from '../utils';
 import { useAuth } from '../context/AuthProvider';
 
-function Carousel({ imgs, isLoading }: { imgs: { id: number; src: string }[], isLoading: boolean }) {
+interface CarouselProps {
+  imgs: { id: number; src: string }[];
+}
+
+const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
   const theme = useTheme();

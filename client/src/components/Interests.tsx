@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, Chip, Autocomplete } from '@mui/material';
-import { Save, Edit } from '@mui/icons-material';
+import { Box, TextField, Typography, Paper, Chip, Autocomplete } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 

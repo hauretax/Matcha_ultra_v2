@@ -11,7 +11,6 @@ interface UserInformationProps {
   gender: string;
   orientation: string;
   email: string;
-  isLoading: boolean;
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {

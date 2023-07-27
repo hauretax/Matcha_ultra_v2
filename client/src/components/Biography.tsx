@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress } from '@mui/material';
-import { Save, Edit } from '@mui/icons-material';
+import { Box, TextField, Typography, Paper } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 
 interface BiographyProps {
   biography: string;
-  isLoading: boolean;
 }
 
 const Biography: React.FC<BiographyProps> = (props) => {
