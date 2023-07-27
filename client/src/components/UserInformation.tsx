@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, Fab, CircularProgress, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
-import { Save, Edit } from '@mui/icons-material';
+import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 
