@@ -22,7 +22,6 @@ function ProfilePage() {
       .then((res: any) => {
         setOptions(res.data)
       })
-      console.log(auth.user!.pictures)
   }, [auth.user])
 
   useEffect(() => {

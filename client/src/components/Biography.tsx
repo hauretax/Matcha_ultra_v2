@@ -12,7 +12,6 @@ const Biography: React.FC<BiographyProps> = (props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const auth = useAuth()
-  console.log(props.biography, biography)
 
   const handleEdit = () => {
     setIsEditing(true);

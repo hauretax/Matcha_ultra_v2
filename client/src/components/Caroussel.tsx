@@ -22,7 +22,6 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
   const handleFileInput = (event: any) => {
 
     const file = event.target.files[0];
-    console.log(file);
     if (!file) return;
     if (activeIndex === imgs.length) {
       uploadImage(file);
