@@ -1,3 +1,5 @@
+import './App.css';
+
 import { Routes, Route } from "react-router-dom";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -19,7 +21,6 @@ import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
-import './App.css';
 import FinderPage from "./pages/FinderPage";
 
 const theme = createTheme(themeOptions)
