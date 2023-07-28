@@ -5,9 +5,10 @@ import db from "./database/db";
 const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960767524 };
 const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.395843454044868 };
 const orientationTab = ["Heterosexual", "Bisexual", "Homosexual"];
-const genderTab = ["Male", "Female", "Other"];
+const genderTab = ["Male", "Female"];
 const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"];
-const randomPicture = ["gF.jpg", "gH.jpg", "sF.jpg", "sH.jpg", "st1F.jpg", "stF.jpg", "stH.jpg"];
+const randomPictureMale = ["profileMan1.webp", "profileMan2.jpg", "profileMan3.webp", "profileMan4.jpeg"]
+const randomPictureFemale = ["profileWoman1.webp", "profileWoman2.webp", "profileWoman3.jpeg"];
 
 /*
 * use for first instantiation .depend of randomInterest tab
@@ -45,7 +46,7 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
-	for (let i = 1; i < 10000; i++) {
+	for (let i = 1; i < 500; i++) {
 
 		const sql = `
         INSERT INTO users (
@@ -64,7 +65,7 @@ export default async function insertDataInDb() {
 		, ?, ?)
       `;
 		const name = (Math.random() * 65536).toString();
-		const gender = genderTab[i % 3];
+		const gender = genderTab[i % 2];
 		const orientation = orientationTab[i % 3];
 		const birthDate = generateRandomDateOfBirth();
 		const { latitude, longitude } = generateRandomPoint(latitudeRange, longitudeRange);
@@ -88,7 +89,8 @@ export default async function insertDataInDb() {
 
 			// Récupérer les éléments aléatoires du tableau
 			const Pictures: string[] = [];
-			for (let i = 0; i < randomCount; i++) {
+			for (let j = 0; j < randomCount; j++) {
+        const randomPicture = i % 2 === 0 ? randomPictureMale : randomPictureFemale;
 				const randomIndex = Math.floor(Math.random() * randomPicture.length);
 				Pictures.push(randomPicture[randomIndex]);
 			}
