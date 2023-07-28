@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import ImageList from '@mui/material/ImageList';
-import { UserPublic } from '../../../comon_src/type/user.type';
-import InputFindUser from '../components/InputFindUser';
+
 import { Button } from '@mui/material';
-import MinimalUser from '../components/MinimalUser';
+
+import { UserPublic } from '../../../comon_src/type/user.type';
+
+import InputFindUser from '../components/InputFindUser';
+import BrowsingResult from '../components/BrowsingResult';
 
 export default function FinderPage() {
     const [profiles, setprofiles] = useState<UserPublic[]>([])
@@ -37,7 +39,8 @@ export default function FinderPage() {
         setIndex((index) => index + 10)
     }
 
-    //TODO #6
+    //TODO: #6
+    //TODO: Handle call failure
     return (
         <>
             <InputFindUser
@@ -46,14 +49,7 @@ export default function FinderPage() {
                 index={index}
             />
 
-            <ImageList >
-                {profiles.map((item) => (
-                    <MinimalUser
-                        key = {item.userId}
-                        user={item}
-                    />
-                ))}
-            </ImageList>
+            <BrowsingResult users={profiles} />
             {
                 (!end && !loading && profiles.length) &&
                 <Button onClick={showMore} variant="contained">show More</Button>
