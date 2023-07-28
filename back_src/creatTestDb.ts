@@ -87,7 +87,7 @@ export default async function insertDataInDb() {
 			const randomCount = Math.floor(Math.random() * 5) + 1;
 
 			// Récupérer les éléments aléatoires du tableau
-			const Pictures = [];
+			const Pictures: string[] = [];
 			for (let i = 0; i < randomCount; i++) {
 				const randomIndex = Math.floor(Math.random() * randomPicture.length);
 				Pictures.push(randomPicture[randomIndex]);
