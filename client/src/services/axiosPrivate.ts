@@ -29,6 +29,8 @@ axiosInstance.interceptors.response.use(
         'refreshToken': localStorage.getItem('refreshToken'),
       });
 
+      //TODO: Handle failed refresh token
+
       if (response.status === 200) {
         localStorage.setItem('accessToken', response.data.token);
         localStorage.setItem('refreshToken', response.data.refreshToken);
