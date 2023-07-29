@@ -21,12 +21,10 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         <Typography gutterBottom variant="h5" component="div">
           {user.username}, {user.age}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
-            <LocationOn sx={{fontSize: '1rem', mr: 1}} />
-            <span>À {user.distance} km</span>
-          </Box>
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'start' }}>
+          <LocationOn sx={{ fontSize: '1rem', mr: 1, fontVariant: "body2", color: "text.secondary" }} />
+          <Typography variant="body2" color="text.secondary">À {user.distance} km</Typography>
+        </Box>
         <UserInterestsList interests={user.interests} />
       </CardContent>
       <CardActions>
