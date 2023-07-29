@@ -13,6 +13,8 @@ function RequireAuth() {
         // than dropping them off on the home page.
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
+
+    //TODO: should getLocation be called every page change?
     getLocation();
     if (location.pathname !== '/profile') {
         if (isProfileIncomplete(auth.user)) {
