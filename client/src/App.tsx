@@ -16,12 +16,12 @@ import ResetPasswordRequestPage from "./pages/ResetPasswordRequestPage";
 import ProfilePage from './pages/ProfilePage'
 import ValideMailPage from "./pages/ValideMailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import BrowsePage from './pages/BrowsePage';
 
 import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
-import FinderPage from "./pages/FinderPage";
 
 const theme = createTheme(themeOptions)
 
@@ -44,7 +44,7 @@ function App() {
               <Route path="/reset_password" element={<ResetPasswordPage />} />
               <Route path='/404' element={<div>404</div>} />
               <Route element={<RequireAuth />} >
-                <Route path='/home' element={<FinderPage />} />
+                <Route path='/home' element={<BrowsePage />} />
                 <Route path='/profile' element={<ProfilePage />} />
               </Route>
             </Route>
