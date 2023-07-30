@@ -25,7 +25,6 @@ const DistanceFilter: React.FC<DistanceFilterProps> = ({ distance, setDistance }
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-  console.log('re-render')
 
   return (
     <div>
