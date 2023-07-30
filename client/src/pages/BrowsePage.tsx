@@ -35,13 +35,6 @@ const BrowsePage: React.FC = () => {
     return res.data;
   }
 
-  const handleSearch = async () => {
-    const newProfiles = await fetchProfiles(0);
-    setProfiles(newProfiles);
-    setIndex(0);
-    setEnd(newProfiles.length < 10);
-  }
-
   const handleNext = async () => {
     if (end) return;
     const newProfiles = await fetchProfiles(index + 10);
@@ -51,12 +44,19 @@ const BrowsePage: React.FC = () => {
   }
 
   useEffect(() => {
+    const handleSearch = async () => {
+      const newProfiles = await fetchProfiles(0);
+      setProfiles(newProfiles);
+      setIndex(0);
+      setEnd(newProfiles.length < 10);
+    }
+
     handleSearch()
-  }, [])
+  }, [filters])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <SearchForm filters={filters} setFilters={setFilters} handleSearch={handleSearch} />
+      <SearchForm setFilters={setFilters} />
       <BrowsingResult users={profiles} />
       {!end && <Button sx={{ marginTop: 2 }} variant="contained" onClick={handleNext}>LOAD MORE...</Button>}
     </Box>

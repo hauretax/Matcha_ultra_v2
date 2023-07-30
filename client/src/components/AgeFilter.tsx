@@ -44,7 +44,7 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
+  
   return (
     <div>
       <Button aria-describedby={id} variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
@@ -79,4 +79,4 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
   );
 }
 
-export default AgeFilter
+export default React.memo(AgeFilter)
