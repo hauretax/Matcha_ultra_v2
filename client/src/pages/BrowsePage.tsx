@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import apiProvider from '../services/apiProvider';
 import { Box, Button } from '@mui/material';
@@ -8,10 +8,10 @@ import BrowsingResult from '../components/BrowsingResult';
 const BrowsePage: React.FC = () => {
   //TODO: initialize filters based on user's profile
   const [filters, setFilters] = useState({
-    ageRange: [18, 99],
+    ageRange: [18, 25],
   });
   const [index, setIndex] = useState(0);
-  const [end, setEnd] = useState(false)
+  const [end, setEnd] = useState(true)
   const [profiles, setProfiles] = useState<any[]>([]);
 
   const fetchProfiles = async (index: number) => {
@@ -41,14 +41,18 @@ const BrowsePage: React.FC = () => {
     const newProfiles = await fetchProfiles(index + 10);
     setProfiles([...profiles, ...newProfiles]);
     setIndex(index + profiles.length);
-    setEnd(profiles.length < 10)
+    setEnd(newProfiles.length < 10)
   }
+
+  useEffect(() => {
+    handleSearch()
+  }, [])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <SearchForm filters={filters} setFilters={setFilters} handleSearch={handleSearch} />
       <BrowsingResult users={profiles} />
-      <Button sx={{marginTop: 2}} variant="contained" onClick={handleNext}>LOAD MORE...</Button>
+      {!end && <Button sx={{ marginTop: 2 }} variant="contained" onClick={handleNext}>LOAD MORE...</Button>}
     </Box>
   )
 }
