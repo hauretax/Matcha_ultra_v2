@@ -5,10 +5,16 @@ import { Box, Button } from '@mui/material';
 import SearchForm from '../components/SearchForm';
 import BrowsingResult from '../components/BrowsingResult';
 
+import { filtersList } from '../../../comon_src/type/utils.type';
+
 const BrowsePage: React.FC = () => {
   //TODO: initialize filters based on user's profile
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<filtersList>({
     ageRange: [18, 25],
+    distance: 100,
+    orientation: ['Female'],
+    interests: [],
+    orderBy: 'distance'
   });
   const [index, setIndex] = useState(0);
   const [end, setEnd] = useState(true)
@@ -18,13 +24,13 @@ const BrowsePage: React.FC = () => {
     const res = await apiProvider.getUsers({
       latitude: 0,
       longitude: 0,
-      distanceMax: 200,
+      distanceMax: filters.distance,
       ageMin: filters.ageRange[0],
       ageMax: filters.ageRange[1],
-      orientation: ['Female'],
-      interestWanted: [],
+      orientation: filters.orientation,
+      interestWanted: filters.interests,
       index: index,
-      orderBy: 'distance'
+      orderBy: filters.orderBy
     });
     return res.data;
   }

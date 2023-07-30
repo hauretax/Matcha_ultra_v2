@@ -32,3 +32,11 @@ export type findTenUsersParams = {
     orderBy: OrderBy;
     userId?:number;
 }
+
+export interface filtersList {
+  ageRange: number[];
+  distance: number;
+  orientation: ("Female" | "Male" | "Other")[];
+  interests: string[];
+  orderBy: OrderBy;
+}
