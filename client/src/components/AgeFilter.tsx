@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Popover, Slider, Typography } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
@@ -10,6 +10,7 @@ interface AgeFilterProps {
 const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  //TODO: prevent age to go to 17 by pushing the Thumb 1
   const handleAgeChange = (
     event: Event,
     newValue: number | number[],
@@ -62,7 +63,6 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
           vertical: 'top',
           horizontal: 'left'
         }}
-        sx={{width: '300px', p: 2}}
       >
         <Typography sx={{p: 2}}>Entre {ageRange[0]} et {ageRange[1]} ans</Typography>
         <Slider
