@@ -26,7 +26,11 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
   }
 
   if (isProfileInfoMissing(user)) {
+<<<<<<< HEAD
     res.status(400).json({ error: "profile information missing" });
+=======
+    res.status(422).json({ error: "unverified email" });
+>>>>>>> e703a2ba17b846c6fb47610affaff5027b8c12b3
     return;
   }
   next();
