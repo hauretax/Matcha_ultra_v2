@@ -8,12 +8,13 @@ interface UserCardProps {
   user: any;
 }
 
+//TODO: improve image fitting proportion
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
   user.liked = false;
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card>
       <CardMedia
-        sx={{ height: 140 }}
+        sx={{ height: 240 }}
         image={prefixBackendUrl(user.pictures[0])}
         title="Profile Picture"
       />
