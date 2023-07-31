@@ -4,6 +4,7 @@ import { Box, Button, Grid } from "@mui/material";
 
 import AgeFilter from "./AgeFilter";
 import DistanceFilter from "./DistanceFilter";
+import OrientationFilter from "./OrientationFilter";
 
 import { filtersList } from "../../../comon_src/type/utils.type";
 
@@ -52,13 +53,22 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
   return (
     <Box sx={{ marginBottom: '1rem'}}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
           <AgeFilter ageRange={tmpFilters.ageRange} setAgeRange={setAgeRange} />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
           <DistanceFilter distance={tmpFilters.distance} setDistance={setDistance} />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <OrientationFilter orientation={tmpFilters.orientation} setOrientation={setOrientation} />
+        </Grid>
+        {/* <Grid item xs={12} sm={6} md={4} lg={2}>
+          <InterestsFilter interests={tmpFilters.interests} setInterests={setInterests} />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
+          <OrderByFilter orderBy={tmpFilters.orderBy} setOrderBy={setOrderBy} />
+        </Grid> */}
+        <Grid item xs={12} sm={6} md={4} lg={2}>
           <Button variant="contained" onClick={() => setFilters(tmpFilters)}>Search</Button>
         </Grid>
       </Grid>
