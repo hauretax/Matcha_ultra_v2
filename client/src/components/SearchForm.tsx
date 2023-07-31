@@ -6,6 +6,7 @@ import AgeFilter from "./AgeFilter";
 import DistanceFilter from "./DistanceFilter";
 import OrientationFilter from "./OrientationFilter";
 import InterestsFilter from "./InterestsFilter";
+import OrderByFilter from "./OrderByFilter";
 
 import { filtersList } from "../../../comon_src/type/utils.type";
 
@@ -66,9 +67,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
         <Grid item xs={12} sm={6} md={4} lg={2}>
           <InterestsFilter options={options} interests={tmpFilters.interests} setInterests={setInterests} />
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={4} lg={2}>
+        <Grid item xs={12} sm={6} md={4} lg={2}>
           <OrderByFilter orderBy={tmpFilters.orderBy} setOrderBy={setOrderBy} />
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={6} md={4} lg={2}>
           <Button variant="contained" onClick={() => setFilters(tmpFilters)}>Search</Button>
         </Grid>
