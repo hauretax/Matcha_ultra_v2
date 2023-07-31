@@ -22,6 +22,9 @@ function ProfilePage() {
       .then((res: any) => {
         setOptions(res.data)
       })
+      .catch((err: any) => {
+        snackbar(`${err.message}: Please reload the page`, "error")
+      })
   }, [auth.user])
 
   useEffect(() => {
