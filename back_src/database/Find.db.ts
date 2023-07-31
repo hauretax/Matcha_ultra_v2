@@ -105,7 +105,7 @@ const FindDb = {
 		default:
 			throw new Error("Invalid order by");
 		}
-
+    //TODO: prevent homosexual men to be queried by heterosexual women
 		const sql = `
 		SELECT
 			u.id,
