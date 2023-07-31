@@ -53,7 +53,7 @@ const DistanceFilter: React.FC<DistanceFilterProps> = ({ distance, setDistance }
           disableSwap
           min={1}
           max={200}
-          sx={{ width: '200px', marginLeft: 2, marginRight: 2, marginBottom: 2 }}
+          sx={{ width: '250px', marginLeft: 2, marginRight: 2, marginBottom: 2 }}
         />
       </Popover>
     </div>
