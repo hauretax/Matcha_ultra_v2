@@ -9,12 +9,14 @@ import InterestsFilter from "./InterestsFilter";
 import OrderByFilter from "./OrderByFilter";
 
 import { filtersList } from "../../../comon_src/type/utils.type";
+import { useSnackbar } from "../context/SnackBar";
 
 interface SearchFormProps {
   setFilters: React.Dispatch<React.SetStateAction<filtersList>>
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
+  const snackbar = useSnackbar()
   const [options, setOptions] = useState<string[]>([])
   const [tmpFilters, setTmpFilters] = useState<filtersList>({
     ageRange: [18, 25],
@@ -26,8 +28,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
 
   useEffect(() => {
     const fetchOptions = async () => {
-      const res = await apiProvider.getOptions()
-      setOptions(res.data)
+      try {
+        const res = await apiProvider.getOptions()
+        setOptions(res.data)
+      } catch (err: any) {
+        snackbar(`${err.message}: Please reload the page`, "error")
+      }
     }
     fetchOptions()
   }, [])
@@ -37,23 +43,23 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
   }, [])
 
   const setDistance = useCallback((distance: number) => {
-    setTmpFilters((prev) => ({ ...prev, distance: distance}))
+    setTmpFilters((prev) => ({ ...prev, distance: distance }))
   }, [])
 
   const setOrientation = useCallback((orientation: ('Female' | 'Male' | 'Other')[]) => {
-    setTmpFilters((prev) => ({ ...prev, orientation: orientation}))
+    setTmpFilters((prev) => ({ ...prev, orientation: orientation }))
   }, [])
 
   const setInterests = useCallback((interests: string[]) => {
-    setTmpFilters((prev) => ({ ...prev, interests: interests}))
+    setTmpFilters((prev) => ({ ...prev, interests: interests }))
   }, [])
 
   const setOrderBy = useCallback((orderBy: 'distance' | 'age' | 'tag' | 'popularity') => {
-    setTmpFilters((prev) => ({ ...prev, orderBy: orderBy}))
+    setTmpFilters((prev) => ({ ...prev, orderBy: orderBy }))
   }, [])
 
   return (
-    <Box sx={{ marginBottom: '1rem'}}>
+    <Box sx={{ marginBottom: '1rem' }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4} lg={2}>
           <AgeFilter ageRange={tmpFilters.ageRange} setAgeRange={setAgeRange} />
