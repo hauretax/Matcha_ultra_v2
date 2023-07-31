@@ -58,7 +58,7 @@ const BrowsePage: React.FC = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <SearchForm setFilters={setFilters} />
       <BrowsingResult users={profiles} />
-      {!end && <Button sx={{ marginTop: 2 }} variant="contained" onClick={handleNext}>LOAD MORE...</Button>}
+      {!end && <Button sx={{ marginTop: 2 }} variant="outlined" onClick={handleNext}>LOAD MORE...</Button>}
     </Box>
   )
 }

@@ -71,7 +71,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
           <OrderByFilter orderBy={tmpFilters.orderBy} setOrderBy={setOrderBy} />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={2}>
-          <Button fullWidth variant="contained" onClick={() => setFilters(tmpFilters)}>Search</Button>
+          <Button fullWidth variant="outlined" onClick={() => setFilters(tmpFilters)}>Search</Button>
         </Grid>
       </Grid>
     </Box>
