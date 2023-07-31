@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Popover, Slider, Typography } from '@mui/material';
+import React, { useState, useRef } from 'react'
+import { Box, Button, Popover, Slider, Typography } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
 interface AgeFilterProps {
@@ -7,8 +7,9 @@ interface AgeFilterProps {
   setAgeRange: (ageRange: number[]) => void;
 }
 
-const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
+const AgeFilter: React.FC<AgeFilterProps> = ({ ageRange, setAgeRange }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   //TODO: prevent age to go to 17 by pushing the Thumb 1
   const handleAgeChange = (
@@ -44,10 +45,10 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-  
+
   return (
     <div>
-      <Button aria-describedby={id} variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
+      <Button ref={buttonRef} fullWidth aria-describedby={id} variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
         Age
       </Button>
       <Popover
@@ -63,17 +64,24 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ageRange, setAgeRange}) => {
           vertical: 'top',
           horizontal: 'left'
         }}
+        slotProps={{
+          paper: {
+            style: { width: `${buttonRef?.current?.offsetWidth}px` }, // here we set Popover's width
+          }
+        }}
       >
-        <Typography sx={{p: 2}}>Entre {ageRange[0]} et {ageRange[1]} ans</Typography>
-        <Slider
-          value={ageRange}
-          onChange={handleAgeChange}
-          valueLabelDisplay="auto"
-          disableSwap
-          min={18}
-          max={99}
-          sx={{width: '250px', marginLeft: 2, marginRight: 2, marginBottom: 2}}
-        />
+        <Box sx={{ padding: 2 }}>
+          <Typography>Entre {ageRange[0]} et {ageRange[1]} ans</Typography>
+          <Slider
+            value={ageRange}
+            onChange={handleAgeChange}
+            valueLabelDisplay="auto"
+            disableSwap
+            min={18}
+            max={99}
+            sx={{ width: '100%', marginTop: 2}}
+          />
+        </Box>
       </Popover>
     </div>
   );

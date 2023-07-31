@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button, Popper, Autocomplete, TextField, ClickAwayListener, Checkbox } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
@@ -16,7 +16,8 @@ interface InterestsFilterProps {
 
 const InterestsFilter: React.FC<InterestsFilterProps> = ({ options, interests, setInterests }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  
   const handleChange = (event: any, value: string[]) => {
     event.stopPropagation()
     setInterests(value)
@@ -34,10 +35,10 @@ const InterestsFilter: React.FC<InterestsFilterProps> = ({ options, interests, s
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
+      <Button ref={buttonRef} fullWidth variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
         interests
       </Button>
-      <Popper open={open} anchorEl={anchorEl} placement="bottom-start" disablePortal sx={{ width: '250px' }}>
+      <Popper open={open} anchorEl={anchorEl} placement="bottom-start" disablePortal sx={{ width: `${buttonRef?.current?.offsetWidth}px`, zIndex: 1301 }}>
         <ClickAwayListener onClickAway={handleClose}>
           <Autocomplete
             multiple

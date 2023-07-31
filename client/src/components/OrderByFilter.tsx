@@ -1,6 +1,6 @@
 import { Button, Checkbox, Popover } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp, CheckBoxOutlineBlank, CheckBox } from '@mui/icons-material';
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components';
 
 const icon = <CheckBoxOutlineBlank fontSize="small" />;
@@ -27,6 +27,7 @@ const LiOption = styled.li`
 
 const OrderByFilter: React.FC<OrderByFilterProps> = ({ orderBy, setOrderBy }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleChange = (value: 'distance' | 'age' | 'tag' | 'popularity') => {
     setOrderBy(value)
@@ -56,7 +57,7 @@ const OrderByFilter: React.FC<OrderByFilterProps> = ({ orderBy, setOrderBy }) =>
 
   return (
     <div>
-      <Button fullWidth variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
+      <Button ref={buttonRef} fullWidth variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
         Order by
       </Button>
       <Popover
@@ -71,8 +72,13 @@ const OrderByFilter: React.FC<OrderByFilterProps> = ({ orderBy, setOrderBy }) =>
           vertical: 'top',
           horizontal: 'left'
         }}
+        slotProps={{
+          paper: {
+            style: { width: `${buttonRef?.current?.offsetWidth}px` }, // here we set Popover's width
+          }
+        }}
       >
-        <ul style={{'listStyle': 'none', 'padding': 0, 'width': '250px'}}>
+        <ul style={{ 'listStyle': 'none', 'padding': 0 }}>
           {['distance', 'age', 'tag', 'popularity'].map(option)}
         </ul>
       </Popover>

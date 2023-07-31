@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button, Popper, Autocomplete, TextField, ClickAwayListener, Checkbox } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
@@ -15,6 +15,7 @@ interface OrientationFilterProps {
 
 const OrientationFilter: React.FC<OrientationFilterProps> = ({ orientation, setOrientation }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleChange = (event: any, value: string[]) => {
     event.stopPropagation()
@@ -34,10 +35,10 @@ const OrientationFilter: React.FC<OrientationFilterProps> = ({ orientation, setO
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
+      <Button ref={buttonRef} fullWidth variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
         Orientation
       </Button>
-      <Popper open={open} anchorEl={anchorEl} placement="bottom-start" disablePortal sx={{ width: '250px' }}>
+      <Popper open={open} anchorEl={anchorEl} placement="bottom-start" disablePortal sx={{ width: `${buttonRef?.current?.offsetWidth}px`, zIndex: 1301 }}>
         <ClickAwayListener onClickAway={handleClose}>
           <Autocomplete
             multiple
@@ -56,7 +57,7 @@ const OrientationFilter: React.FC<OrientationFilterProps> = ({ orientation, setO
                 {option}
               </li>
             )}
-            sx={{ bgcolor: '#ffff' }}
+            sx={{ bgcolor: '#ffff'}}
             popupIcon={null}
             renderInput={(params) => (
               <TextField

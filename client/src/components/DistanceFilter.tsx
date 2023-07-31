@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Popover, Slider, Typography } from '@mui/material';
+import React, { useRef, useState } from 'react'
+import { Box, Button, Popover, Slider, Typography } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 
 interface DistanceFilterProps {
@@ -9,6 +9,7 @@ interface DistanceFilterProps {
 
 const DistanceFilter: React.FC<DistanceFilterProps> = ({ distance, setDistance }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleAgeChange = (event: Event, newValue: number | number[]) => {
     if (Array.isArray(newValue)) return;
@@ -28,7 +29,7 @@ const DistanceFilter: React.FC<DistanceFilterProps> = ({ distance, setDistance }
 
   return (
     <div>
-      <Button aria-describedby={id} variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
+      <Button ref={buttonRef} fullWidth aria-describedby={id} variant="contained" onClick={handleClick} endIcon={open ? <ArrowDropUp /> : <ArrowDropDown />}>
         Distance
       </Button>
       <Popover
@@ -44,17 +45,24 @@ const DistanceFilter: React.FC<DistanceFilterProps> = ({ distance, setDistance }
           vertical: 'top',
           horizontal: 'left'
         }}
+        slotProps={{
+          paper: {
+            style: { width: `${buttonRef?.current?.offsetWidth}px` },
+          }
+        }}
       >
-        <Typography sx={{ p: 2 }}>À moins de {distance} km</Typography>
-        <Slider
-          value={distance}
-          onChange={handleAgeChange}
-          valueLabelDisplay="auto"
-          disableSwap
-          min={1}
-          max={200}
-          sx={{ width: '250px', marginLeft: 2, marginRight: 2, marginBottom: 2 }}
-        />
+        <Box sx={{ padding: 2 }}>
+          <Typography>À moins de {distance} km</Typography>
+          <Slider
+            value={distance}
+            onChange={handleAgeChange}
+            valueLabelDisplay="auto"
+            disableSwap
+            min={1}
+            max={200}
+            sx={{ width: '100%', marginTop: 2 }}
+          />
+        </Box>
       </Popover>
     </div>
   );
