@@ -21,6 +21,7 @@ import GetDb from "../database/Get.db";
 import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
+import { setUserPosition } from "./localisationCtrl";
 
 const passwordResetKey = [];
 
@@ -183,22 +184,9 @@ export async function updateProfile(req: Request, res: Response) {
     [res.locals.fulluser.id]
   )
 
-  // Custom location handling
   if (customLocation) {
-    if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
-      res.status(400).json({ error: "missing parameters" });
-      return;
-    }
-
-    const { latitude, longitude } = req.body;
-
-    // Coordinates validation
-    if (!validateCoordinates(latitude, longitude)) {
-      res.status(400).json({ error: "invalid coordinates" });
-      return;
-    }
-    
-    await UpdateDb.update('users', ['latitude', 'longitude'], [latitude, longitude], ['id'], [res.locals.fulluser.id])
+    setUserPosition(req, res) //Why not ?
+    return;
   }
 
   res.status(200).json({ message: "Profile updated successfully" });
