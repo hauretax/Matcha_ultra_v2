@@ -25,9 +25,9 @@ import themeOptions from './theme/classical'
 import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
 import { SocketProvider } from "./context/SocketProvider";
+import socketIOClient from 'socket.io-client';
 
 const theme = createTheme(themeOptions)
-
 
 
 function App() {
@@ -60,9 +60,16 @@ function App() {
   );
 }
 
+const socket = socketIOClient('http://localhost:8080');
+
+function testMessage() {
+  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 501 })
+}
 function PublicPage() {
-  return (
-    <p>Public page</p>
+  return (<>
+    <button onClick={testMessage}>helo</button>
+
+    <p>Public page</p></>
   )
 }
 

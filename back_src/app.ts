@@ -7,11 +7,11 @@ import InitializeDb from "./database/Initialize.db";
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import multerErrorMiddleware from "./middlewares/multerError.middleware";
-import { validateJwt } from "./utils/jwt";
 import profileRoutes from "./routes/profileRoutes";
 import noteRoutes from "./routes/noteRoutes";
 import { Bport } from "../comon_src/constant";
-import FindDb from "./database/Find.db";
+
+import handleSocket from "./controllers/socketCtrl";
 
 class App {
 	private app: Application;
@@ -34,35 +34,10 @@ class App {
 		this.configureSocket();
 		//je sait pas comment faire :s
 	}
-
 	private configureSocket(): void {
 		this.io.on("connection", (socket) => {
-			console.log("a user connected");
-
-			socket.on("authenticate", async ({ accessToken }) => {
-				try {
-					const userId = validateJwt(accessToken);
-					if (!userId) {
-						throw new Error("Invalid token");
-					}
-					const user = await FindDb.userById(userId);
-					if (!user) {
-						throw new Error("User not found");
-					}
-					this.connectedUsers.set(socket.id, userId);
-					this.io.emit("connectedUsers", Array.from(this.connectedUsers.values()));
-					console.log("User authenticated:", userId);
-				} catch (error) {
-					socket.emit("unauthorized", { message: "Invalid token" });
-					console.log("Invalid token:", error.message);
-				}
-			});
-
-			socket.on("disconnect", () => {
-				console.log("user disconnected");
-				this.connectedUsers.delete(socket.id);
-				this.io.emit("connectedUsers", Array.from(this.connectedUsers.keys()));
-			});
+			handleSocket(socket, this.io)
+			
 		});
 	}
 

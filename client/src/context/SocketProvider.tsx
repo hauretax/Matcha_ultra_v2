@@ -33,12 +33,17 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       // Perform appropriate actions for unauthorized access
     };
 
+    const handleMessage = ({ message, senderId  }:{ message: string, senderId: number}) => {
+      alert(message + ' from ' + senderId)
+    }
+
     // Socket connection and authentication
     authenticateSocket();
 
     socket.on('connectedUsers', handleAuthenticated);
     socket.on('unauthorized', handleUnauthorized);
 
+    socket.on('newMessage', handleMessage)
     // Error handling
     socket.on('connect_error', (error) => {
       console.log('Socket connection error:', error.message);
@@ -58,7 +63,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   }, [auth.user]);
 
   const value = { connectedUsers };
-
+  console.log('tttt', value)
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 }
 
