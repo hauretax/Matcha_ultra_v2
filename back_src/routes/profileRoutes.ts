@@ -4,7 +4,9 @@ import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
+import setUserPosition from  "../controllers/localisationCtrl"
 import upload from "../config/multer.config";
+import axios from "axios";
 
 const router = express.Router();
 router.get("/test",async (req, res) => {
