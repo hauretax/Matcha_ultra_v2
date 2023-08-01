@@ -26,7 +26,6 @@ import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
 import { SocketProvider } from "./context/SocketProvider";
 
-
 const theme = createTheme(themeOptions)
 
 
