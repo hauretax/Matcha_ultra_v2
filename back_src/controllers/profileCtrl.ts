@@ -140,7 +140,7 @@ export async function validByEmail(req: Request, res: Response) {
     return;
   }
 
-  await UpdateDb.valideUser(email);
+  await UpdateDb.update('users', ['emailVerified'], [true], ['email'], [email]);
   res.sendStatus(200);
   return;
 }
@@ -289,7 +289,7 @@ export async function passwordReset(req: Request, res: Response) {
   }
   const encryptedPassword = await bcrypt.hash(newPassword, 10);
 
-  await UpdateDb.changePassword(encryptedPassword, email);
+  await UpdateDb.update('users', ['password'], [encryptedPassword], ['email'], [email])
 
   res.status(200).json({ message: "password reset" });
   return;
