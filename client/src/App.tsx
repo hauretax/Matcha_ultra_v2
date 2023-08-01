@@ -22,7 +22,6 @@ import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
-import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
 import { SocketProvider } from "./context/SocketProvider";
 import socketIOClient from 'socket.io-client';
