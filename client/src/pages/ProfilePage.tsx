@@ -33,15 +33,14 @@ function ProfilePage() {
   }, [location.state?.profileIncomplete, snackbar])
 
 
- 
-
+  //TODO: extract props from UserInformation
 
   return (
     <Box>
       <Caroussel imgs={auth.user!.pictures} />
       <Biography biography={auth.user!.biography} />
       <Interests interests={auth.user!.interests} options={options} updateDb={true} />
-      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} />
+      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} customLocation= {auth.user!.customLocation} latitude={auth.user!.latitude} longitude={auth.user!.longitude} />
     </Box>
 
   )
