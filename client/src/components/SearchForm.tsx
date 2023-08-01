@@ -10,6 +10,7 @@ import OrderByFilter from "./OrderByFilter";
 
 import { filtersList } from "../../../comon_src/type/utils.type";
 import { useSnackbar } from "../context/SnackBar";
+import { buildErrorString } from "../utils";
 
 interface SearchFormProps {
   setFilters: React.Dispatch<React.SetStateAction<filtersList>>
@@ -32,7 +33,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
         const res = await apiProvider.getOptions()
         setOptions(res.data)
       } catch (err: any) {
-        snackbar(`${err.message}: Please reload the page`, "error")
+        snackbar(buildErrorString(err, "Error while fetching other user's interests"), "error")
       }
     }
     fetchOptions()
