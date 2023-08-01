@@ -2,13 +2,21 @@ import db from "./db";
 
 const UpdateDb = {
 	//TODO #5 
-	profile(profile: { firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number }, userId: number) {
-		const sql = `
+	profile(profile: { firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, emailVerified: number, customLocation: number, latitude?: string, longitude?: string}, userId: number) {
+		let sql = `
 			UPDATE users 
 			SET firstName=?, lastName=?, birthDate=?, gender=?, orientation=?, email=?, emailVerified=?,
-			age=STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?))
-			WHERE id=?`;
-		const params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, profile.birthDate, profile.birthDate, userId];
+			age=STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?)),
+      customLocation=?`;
+    let params = [profile.firstName, profile.lastName, profile.birthDate, profile.gender, profile.orientation, profile.email, profile.emailVerified, profile.birthDate, profile.birthDate, profile.customLocation]
+    if (!profile.customLocation) {
+      sql += '\nWHERE id=?'
+      params.push(userId)
+    } else {
+      sql += ', latitude=?, longitude=?'
+      sql += '\nWHERE id=?'
+      params.push(profile.latitude, profile.longitude, userId)
+    }
 		return db.run(sql, params);
 	},
 

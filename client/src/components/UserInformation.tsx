@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
+import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid, Switch, FormControlLabel } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 
@@ -10,6 +10,9 @@ interface UserInformationProps {
   gender: string;
   orientation: string;
   email: string;
+  customLocation: boolean;
+  longitude?: string;
+  latitude?: string;
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {
@@ -19,6 +22,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [birthDate, setBirthDate] = useState(props.birthDate);
   const [gender, setGender] = useState(props.gender);
   const [orientation, setOrientation] = useState(props.orientation);
+  const [customLocation, setCustomLocation] = useState<boolean>(props.customLocation);
+  const [longitude, setLongitude] = useState<string>(props.longitude || '');
+  const [latitude, setLatitude] = useState<string>(props.latitude || '');
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const auth = useAuth();
@@ -29,7 +35,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
 
   const handleSave = async () => {
     setIsUploading(true);
-    await auth.updateProfile(firstName, lastName, birthDate, gender, orientation, email);
+    await auth.updateProfile(firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude);
     setIsEditing(false);
     setIsUploading(false);
   };
@@ -41,6 +47,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     setBirthDate(props.birthDate || '')
     setGender(props.gender || '')
     setOrientation(props.orientation || '')
+    setCustomLocation(props.customLocation || false)
+    setLongitude(props.longitude || '')
+    setLatitude(props.latitude || '')
   }, [props]);
 
   const handlDateChange = async (dateEl: any) => {
@@ -188,6 +197,59 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               </Box>
             }
           </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={<Switch
+                checked={customLocation}
+                onChange={() => setCustomLocation(!customLocation)}
+                disabled={!isEditing}
+              />}
+              label="Custom Location"
+            />
+          </Grid>
+          {/* if customLocation is set to true, display input fields for longitude and latitude */}
+          {customLocation &&
+            <>
+              <Grid item xs={12} sm={6}>
+                {isEditing ?
+                  <TextField
+                    fullWidth
+                    disabled={!isEditing}
+                    variant="standard"
+                    label="Longitude"
+                    value={longitude}
+                    onChange={(e) => setLongitude(e.target.value)}
+                    sx={{ my: 1 }}
+                  /> :
+                  <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
+                    <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Longitude</Typography>
+                    <Box>
+                      <StyledTypo text={longitude} />
+                    </Box>
+                  </Box>
+                }
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                {isEditing ?
+                  <TextField
+                    fullWidth
+                    disabled={!isEditing}
+                    variant="standard"
+                    label="Latitude"
+                    value={latitude}
+                    onChange={(e) => setLatitude(e.target.value)}
+                    sx={{ my: 1 }}
+                  /> :
+                  <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
+                    <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Latitude</Typography>
+                    <Box>
+                      <StyledTypo text={latitude} />
+                    </Box>
+                  </Box>
+                }
+              </Grid>
+            </>
+          }
           <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
         </Grid>
       </Paper>

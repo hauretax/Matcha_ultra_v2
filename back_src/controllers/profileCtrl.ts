@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import { validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateCoordinates } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -84,7 +84,7 @@ export async function login(req: Request, res: Response) {
 		return;
 	}
 
-	const { id, email, firstName, lastName, biography, gender, birthDate, orientation, emailVerified, pictures, interests } = user;
+	const { id, email, firstName, lastName, biography, gender, birthDate, orientation, emailVerified, pictures, interests, customLocation, latitude, longitude } = user;
 	const payload: UserPayload = {
 		jwt: {
 			accessToken: generateJwt(id),
@@ -102,7 +102,10 @@ export async function login(req: Request, res: Response) {
 			orientation,
 			emailVerified,
 			pictures,
-			interests
+			interests,
+      customLocation,
+      latitude: latitude?.toString(),
+      longitude: longitude?.toString(),
 		}
 	};
 	res.status(200).json(payload);
@@ -142,11 +145,11 @@ export async function validByEmail(req: Request, res: Response) {
 }
 
 export async function updateProfile(req: Request, res: Response) {
-	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "orientation", "email"], ["string", "string", "string", "string", "string", "string"])) {
+	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "orientation", "email", "customLocation"], ["string", "string", "string", "string", "string", "string", "boolean"])) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { firstName, lastName, birthDate, gender, orientation, email } = req.body;
+	const { firstName, lastName, birthDate, gender, orientation, email, customLocation } = req.body;
 
 	// Age validation
 	if (!validateDate(birthDate)) {
@@ -171,7 +174,7 @@ export async function updateProfile(req: Request, res: Response) {
 		res.status(400).json({ error: "invalid email" });
 		return;
 	}
-
+  
 	const profileInformation = {
 		firstName,
 		lastName,
@@ -179,8 +182,29 @@ export async function updateProfile(req: Request, res: Response) {
 		gender,
 		orientation,
 		email,
-		emailVerified: Number(email === res.locals.fulluser.email)
+		emailVerified: Number(email === res.locals.fulluser.email), // if email is different, emailVerified is set to false
+    customLocation: customLocation === true ? 1 : 0,
 	};
+
+  // Custom location handling
+  if (customLocation) {
+    if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
+      res.status(400).json({ error: "missing parameters" });
+      return;
+    }
+
+    const { latitude, longitude } = req.body;
+
+    // Coordinates validation
+    if (!validateCoordinates(latitude, longitude)) {
+      res.status(400).json({ error: "invalid coordinates" });
+      return;
+    }
+
+    profileInformation["latitude"] = latitude;
+    profileInformation["longitude"] = longitude;
+  }
+
 	await UpdateDb.profile(profileInformation, res.locals.fulluser.id);
 
 	res.status(200).json({ message: "Profile updated successfully" });

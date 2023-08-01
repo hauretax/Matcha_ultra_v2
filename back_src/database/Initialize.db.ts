@@ -2,8 +2,8 @@ import db from "./db";
 
 const InitializeDb = {
 
-	userTable() {
-		const sql = `
+  userTable() {
+    const sql = `
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -18,35 +18,37 @@ const InitializeDb = {
         orientation TEXT,
         emailVerified INTEGER,
         accessCode TEXT,
-		token TEXT, 
+		    token TEXT, 
         latitude DECIMAL(9, 6),
-        longitude DECIMAL(9, 6)
+        longitude DECIMAL(9, 6),
+        ip TEXT,
+        customLocation BIT DEFAULT 0
       )`;
-		return db.run(sql);
-	},
+    return db.run(sql);
+  },
 
-	pictureTable() {
-		const sql = `
+  pictureTable() {
+    const sql = `
         CREATE TABLE IF NOT EXISTS pictures (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             src TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )`;
-		return db.run(sql);
-	},
+    return db.run(sql);
+  },
 
-	interestsTable() {
-		const sql = `
+  interestsTable() {
+    const sql = `
             CREATE TABLE IF NOT EXISTS interests (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 interest TEXT UNIQUE
             )`;
-		return db.run(sql);
-	},
+    return db.run(sql);
+  },
 
-	userInterestsTable() {
-		const sql = `
+  userInterestsTable() {
+    const sql = `
             CREATE TABLE IF NOT EXISTS user_interests (
                 user_id INTEGER,
                 interest_id INTEGER,
@@ -54,11 +56,11 @@ const InitializeDb = {
                 FOREIGN KEY(user_id) REFERENCES users(id),
                 FOREIGN KEY(interest_id) REFERENCES interests(id)
             )`;
-		return db.run(sql);
-	},
+    return db.run(sql);
+  },
 
-	userNoteTable() {
-		const sql = `
+  userNoteTable() {
+    const sql = `
         CREATE TABLE IF NOT EXISTS user_notes (
             from_id INTEGER,
             to_id INTEGER,
@@ -66,8 +68,8 @@ const InitializeDb = {
             UNIQUE (from_id, to_id)
         )
         `;
-		return db.run(sql);
-	}
+    return db.run(sql);
+  }
 
 };
 
