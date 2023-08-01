@@ -20,32 +20,6 @@ const UpdateDb = {
 		return db.run(sql, params);
 	},
 
-	setUserlocalisation(latitude: string, longitude: string, userId: number) {
-		const sql = `
-			UPDATE users 
-			SET latitude=?, longitude=?
-			WHERE id=?`;
-		const params = [latitude, longitude, userId];
-		return db.run(sql, params);
-	},
-
-  setUserlocalisationAndIP(latitude: string, longitude: string, ip: string, userId: number) {
-		const sql = `
-			UPDATE users 
-			SET latitude=?, longitude=?, ip=?
-			WHERE id=?`;
-		const params = [latitude, longitude, ip, userId];
-		return db.run(sql, params);
-	},
-
-	bio(biography: string, userId: number) {
-		const sql = `
-			UPDATE users 
-			SET biography=?
-			WHERE id=?`;
-		const params = [biography, userId];
-		return db.run(sql, params);
-	},
 	// TODO #2
 	picture(userId: number, src: string) {
 		const sql = `
@@ -78,7 +52,25 @@ const UpdateDb = {
 			VALUES (?, ?, ?);
 		`;
 		return db.get(sql, [userFrom, userTo,note]);
-	}
+	},
+
+  update(table: string, columns: string[], values: any[], whereColumns: string[], whereValues: any[]) {
+    let sql = `UPDATE ${table} SET `;
+    for (let i = 0; i < columns.length; i++) {
+      sql += `${columns[i]} = ?`;
+      if (i < columns.length - 1) {
+        sql += ', ';
+      }
+    }
+    sql += ' WHERE ';
+    for (let i = 0; i < whereColumns.length; i++) {
+      sql += `${whereColumns[i]} = ?`;
+      if (i < whereColumns.length - 1) {
+        sql += ' AND ';
+      }
+    }
+    return db.run(sql, [...values, ...whereValues]);
+  }
 
 };
 

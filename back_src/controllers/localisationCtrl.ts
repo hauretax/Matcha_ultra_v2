@@ -13,7 +13,7 @@ export async function setUserPosition(req: Request, res: Response) {
     return;
   }
 
-  await UpdateDb.setUserlocalisation(latitude, longitude, res.locals.fulluser.id);
+  await UpdateDb.update('users', ['latitude', 'longitude'], [latitude, longitude], ['id'], [res.locals.fulluser.id]);
   res.sendStatus(200);
 }
 
@@ -25,7 +25,7 @@ export async function setUserPositionByIP(req: Request, res: Response) {
     try {
       const { data: { loc } } = await axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_API_KEY}`)
       const [latitude, longitude] = loc.split(',');
-      await UpdateDb.setUserlocalisationAndIP(latitude, longitude, ip, res.locals.fulluser.id);
+      await UpdateDb.update('users', ['latitude', 'longitude', 'ip'], [latitude, longitude, ip], ['id'], [res.locals.fulluser.id]);
       res.sendStatus(200)
     } catch (error) {
       console.error('Erreur lors de la récupération de la localisation :', error.message);
