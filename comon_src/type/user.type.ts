@@ -13,9 +13,11 @@ export type UserProfile = {
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];
-  localisation?: Vector;
   distance?: number;
   age?: number;
+  customLocation: boolean;
+  latitude?: string;
+  longitude?: string;
 }
 /**
  * 

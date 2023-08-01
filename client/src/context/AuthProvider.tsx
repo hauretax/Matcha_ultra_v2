@@ -19,7 +19,7 @@ interface AuthContextType {
   getProfile: () => Promise<void>;
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
-  updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string) => Promise<void>;
+  updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
   insertPicture: (formdata: FormData) => Promise<void>;
   updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
@@ -97,9 +97,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateProfile = async (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string): Promise<void> => {
+  const updateProfile = async (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string): Promise<void> => {
     try {
-      await apiProvider.updateProfile(firstName, lastName, birthDate, gender, orientation, email)
+      await apiProvider.updateProfile(firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude)
 
       if (user) {
         const newUser = {
@@ -110,8 +110,14 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           gender,
           orientation,
           email,
-          emailVerified: Number(user.email === email)
+          emailVerified: Number(user.email === email),
+          customLocation
         }
+        if (customLocation) {
+          newUser.latitude = latitude;
+          newUser.longitude = longitude;
+        }
+
         setUser(newUser);
       }
     } catch (error: any) {
