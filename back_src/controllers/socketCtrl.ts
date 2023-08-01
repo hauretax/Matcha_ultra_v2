@@ -42,6 +42,6 @@ export default function handleSocket(socket, io) {
 	socket.on("disconnect", () => {
 		console.log("user disconnected");
 		connectedUsers.delete(socket.id);
-		io.emit("connectedUsers", Array.from(connectedUsers.keys()));
+		io.emit("connectedUsers", Array.from(connectedUsers.values()));
 	});
 }
