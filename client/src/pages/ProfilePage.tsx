@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom'
 import { useSnackbar } from '../context/SnackBar'
 import { useAuth } from '../context/AuthProvider'
 
+
 function ProfilePage() {
   const auth = useAuth()
   const [options, setOptions] = useState<string[]>([])
@@ -31,7 +32,9 @@ function ProfilePage() {
     if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")
   }, [location.state?.profileIncomplete, snackbar])
 
+
   //TODO: extract props from UserInformation
+
   return (
     <Box>
       <Caroussel imgs={auth.user!.pictures} />

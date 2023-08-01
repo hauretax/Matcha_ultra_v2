@@ -1,25 +1,44 @@
 import express, { Application, Request, Response } from "express";
 import path from "path";
-
+import http from "http";
+import { Server } from "socket.io";
 import InitializeDb from "./database/Initialize.db";
 
 import requestLoggerMiddleware from "./middlewares/requestLogger.middleware";
 import globalErrorMiddleware from "./middlewares/globalError.middleware";
 import multerErrorMiddleware from "./middlewares/multerError.middleware";
-
 import profileRoutes from "./routes/profileRoutes";
 import noteRoutes from "./routes/noteRoutes";
 import { Bport } from "../comon_src/constant";
 
+import handleSocket from "./controllers/socketCtrl";
+
 class App {
 	private app: Application;
+	private server: http.Server;
+	private io: Server;
+	private connectedUsers: Map<string, number> = new Map<string, number>();
 
 	constructor() {
 		this.app = express();
+		this.server = http.createServer(this.app);
+		this.io = new Server(this.server, {
+			cors: {
+				origin: "http://localhost:3000",
+				credentials: true
+			}
+		});
 		this.configureMiddlewares();
 		this.configureRoutes();
 		this.handleErrors();
+		this.configureSocket();
 		//je sait pas comment faire :s
+	}
+	private configureSocket(): void {
+		this.io.on("connection", (socket) => {
+			handleSocket(socket, this.io)
+			
+		});
 	}
 
 	private configureMiddlewares(): void {
@@ -50,7 +69,7 @@ class App {
 	}
 
 	public start(port: number) {
-		const server = this.app.listen(port, () => {
+		const server = this.server.listen(port, () => {
 			console.log(`Le serveur est en cours d"exécution http://localhost:${port}`);
 		});
 		return server;

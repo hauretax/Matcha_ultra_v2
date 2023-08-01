@@ -22,9 +22,11 @@ import RequireAuth from "./components/RequireAuth";
 
 import themeOptions from './theme/classical'
 
+import { getLocation, getLocationByIp } from "./utils";
+import { SocketProvider } from "./context/SocketProvider";
+import socketIOClient from 'socket.io-client';
 
 const theme = createTheme(themeOptions)
-
 
 
 function App() {
@@ -34,30 +36,39 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<PublicPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/valide_mail" element={<ValideMailPage />} />
-              <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
-              <Route path="/reset_password" element={<ResetPasswordPage />} />
-              <Route path='/404' element={<div>404</div>} />
-              <Route element={<RequireAuth />} >
-                <Route path='/home' element={<BrowsePage />} />
-                <Route path='/profile' element={<ProfilePage />} />
+          <SocketProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<PublicPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/valide_mail" element={<ValideMailPage />} />
+                <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
+                <Route path="/reset_password" element={<ResetPasswordPage />} />
+                <Route path='/404' element={<div>404</div>} />
+                <Route element={<RequireAuth />} >
+                  <Route path='/home' element={<BrowsePage />} />
+                  <Route path='/profile' element={<ProfilePage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </SocketProvider>
         </ThemeProvider>
       </AuthProvider >
     </SnackBarProvider >
   );
 }
 
+const socket = socketIOClient('http://localhost:8080');
+
+function testMessage() {
+  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 501 })
+}
 function PublicPage() {
-  return (
-    <p>Public page</p>
+  return (<>
+    <button onClick={testMessage}>helo</button>
+
+    <p>Public page</p></>
   )
 }
 
