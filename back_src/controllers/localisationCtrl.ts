@@ -2,18 +2,25 @@ import axios from "axios";
 import dotenv from "dotenv";
 import { Response, Request } from "express";
 import UpdateDb from "../database/Update.db";
+import { validateBody, validateCoordinates } from "../utils/validateDataHelper";
 
 dotenv.config();
 
 export async function setUserPosition(req: Request, res: Response) {
-  const { latitude, longitude } = req.body;
-
-  if (!latitude || !longitude) {
-    res.status(400).json({ message: "missing params" });
+  if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
+    res.status(400).json({ error: "missing parameters" });
     return;
   }
 
-  await UpdateDb.update('users', ['latitude', 'longitude'], [latitude, longitude], ['id'], [res.locals.fulluser.id]);
+  const { latitude, longitude } = req.body;
+
+  // Coordinates validation
+  if (!validateCoordinates(latitude, longitude)) {
+    res.status(400).json({ error: "invalid coordinates" });
+    return;
+  }
+  
+  await UpdateDb.update('users', ['latitude', 'longitude'], [latitude, longitude], ['id'], [res.locals.fulluser.id])
   res.sendStatus(200);
 }
 
