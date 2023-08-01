@@ -22,6 +22,7 @@ import themeOptions from './theme/classical'
 
 import './App.css';
 import { getLocation, getLocationByIp } from "./utils";
+import { SocketProvider } from "./context/SocketProvider";
 
 const theme = createTheme(themeOptions)
 
@@ -31,27 +32,28 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path='/test' element={
-                <>
-              <button onClick={getLocation}>Obtenir la géolocalisation</button>
-              <button onClick={getLocationByIp}>ip2</button>
-              </> }/>
-              <Route path="/" element={<PublicPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/valide_mail" element={<ValideMailPage />} />
-              <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
-              <Route path="/reset_password" element={<ResetPasswordPage />} />
-              <Route path='/404' element={<div>404</div>} />
-              <Route element={<RequireAuth />} >
-                <Route path='/home' element={<HomePage />} />
-                <Route path='/profile' element={<ProfilePage />} />
+          <SocketProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path='/test' element={
+                  <>
+                    <button onClick={getLocation}>Obtenir la géolocalisation</button>
+                    <button onClick={getLocationByIp}>ip2</button>
+                  </>} />
+                <Route path="/" element={<PublicPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/valide_mail" element={<ValideMailPage />} />
+                <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
+                <Route path="/reset_password" element={<ResetPasswordPage />} />
+                <Route path='/404' element={<div>404</div>} />
+                <Route element={<RequireAuth />} >
+                  <Route path='/home' element={<HomePage />} />
+                  <Route path='/profile' element={<ProfilePage />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </SocketProvider>
         </ThemeProvider>
       </AuthProvider >
     </SnackBarProvider >
