@@ -29,6 +29,15 @@ const UpdateDb = {
 		return db.run(sql, params);
 	},
 
+  setUserlocalisationAndIP(latitude: string, longitude: string, ip: string, userId: number) {
+		const sql = `
+			UPDATE users 
+			SET latitude=?, longitude=?, ip=?
+			WHERE id=?`;
+		const params = [latitude, longitude, ip, userId];
+		return db.run(sql, params);
+	},
+
 	bio(biography: string, userId: number) {
 		const sql = `
 			UPDATE users 

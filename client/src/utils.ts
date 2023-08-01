@@ -17,17 +17,9 @@ export const isProfileIncomplete = (user: UserProfile) => {
     user.pictures.length === 0;
 }
 
-export function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) =>
-      apiProvider.updatePositionByLL(position.coords.latitude.toString(), position.coords.longitude.toString())
-    )
-  } else {
-    getLocationByIp()
+export const buildErrorString = (err: any, msg: string) => {
+  if (err.response?.data?.error) {
+    return `${msg} : ${err.response?.data?.error}`;
   }
-}
-
-export async function getLocationByIp() {
-  const ip = window.location?.hostname;
-  apiProvider.updatePositionByIp(ip)
+  return msg;
 }

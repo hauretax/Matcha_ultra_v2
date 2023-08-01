@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
-import setUserPosition from  "../controllers/localisationCtrl"
+import { setUserPosition, setUserPositionByIP } from "../controllers/localisationCtrl"
 import upload from "../config/multer.config";
 import axios from "axios";
 
@@ -22,6 +22,7 @@ router.post("/reset_password", publicGroup, asyncHandler(passwordReset));
 router.post("/newToken", publicGroup, asyncHandler(createNewJwt));
 
 router.post("/setLocalisation", privateGroup, asyncHandler(setUserPosition));
+router.post("/setLocationByIP", privateGroup, asyncHandler(setUserPositionByIP));
 router.get("/profile", privateGroup, asyncHandler(getProfile));
 router.get("/options", privateGroup, asyncHandler(getOptions));
 router.patch("/profile", privateGroup, asyncHandler(updateProfile));
