@@ -176,6 +176,8 @@ export async function updateProfile(req: Request, res: Response) {
     return;
   }
 
+  // TODO #5: if email is updated, send a new validation email
+
   await UpdateDb.update(
     'users',
     ['firstName', 'lastName', 'birthDate', 'gender', 'orientation', 'email', 'emailVerified', 'customLocation'],
@@ -318,7 +320,7 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
   const { filename } = req.file;
   const { pictureId } = req.params;
 
-  await UpdateDb.picture(parseInt(pictureId), filename);
+  await UpdateDb.update('pictures', ['src'], [filename], ['id'], [parseInt(pictureId)]);
 
   res.status(200).json({ id: pictureId, src: filename });
 
