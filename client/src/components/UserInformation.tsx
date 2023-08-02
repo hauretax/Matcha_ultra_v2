@@ -7,6 +7,7 @@ import MyTextField from './MyTextField';
 import MySelectField from './MySelectField';
 
 interface UserInformationProps {
+  readOnly: boolean;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -62,11 +63,13 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
       </Typography>
       <Paper elevation={5} sx={{ position: 'relative', minHeight: '250px', padding: '1rem' }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <EditableFields isEditing={isEditing} value={email} label='Email' setState={setEmail}>
-              <MyTextField />
-            </EditableFields>
-          </Grid>
+          {!props.readOnly &&
+            <Grid item xs={12}>
+              <EditableFields isEditing={isEditing} value={email} label='Email' setState={setEmail}>
+                <MyTextField />
+              </EditableFields>
+            </Grid>
+          }
           <Grid item xs={12} sm={4}>
             <EditableFields isEditing={isEditing} value={firstName} label='Firstname' setState={setFirstName} >
               <MyTextField />
@@ -92,7 +95,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <MySelectField />
             </EditableFields>
           </Grid>
-          <Grid item xs={12}>
+          {!props.readOnly && <Grid item xs={12}>
             <FormControlLabel
               control={<Switch
                 checked={customLocation}
@@ -101,9 +104,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               />}
               label="Custom Location"
             />
-          </Grid>
+          </Grid>}
           {/* if customLocation is set to true, display input fields for longitude and latitude */}
-          {customLocation &&
+          {(customLocation || props.readOnly) &&
             <>
               <Grid item xs={12} sm={6}>
                 <EditableFields isEditing={isEditing} value={latitude} label='Latitude' setState={setLatitude} >
@@ -117,7 +120,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               </Grid>
             </>
           }
-          <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
+          {!props.readOnly && <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />}
         </Grid>
       </Paper>
     </Box>

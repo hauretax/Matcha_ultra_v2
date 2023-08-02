@@ -32,20 +32,9 @@ function ProfilePage() {
     distance: 0,
     age: 0,
   })
-  const [options, setOptions] = useState<string[]>([])
   const location = useLocation();
   let snackbar = useSnackbar()
   const { id } = useParams<{ id: string }>()
-
-  useEffect(() => {
-    apiProvider.getOptions()
-      .then((res: any) => {
-        setOptions(res.data)
-      })
-      .catch((err: any) => {
-        snackbar(buildErrorString(err, "Error while fetching interest list"), "error")
-      })
-  }, [snackbar])
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -73,10 +62,10 @@ function ProfilePage() {
 
   return (
     <Box>
-      <Caroussel readOnly={id != undefined} imgs={user.pictures} />
-      <Biography biography={auth.user!.biography} />
-      <Interests interests={auth.user!.interests} options={options} updateDb={true} />
-      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} customLocation={auth.user!.customLocation} latitude={auth.user!.latitude} longitude={auth.user!.longitude} />
+      <Caroussel readOnly={id !== undefined} imgs={user.pictures} />
+      <Biography readOnly={id !== undefined} biography={user.biography} />
+      <Interests readOnly={id !== undefined} interests={user.interests} />
+      <UserInformation readOnly={id !== undefined} {...user} />
     </Box>
 
   )

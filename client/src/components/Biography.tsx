@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 
 interface BiographyProps {
+  readOnly: boolean;
   biography: string;
 }
 
@@ -51,7 +52,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
             </Typography>
           </Box>
         )}
-        <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
+        {!props.readOnly && <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />}
       </Paper>
     </Box>
   );
