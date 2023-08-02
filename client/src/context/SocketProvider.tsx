@@ -41,26 +41,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
-
-
       setMessage({ userFrom: senderId, message })
-
-      // Agir en fonction du contexte
-      // switch (currentContext) {
-      //   case 'notification':
-      //     handleNotification(message);
-      //     break;
-      //   case 'profile':
-      //     handleProfileMessage(message);
-      //     break;
-      //   case 'profileConversation':
-      //     handleProfileConversationMessage(message);
-      //     break;
-      //   default:
-      //     // Par défaut, gérer comme une notification
-      //     handleNotification(message);
-      // }
-
     }
 
     // Socket connection and authentication
