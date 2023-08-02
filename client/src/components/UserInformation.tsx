@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid, Switch, FormControlLabel } from '@mui/material';
+import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid, Switch, FormControlLabel, SelectChangeEvent } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
+import EditableFields from './EditableFields';
+import MyTextField from './MyTextField';
+import MySelectField from './MySelectField';
 
 interface UserInformationProps {
   firstName: string;
@@ -16,15 +19,15 @@ interface UserInformationProps {
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {
-  const [email, setEmail] = useState(props.email);
-  const [firstName, setFirstName] = useState(props.firstName);
-  const [lastName, setLastName] = useState(props.lastName);
-  const [birthDate, setBirthDate] = useState(props.birthDate);
-  const [gender, setGender] = useState(props.gender);
-  const [orientation, setOrientation] = useState(props.orientation);
-  const [customLocation, setCustomLocation] = useState<boolean>(props.customLocation);
-  const [longitude, setLongitude] = useState<string>(props.longitude || '');
-  const [latitude, setLatitude] = useState<string>(props.latitude || '');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [gender, setGender] = useState('');
+  const [orientation, setOrientation] = useState('');
+  const [customLocation, setCustomLocation] = useState<boolean>(false);
+  const [longitude, setLongitude] = useState<string>('');
+  const [latitude, setLatitude] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const auth = useAuth();
@@ -41,31 +44,20 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   };
 
   React.useEffect(() => {
-    setEmail(props.email || '')
-    setFirstName(props.firstName || '')
-    setLastName(props.lastName || '')
-    setBirthDate(props.birthDate || '')
-    setGender(props.gender || '')
-    setOrientation(props.orientation || '')
-    setCustomLocation(props.customLocation || false)
-    setLongitude(props.longitude || '')
-    setLatitude(props.latitude || '')
-  }, [props]);
-
-  const handlDateChange = async (dateEl: any) => {
-    const date = dateEl.target.value;
-
-    if (date.length < birthDate.length) {
-      if (date.length === 4 || date.length === 7) {
-        setBirthDate(birthDate.slice(0, -2));
-        return;
-      }
-      setBirthDate(date);
+    const initStringState = (str: string | undefined) => {
+      return str || ''
     }
-    setBirthDate(date)
-    if (date.length === 4 || date.length === 7)
-      setBirthDate(date + "-")
-  };
+
+    setEmail(initStringState(props.email))
+    setFirstName(initStringState(props.firstName))
+    setLastName(initStringState(props.lastName))
+    setBirthDate(initStringState(props.birthDate))
+    setGender(initStringState(props.gender))
+    setOrientation(initStringState(props.orientation))
+    setCustomLocation(props.customLocation || false)
+    setLongitude(initStringState(props.longitude))
+    setLatitude(initStringState(props.latitude))
+  }, [props]);
 
   return (
     <Box>
@@ -75,127 +67,34 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
       <Paper elevation={5} sx={{ position: 'relative', minHeight: '250px', padding: '1rem' }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {isEditing ?
-              <TextField
-                fullWidth
-                disabled={!isEditing}
-                variant="standard"
-                label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ my: 1 }}
-              /> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Email</Typography>
-                <Box>
-                  <StyledTypo text={email} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={email} label='Email' setState={setEmail}>
+              <MyTextField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12} sm={4}>
-            {isEditing ?
-              <TextField
-                fullWidth
-                disabled={!isEditing}
-                variant="standard"
-                label="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                sx={{ my: 1 }}
-              /> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>First Name</Typography>
-                <Box>
-                  <StyledTypo text={firstName} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={firstName} label='Firstname' setState={setFirstName} >
+              <MyTextField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12} sm={4}>
-            {isEditing ?
-              <TextField
-                fullWidth
-                variant="standard"
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                sx={{ my: 1 }}
-              /> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Last Name</Typography>
-                <Box>
-                  <StyledTypo text={lastName} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={lastName} label='Lastname' setState={setLastName} >
+              <MyTextField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12} sm={4}>
-            {isEditing ?
-              <TextField
-                fullWidth
-                disabled={!isEditing}
-                variant="standard"
-                label="BirthDate (yyyy-mm-jj)"
-                value={birthDate}
-                onChange={(e) => handlDateChange(e)}
-                sx={{ my: 1 }}
-              /> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>BirthDate</Typography>
-                <Box>
-                  <StyledTypo text={birthDate} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={birthDate} label='Birthdate (YYYY-MM-DD)' setState={setBirthDate} >
+              <MyTextField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12} sm={6}>
-            {isEditing ?
-              <FormControl fullWidth disabled={!isEditing} variant="standard" sx={{ my: 1 }}>
-                <InputLabel id="gender-label">Gender</InputLabel>
-                <Select
-                  labelId="gender-label"
-                  id="gender"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value as string)}
-                  label="Gender"
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
-                </Select>
-              </FormControl> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Gender</Typography>
-                <Box>
-                  <StyledTypo text={gender} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={gender} label='Gender' setState={setGender} options={['Male', 'Female', 'Other']} >
+              <MySelectField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12} sm={6}>
-            {isEditing ?
-              <FormControl fullWidth disabled={!isEditing} variant="standard" sx={{ my: 1 }}>
-                <InputLabel id="orientation-label">Sexual Orientation</InputLabel>
-                <Select
-                  labelId="orientation-label"
-                  id="orientation"
-                  value={orientation}
-                  onChange={(e) => setOrientation(e.target.value as string)}
-                  label="Sexual Orientation"
-                >
-                  <MenuItem value="Heterosexual">Heterosexual</MenuItem>
-                  <MenuItem value="Bisexual">Bisexual</MenuItem>
-                  <MenuItem value="Homosexual">Homosexual</MenuItem>
-                </Select>
-              </FormControl> :
-              <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Sexual Orientation</Typography>
-                <Box>
-                  <StyledTypo text={orientation} />
-                </Box>
-              </Box>
-            }
+            <EditableFields isEditing={isEditing} value={orientation} label='Sexual Orientation' setState={setOrientation} options={['Heterosexual', 'Bisexual', 'Homosexual']} >
+              <MySelectField />
+            </EditableFields>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
@@ -211,42 +110,14 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
           {customLocation &&
             <>
               <Grid item xs={12} sm={6}>
-                {isEditing ?
-                  <TextField
-                    fullWidth
-                    disabled={!isEditing}
-                    variant="standard"
-                    label="Longitude"
-                    value={longitude}
-                    onChange={(e) => setLongitude(e.target.value)}
-                    sx={{ my: 1 }}
-                  /> :
-                  <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                    <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Longitude</Typography>
-                    <Box>
-                      <StyledTypo text={longitude} />
-                    </Box>
-                  </Box>
-                }
+                <EditableFields isEditing={isEditing} value={latitude} label='Latitude' setState={setLatitude} >
+                  <MyTextField />
+                </EditableFields>
               </Grid>
               <Grid item xs={12} sm={6}>
-                {isEditing ?
-                  <TextField
-                    fullWidth
-                    disabled={!isEditing}
-                    variant="standard"
-                    label="Latitude"
-                    value={latitude}
-                    onChange={(e) => setLatitude(e.target.value)}
-                    sx={{ my: 1 }}
-                  /> :
-                  <Box sx={{ borderBottom: '1px solid gray', mt: '2px', mb: '8px' }}>
-                    <Typography variant='caption' color={'rgba(0,0,0,0.6)'}>Latitude</Typography>
-                    <Box>
-                      <StyledTypo text={latitude} />
-                    </Box>
-                  </Box>
-                }
+                <EditableFields isEditing={isEditing} value={longitude} label='Longitude' setState={setLongitude} >
+                  <MyTextField />
+                </EditableFields>
               </Grid>
             </>
           }
@@ -256,9 +127,5 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
     </Box>
   );
 };
-
-const StyledTypo = ({ text }: { text: (string | number) }) => (
-  <Typography sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'elipsis', paddingBottom: '4px', paddingTop: '1px' }}><span>{text || "-"}</span></Typography>
-)
 
 export default UserInformation;
