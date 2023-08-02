@@ -33,7 +33,6 @@ export async function validsecurRequest(
 		}
 
 		res.locals.fulluser = fulluser;
-		delete res.locals.fulluser.email;
 		next();
 
 	} catch (err) {

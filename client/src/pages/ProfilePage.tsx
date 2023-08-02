@@ -10,6 +10,7 @@ import UserInformation from '../components/UserInformation'
 import { useLocation } from 'react-router-dom'
 import { useSnackbar } from '../context/SnackBar'
 import { useAuth } from '../context/AuthProvider'
+import { buildErrorString } from '../utils'
 
 
 function ProfilePage() {
@@ -24,7 +25,7 @@ function ProfilePage() {
         setOptions(res.data)
       })
       .catch((err: any) => {
-        snackbar(`${err.message}: Please reload the page`, "error")
+        snackbar(buildErrorString(err, "Error while fetching interest list"), "error")
       })
   }, [auth.user])
 

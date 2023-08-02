@@ -10,10 +10,8 @@ const apiProvider = {
     return axiosPrivate.get('/options')
   },
 
-  updatePositionByIp(ip: string) {
-    return axiosPrivate.post('/setLocalisation', {
-      ip
-    })
+  updatePositionByIp() {
+    return axiosPrivate.post('/setLocationByIP')
   },
 
   /*

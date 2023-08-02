@@ -6,6 +6,8 @@ import SearchForm from '../components/SearchForm';
 import BrowsingResult from '../components/BrowsingResult';
 
 import { filtersList } from '../../../comon_src/type/utils.type';
+import { useSnackbar } from '../context/SnackBar';
+import { buildErrorString } from '../utils';
 
 const BrowsePage: React.FC = () => {
   //TODO: initialize filters based on user's profile
@@ -19,20 +21,26 @@ const BrowsePage: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [end, setEnd] = useState(true)
   const [profiles, setProfiles] = useState<any[]>([]);
+  const snackbar = useSnackbar();
 
   const fetchProfiles = async (index: number) => {
-    const res = await apiProvider.getUsers({
-      latitude: 0,
-      longitude: 0,
-      distanceMax: filters.distance,
-      ageMin: filters.ageRange[0],
-      ageMax: filters.ageRange[1],
-      orientation: filters.orientation,
-      interestWanted: filters.interests,
-      index: index,
-      orderBy: filters.orderBy
-    });
-    return res.data;
+    try {
+      const res = await apiProvider.getUsers({
+        latitude: 0,
+        longitude: 0,
+        distanceMax: filters.distance,
+        ageMin: filters.ageRange[0],
+        ageMax: filters.ageRange[1],
+        orientation: filters.orientation,
+        interestWanted: filters.interests,
+        index: index,
+        orderBy: filters.orderBy
+      });
+      return res.data;
+    } catch (err: any) {
+      snackbar(buildErrorString(err, "Error while fetching profiles"), "error")
+      return [];
+    }
   }
 
   const handleNext = async () => {

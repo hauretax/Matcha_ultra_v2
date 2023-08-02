@@ -44,7 +44,7 @@ const OrderByFilter: React.FC<OrderByFilterProps> = ({ orderBy, setOrderBy }) =>
   const open = Boolean(anchorEl);
 
   const option = (label: string) => (
-    <LiOption className={orderBy === label ? 'selected' : 'normal'} onClick={() => handleChange(label as 'distance' | 'age' | 'tag' | 'popularity')}>
+    <LiOption key={label} className={orderBy === label ? 'selected' : 'normal'} onClick={() => handleChange(label as 'distance' | 'age' | 'tag' | 'popularity')}>
       <Checkbox
         icon={icon}
         checkedIcon={checkedIcon}

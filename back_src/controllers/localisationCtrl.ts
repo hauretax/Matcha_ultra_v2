@@ -1,33 +1,44 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import { Response, Request } from "express";
-import { Ip2Location } from "../../comon_src/type/utils.type";
 import UpdateDb from "../database/Update.db";
+import { validateBody, validateCoordinates } from "../utils/validateDataHelper";
 
 dotenv.config();
 
-function callToip2locationApi(ip: string): Promise<{data: Ip2Location} > {
-	const headers = {
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
-	};
-	return axios.get("https://api.ip2location.io/?key=" + process.env.IP2_API_KEY + "&ip=" + ip, { headers });
+export async function setUserPosition(req: Request, res: Response) {
+  if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
+    res.status(400).json({ error: "missing parameters" });
+    return;
+  }
+
+  const { latitude, longitude } = req.body;
+
+  // Coordinates validation
+  if (!validateCoordinates(latitude, longitude)) {
+    res.status(400).json({ error: "invalid coordinates" });
+    return;
+  }
+  
+  await UpdateDb.update('users', ['latitude', 'longitude'], [latitude, longitude], ['id'], [res.locals.fulluser.id])
+  res.sendStatus(200);
 }
-export default async function setUserPosition(req: Request, res: Response) {
 
+export async function setUserPositionByIP(req: Request, res: Response) {
+  //since we are running on localhost, we are not using wifi and therefore needs to use an external service to get our ip
+  const { data: { ip } } = await axios.get("https://api.ipify.org?format=json");
 
-	let { ip, latitude, longitude } = req.body;
-	if (ip === "localhost")
-		ip = "8.8.8.8";
-	if (!latitude && !longitude) {
-		if (!ip) {
-			res.status(400).json({ message: "missing params" });
-			return;
-		}
-
-		const ip2Data: {data: Ip2Location} = await callToip2locationApi(ip);
-		latitude = ip2Data.data.latitude;
-		longitude = ip2Data.data.longitude;
-	}
-	await UpdateDb.setUserlocalisation(latitude, longitude, res.locals.fulluser.id);
-	res.sendStatus(200);
+  if (ip !== res.locals.fulluser.ip) {
+    try {
+      const { data: { loc } } = await axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_API_KEY}`)
+      const [latitude, longitude] = loc.split(',');
+      await UpdateDb.update('users', ['latitude', 'longitude', 'ip'], [latitude, longitude, ip], ['id'], [res.locals.fulluser.id]);
+      res.sendStatus(200)
+    } catch (error) {
+      console.error('Erreur lors de la récupération de la localisation :', error.message);
+      res.sendStatus(500)
+    }
+  } else {
+    res.sendStatus(200)
+  }
 }
