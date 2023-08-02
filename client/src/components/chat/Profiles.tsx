@@ -7,7 +7,8 @@ function BrowsingChatProfiles(props: { profiles: { username: string, userId: num
         <Grid container spacing={2} >
             {props.profiles.map((profile) => (
                 <Grid item xs={12} key={profile.userId}>
-                    <ProfileCard user={profile.username} />
+                    <ProfileCard user={profile} />
+                    
                 </Grid>
             ))}
         </Grid>
