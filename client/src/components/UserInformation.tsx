@@ -12,24 +12,24 @@ interface UserInformationProps {
   birthDate: string;
   gender: string;
   orientation: string;
-  email: string;
-  customLocation: boolean;
-  longitude?: string;
-  latitude?: string;
+  email?: string;
+  customLocation?: boolean;
+  longitude: string;
+  latitude: string;
 }
 
 const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [birthDate, setBirthDate] = useState('');
-  const [gender, setGender] = useState('');
-  const [orientation, setOrientation] = useState('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [birthDate, setBirthDate] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
+  const [orientation, setOrientation] = useState<string>('');
   const [customLocation, setCustomLocation] = useState<boolean>(false);
   const [longitude, setLongitude] = useState<string>('');
   const [latitude, setLatitude] = useState<string>('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const auth = useAuth();
 
   const handleEdit = () => {
@@ -44,19 +44,15 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
   };
 
   React.useEffect(() => {
-    const initStringState = (str: string | undefined) => {
-      return str || ''
-    }
-
-    setEmail(initStringState(props.email))
-    setFirstName(initStringState(props.firstName))
-    setLastName(initStringState(props.lastName))
-    setBirthDate(initStringState(props.birthDate))
-    setGender(initStringState(props.gender))
-    setOrientation(initStringState(props.orientation))
+    setEmail(props.email || '')
+    setFirstName(props.firstName)
+    setLastName(props.lastName)
+    setBirthDate(props.birthDate)
+    setGender(props.gender)
+    setOrientation(props.orientation)
     setCustomLocation(props.customLocation || false)
-    setLongitude(initStringState(props.longitude))
-    setLatitude(initStringState(props.latitude))
+    setLongitude(props.longitude)
+    setLatitude(props.latitude)
   }, [props]);
 
   return (
