@@ -35,6 +35,7 @@ function RequireAuth() {
     if (auth.user?.customLocation === false) {
       fetchLocation();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   if (!auth.user) {

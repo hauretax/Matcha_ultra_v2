@@ -60,6 +60,7 @@ const BrowsePage: React.FC = () => {
     }
 
     handleSearch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   return (

@@ -1,8 +1,7 @@
-import React, { useEffect, useState, createContext, useContext } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import socketIOClient from 'socket.io-client';
 
 import { useAuth } from './AuthProvider';
-import { profile } from 'console';
 
 interface SocketContextType {
   connectedUsers: number[];

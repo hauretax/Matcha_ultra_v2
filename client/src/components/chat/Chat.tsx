@@ -4,8 +4,6 @@ import { TextInput } from "./TextInput";
 import { MessageLeft, MessageRight } from "./Message";
 import { Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
-import { SocketProvider } from "../../context/SocketProvider";
-import ZoneContext from "../../context/zoneContext";
 import SocketContext from "../../context/SocketProvider"
 
 export default function Chat() {
