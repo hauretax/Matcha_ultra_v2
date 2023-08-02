@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import UserCard from "../UserCard";
 import ProfileCard from "./ProfileCarde";
 
 function BrowsingChatProfiles(props: { profiles: { username: string, userId: number }[] }) {

@@ -1,17 +1,17 @@
 import { validateJwt } from "../utils/jwt";
 import FindDb from "../database/Find.db";
-import { Server } from "socket.io";
 
 const connectedUsers: Map<string, number> = new Map<string, number>();
 
 
-function getSocketID(UserId: number) {
+function getSocketID(userId: number) {
+	const userSockets = [];
 	for (const [key, value] of connectedUsers) {
-		if (value === UserId) {
-			return key;
+		if (value === userId) {
+			userSockets.push(key);
 		}
 	}
-	return null;
+	return userSockets;
 }
 
 export default function handleSocket(socket, io) {
@@ -34,9 +34,18 @@ export default function handleSocket(socket, io) {
 
 	socket.on("sendMessage", async ({ message, idTo, idFrom }) => {
 		socket.emit("messageReceived", { message: "Votre message a été reçu avec succès." });
+		console.log(connectedUsers)
+		console.log(message, idTo, idFrom)
+		// io.to(getSocketID(idTo)).emit("newMessage", { message, senderId: idFrom });
 
-		io.to(getSocketID(idTo)).emit("newMessage", { message, senderId: idFrom });
+		// Filtrer les sockets qui correspondent à l'ID utilisateur donné
+		const userSockets = getSocketID(idTo);
 
+		console.log(userSockets)
+		// Envoyer le message à toutes les sockets correspondant à l'ID utilisateur
+		userSockets.forEach((socketId) => {
+			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
+		});
 	});
 
 	socket.on("disconnect", () => {

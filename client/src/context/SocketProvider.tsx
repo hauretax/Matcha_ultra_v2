@@ -63,7 +63,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   }, [auth.user]);
 
   const value = { connectedUsers };
-  console.log('tttt', value)
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 }
 
