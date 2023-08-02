@@ -42,7 +42,7 @@ const Carousel: React.FC<CarouselProps> = ({ readOnly, imgs }) => {
   };
 
   const goLeft = () => {
-    changeImage((activeIndex + imgs.length) % (imgs.length + (readOnly ? 0 : 1)));
+    changeImage((activeIndex + (imgs.length - (readOnly ? 1 : 0)) ) % (imgs.length + (readOnly ? 0 : 1)));
   };
 
   const goRight = () => {
