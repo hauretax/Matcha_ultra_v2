@@ -28,6 +28,9 @@ function RequireAuth() {
           } catch (err) {
             snackbar(buildErrorString(err, "Position failed to update"), "error")
           }
+        },
+        {
+          enableHighAccuracy: true,
         }
       )
     }
