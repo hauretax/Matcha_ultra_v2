@@ -23,6 +23,10 @@ const pages = [
   {
     label: 'Protected page',
     url: '/home'
+  },
+  {
+    label: 'chat',
+    url: '/chat'
   }
 ];
 

@@ -17,6 +17,7 @@ import ProfilePage from './pages/ProfilePage'
 import ValideMailPage from "./pages/ValideMailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import BrowsePage from './pages/BrowsePage';
+import Chat from './components/chat/Chat';
 
 import RequireAuth from "./components/RequireAuth";
 
@@ -24,6 +25,7 @@ import themeOptions from './theme/classical'
 
 import { SocketProvider } from "./context/SocketProvider";
 import socketIOClient from 'socket.io-client';
+
 
 const theme = createTheme(themeOptions)
 
@@ -48,6 +50,7 @@ function App() {
                 <Route element={<RequireAuth />} >
                   <Route path='/home' element={<BrowsePage />} />
                   <Route path='/profile' element={<ProfilePage />} />
+                  <Route path='/chat' element={<Chat />} />
                 </Route>
               </Route>
             </Routes>
