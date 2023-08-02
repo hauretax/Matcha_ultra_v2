@@ -6,7 +6,6 @@ import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
 import { setUserPosition, setUserPositionByIP } from "../controllers/localisationCtrl"
 import upload from "../config/multer.config";
-import axios from "axios";
 
 const router = express.Router();
 const publicGroup = [];
