@@ -48,6 +48,7 @@ function App() {
                 <Route element={<RequireAuth />} >
                   <Route path='/home' element={<BrowsePage />} />
                   <Route path='/profile' element={<ProfilePage />} />
+                  <Route path='/profile/:id' element={<ProfilePage />} />
                 </Route>
               </Route>
             </Routes>

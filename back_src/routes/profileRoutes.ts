@@ -1,5 +1,5 @@
 import express from "express";
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles } from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById } from "../controllers/profileCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
@@ -33,5 +33,6 @@ router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"),
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));
 
 router.get("/users", validsecurRequest, profileCompletedGroup, asyncHandler(getProfiles));
+router.get("/profile/:id", privateGroup, asyncHandler(getProfileById));
 
 export default router;  

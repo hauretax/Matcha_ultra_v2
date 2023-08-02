@@ -1,9 +1,5 @@
-import { Vector } from "./utils.type";
-
 export type UserProfile = {
   id: number;
-  emailVerified: number;
-  email: string;
   username: string;
   lastName: string;
   firstName: string;
@@ -13,11 +9,15 @@ export type UserProfile = {
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];
+  latitude: string;
+  longitude: string;
+  // not necessary when fetching someone else's profile
+  emailVerified?: number;
+  email?: string;
+  customLocation?: boolean;
+  // not necessary when fetching one own profile
   distance?: number;
   age?: number;
-  customLocation: boolean;
-  latitude?: string;
-  longitude?: string;
 }
 /**
  * 

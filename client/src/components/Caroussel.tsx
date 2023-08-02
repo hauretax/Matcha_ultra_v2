@@ -7,10 +7,11 @@ import { prefixBackendUrl } from '../utils';
 import { useAuth } from '../context/AuthProvider';
 
 interface CarouselProps {
+  readOnly: boolean;
   imgs: { id: number; src: string }[];
 }
 
-const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
+const Carousel: React.FC<CarouselProps> = ({ readOnly, imgs }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
   const theme = useTheme();
@@ -41,11 +42,11 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
   };
 
   const goLeft = () => {
-    changeImage((activeIndex + imgs.length) % (imgs.length + 1));
+    changeImage((activeIndex + imgs.length) % (imgs.length + (readOnly ? 0 : 1)));
   };
 
   const goRight = () => {
-    changeImage((activeIndex + 1) % (imgs.length + 1));
+    changeImage((activeIndex + 1) % (imgs.length + (readOnly ? 0 : 1)));
   };
 
   async function deleteImage(pictureId: number): Promise<void> {
@@ -72,7 +73,6 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-
       {activeIndex < imgs.length ?
         <Box sx={{ position: 'relative' }}>
           <Box
@@ -88,28 +88,33 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
             src={prefixBackendUrl(imgs[activeIndex].src)}
             alt={'Issue while fetching picture'}
           />
-          <Fab
-            color="primary"
-            aria-label={'edit'}
-            sx={{ position: 'absolute', bottom: 16, right: 84 }}
-            onClick={handleClick}
-            disabled={uploading}>
-            {uploading ?
-              <CircularProgress size={24} /> :
-              <Edit />
-            }
-          </Fab>
-          <Fab
-            color="primary"
-            aria-label={'delete'}
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            onClick={() => deleteImage(imgs[activeIndex].id)}
-            disabled={uploading}>
-            {uploading ?
-              <CircularProgress size={24} /> :
-              <Delete />
-            }
-          </Fab>
+          {!readOnly &&
+            <Box>
+              <Fab
+                color="primary"
+                aria-label={'edit'}
+                sx={{ position: 'absolute', bottom: 16, right: 84 }}
+                onClick={handleClick}
+                disabled={uploading}>
+                {uploading ?
+                  <CircularProgress size={24} /> :
+                  <Edit />
+                }
+              </Fab>
+              <Fab
+                color="primary"
+                aria-label={'delete'}
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                onClick={() => deleteImage(imgs[activeIndex].id)}
+                disabled={uploading}>
+                {uploading ?
+                  <CircularProgress size={24} /> :
+                  <Delete />
+                }
+              </Fab>
+            </Box>
+          }
+
         </Box> :
         <Box sx={{ height: '300px', backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
           <Fab color="primary" aria-label="add" disabled={uploading} onClick={handleClick}>
@@ -155,17 +160,19 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
               }}
             />
           ))}
-          <span
-            key={imgs.length}
-            style={{
-              height: '10px',
-              width: '10px',
-              margin: '0 5px',
-              backgroundColor: imgs.length === activeIndex ? 'black' : 'gray',
-              borderRadius: '50%',
-              display: 'inline-block'
-            }}
-          />
+          {!readOnly &&
+            <span
+              key={imgs.length}
+              style={{
+                height: '10px',
+                width: '10px',
+                margin: '0 5px',
+                backgroundColor: imgs.length === activeIndex ? 'black' : 'gray',
+                borderRadius: '50%',
+                display: 'inline-block'
+              }}
+            />
+          }
         </Box>
         <Button onClick={goRight}>
           Next

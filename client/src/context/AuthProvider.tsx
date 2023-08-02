@@ -16,7 +16,7 @@ interface AuthContextType {
   valideByMail: (mail: string, code: string) => Promise<void>,
   resetPasswordRequest: (email: string) => Promise<void>;
   resetPassword: (email: string, code: string, password: string) => Promise<void>;
-  getProfile: () => Promise<void>;
+  getProfile: (id: string) => Promise<void>;
   updateBio: (biography: string) => Promise<void>;
   updateInterests: (interests: string[]) => Promise<void>;
   updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
@@ -88,9 +88,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
 
-  const getProfile = async (): Promise<void> => {
+  const getProfile = async (id: string): Promise<void> => {
     try {
-      const res: AxiosResponse = await apiProvider.getProfile()
+      const res: AxiosResponse = await apiProvider.getProfile(id)
       setUser(res.data);
     } catch (error: any) {
       handleError(error, 'Error while fetching profile')

@@ -2,8 +2,8 @@ import { findTenUsersParams } from '../../../comon_src/type/utils.type'
 import axiosPrivate from './axiosPrivate'
 
 const apiProvider = {
-  getProfile() {
-    return axiosPrivate.get('/profile')
+  getProfile(id: string) {
+    return axiosPrivate.get('/profile/' + id)
   },
 
   getOptions() {
