@@ -18,6 +18,7 @@ const InitializeDb = {
         orientation TEXT,
         emailVerified INTEGER,
         accessCode TEXT,
+        resetPasswordCode TEXT,
 		    token TEXT, 
         latitude DECIMAL(9, 6),
         longitude DECIMAL(9, 6),

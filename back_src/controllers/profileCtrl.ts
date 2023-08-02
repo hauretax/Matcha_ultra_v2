@@ -23,8 +23,6 @@ import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
 
-const passwordResetKey = [];
-
 export async function createProfile(req: Request, res: Response) {
   if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
     res.status(400).json({ error: "Missing parameters" });
@@ -250,49 +248,53 @@ export async function deletePicture(req: Request, res: Response) {
 }
 
 export async function RequestpasswordReset(req: Request, res: Response) {
-  if (!req.body) {
-    res.status(400).json({ error: "need argument" });
-    return;
+  if (!validateBody(req, ['email'], ['string'])) {
+    res.status(400).json({ error: 'email is missing'})
   }
-  const email = req.body.email;
-  if (!email) {
-    res.status(400).json({ error: "need argument" });
-    return;
-  }
+
+  const { email } = req.body
+
   const user = await GetDb.userbyMail(email);
+  
   if (!user) {
-    res.status(200).json({ message: "ok" });
+    res.status(404).json({ error: "account not found" });
     return;
   }
+
   const code = generateRandomString(16);
-  passwordResetKey[email] = code;
-  sendEmail(email, "click on this link to create new password :http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "reset password");
-  res.status(200).json({ message: "ok" });
+  
+  await UpdateDb.update('users', ['resetPasswordCode'], [code], ['email'], [email])
+  
+  sendEmail(email, "Click on this link to create a new password: http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "[Matcha] Reset password");
+  
+  res.status(200).json({ message: "reset password link sent to your mailbox" });
 }
 
 export async function passwordReset(req: Request, res: Response) {
-  if (!req.body) {
-    res.status(400).json({ error: "need argument" });
+  if (!validateBody(req, ['email', 'code', 'newPassword'], ['string', 'string', 'string'])) {
+    res.status(400).json({ error: 'missing parameters' });
     return;
   }
-  const email = req.body.email;
-  const code = req.body.code;
-  const newPassword = req.body.newPassword;
 
-  if (!email || !code || !newPassword) {
-    res.status(400).json({ error: "need argument" });
-    return;
-  }
-  if (code !== passwordResetKey[email]) {
+  const {email, code, newPassword} = req.body
+
+  const user = await GetDb.userbyMail(email);
+
+  if (!user) {
     res.status(404).json({ message: "not found" });
     return;
   }
+
+  if (code !== user.resetPasswordCode) {
+    res.status(400).json({ message: "invalid link" });
+    return;
+  }
+
   const encryptedPassword = await bcrypt.hash(newPassword, 10);
 
-  await UpdateDb.update('users', ['password'], [encryptedPassword], ['email'], [email])
+  await UpdateDb.update('users', ['password', 'resetPasswordCode'], [encryptedPassword, null], ['email'], [email])
 
   res.status(200).json({ message: "password reset" });
-  return;
 }
 
 export async function insertPicture(req: Request, res: Response, next: NextFunction) {
