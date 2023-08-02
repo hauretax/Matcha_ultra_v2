@@ -1,9 +1,6 @@
 import { Avatar } from "@mui/material";
 import React from "react";
 
-
-
-//avatarが左にあるメッセージ（他人）
 export const MessageLeft = (props: any) => {
     const message = props.message ? props.message : "no message";
     const timestamp = props.timestamp ? props.timestamp : "";
@@ -29,7 +26,7 @@ export const MessageLeft = (props: any) => {
         </>
     );
 };
-//avatarが右にあるメッセージ（自分）
+
 export const MessageRight = (props: any) => {
     const message = props.message ? props.message : "no message";
     const timestamp = props.timestamp ? props.timestamp : "";

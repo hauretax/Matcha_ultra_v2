@@ -10,7 +10,7 @@ export const TextInput = () => {
             <form   noValidate autoComplete="off">
             <TextField
                 id="standard-text"
-                label="メッセージを入力"
+                label="un label"
                 //margin="normal"
             />
             <Button variant="contained" color="primary" >

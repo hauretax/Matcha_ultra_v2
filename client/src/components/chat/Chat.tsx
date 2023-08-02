@@ -51,32 +51,32 @@ export default function Chat() {
             <Paper>
                 <Paper id="style-1" >
                     <MessageLeft
-                        message="あめんぼあかいなあいうえお"
+                        message="sed leo. Nulla facilisi. Aliquam"
                         timestamp="MM/DD 00:00"
                         photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName=""
+                        displayName="Moi"
                         avatarDisp={true}
                     />
 
                     <MessageLeft
-                        message="xxxxxhttps://yahoo.co.jp xxxxxxxxxあめんぼあかいなあいうえおあいうえおかきくけこさぼあかいなあいうえおあいうえおかきくけこさぼあかいなあいうえおあいうえおかきくけこさいすせそ"
+                        message="s dignissim fermentum. Suspendisse luctus, tortor vel pharetra efficitur, nunc justo sollicitudin nisi, nec mollis orci nisl in enim. Pellentesque rutrum mollis auctor. Phasellus eget nulla vel leo condiment"
                         timestamp="MM/DD 00:00"
                         photoURL=""
-                        displayName="テスト"
+                        displayName="Louis"
                         avatarDisp={false}
                     />
                     <MessageRight
-                        message="messageRあめんぼあかいなあいうえおあめんぼあかいなあいうえおあめんぼあかいなあいうえお"
+                        message="psum, elementum feugiat vehicula vitae, sodales ac enim. Proin varius, sem in malesuada accumsan, tort"
                         timestamp="MM/DD 00:00"
                         photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName="まさりぶ"
+                        displayName="Vanille"
                         avatarDisp={true}
                     />
                     <MessageRight
-                        message="messageRあめんぼあかいなあいうえおあめんぼあかいなあいうえお"
+                        message="or. Phasellus eget nulla vel leo condimentum sollicitudin "
                         timestamp="MM/DD 00:00"
                         photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName="まさりぶ"
+                        displayName="Jean"
                         avatarDisp={false}
                     />
                 </Paper>
