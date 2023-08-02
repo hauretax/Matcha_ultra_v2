@@ -36,13 +36,10 @@ export default function handleSocket(socket, io) {
 		socket.emit("messageReceived", { message: "Votre message a été reçu avec succès." });
 		console.log(connectedUsers)
 		console.log(message, idTo, idFrom)
-		// io.to(getSocketID(idTo)).emit("newMessage", { message, senderId: idFrom });
 
-		// Filtrer les sockets qui correspondent à l'ID utilisateur donné
 		const userSockets = getSocketID(idTo);
 
 		console.log(userSockets)
-		// Envoyer le message à toutes les sockets correspondant à l'ID utilisateur
 		userSockets.forEach((socketId) => {
 			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
 		});
