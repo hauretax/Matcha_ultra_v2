@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { TextInput } from "./TextInput";
-import { MessageLeft, MessageRight } from "./Message";
-import { Paper } from "@mui/material";
+import { MessageLeft } from "./Message";
+import { Box, Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider"
 
@@ -150,6 +150,7 @@ export default function Chat() {
     const containerStyle = {
         display: 'flex',
         justifyContent: 'space-between',
+        height: '200px'
     };
     //reflexion sur la structure des profiles message
     //{ username: string, userId: number, lastMessage:string, MessageDate: Date ou string ?  }
@@ -157,6 +158,11 @@ export default function Chat() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [userIdOpenConv, changeActualConv] = useState(-1)
     const { message } = useContext(SocketContext);
+
+    const handleClickProfile = (userId: number) => {
+        console.log('set as :', userId)
+        changeActualConv(userId);
+    };
 
     //apelle au montage
     useEffect(() => {
@@ -168,19 +174,25 @@ export default function Chat() {
                 console.error('Erreur lors de la récupération des profils:', error);
             }
         }
-        //a mettre sur un useffect qui focus userIdOpenConv
+
+        fetchProfiles();
+       
+    }, []);
+
+    useEffect(() => {
         async function fetchMessage() {
             try {
                 const fetchedMessage = await getMessagesDiscussion();
                 setMessages(fetchedMessage);
+                console.log('chat change')
             } catch (error) {
                 console.error('Erreur lors de la récupération des messages:', error);
             }
         }
 
-        fetchProfiles();
         fetchMessage();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userIdOpenConv])
 
     //apelle quand message change
     useEffect(() => {
@@ -209,22 +221,24 @@ export default function Chat() {
                 <br />
                 <br />
                 <br />
-                <BrowsingChatProfiles profiles={profiles} />
+                <BrowsingChatProfiles profiles={profiles} handleClickProfile={handleClickProfile} />
             </Paper>
 
-            <Paper sx={{ width: '80%' }}>
-                <Paper id="style-1" >
-                    {
-                        messages.map((message) => {
-                            return <MessageLeft
-                                message= {message.message}
-                                timestamp={message.timestamp}
-                                photoURL={message.photoURL}
-                                displayName={message.displayName}
-                                avatarDisp={message.avatarDisp}
-                            />
-                        })
-                    }
+            <Paper sx={{ width: '80%', height: '200px' }}>
+                <Paper id="style-1" sx={{ height: '300px' }} >
+                    <Box sx={{ height: '300px', overflow: 'auto' }}>
+                        {
+                            messages.map((message) => {
+                                return <MessageLeft
+                                    message={message.message}
+                                    timestamp={message.timestamp}
+                                    photoURL={message.photoURL}
+                                    displayName={message.displayName}
+                                    avatarDisp={message.avatarDisp}
+                                />
+                            })
+                        }
+                    </Box>
                 </Paper>
                 <TextInput />
             </Paper>
