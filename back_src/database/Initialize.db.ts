@@ -27,6 +27,18 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
+	chatsTable() {
+		const sql = `
+        CREATE TABLE IF NOT EXISTS chats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userIdFrom INTEGER,
+            userIdTo INTEGER,
+            msg TEXT,
+            sendDate DATE,
+        )`;
+		return db.run(sql);
+	},
+
 	pictureTable() {
 		const sql = `
         CREATE TABLE IF NOT EXISTS pictures (

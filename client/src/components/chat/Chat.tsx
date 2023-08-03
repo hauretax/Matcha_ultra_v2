@@ -6,6 +6,146 @@ import { Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider"
 
+// les rendres accesible a tous
+interface Profile {
+    username: string;
+    userId: number;
+    lastMessage: string;
+    messageDate: Date;
+}
+interface Message {
+    message: string;
+    timestamp: string;
+    photoURL: string;
+    displayName: string;
+    avatarDisp: boolean;
+}
+
+async function getProfilesDiscussion(): Promise<Profile[]> {
+    const fakeDBRequest: Promise<Profile[]> = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([
+                {
+                    username: 'Alice',
+                    userId: 1,
+                    lastMessage: 'Hello there!',
+                    messageDate: new Date('2023-08-03T12:34:56') // Sample date and time
+                },
+                {
+                    username: 'Bob',
+                    userId: 2,
+                    lastMessage: 'Hey Alice, how are you?',
+                    messageDate: new Date('2023-08-02T15:23:45') // Sample date and time
+                },
+                {
+                    username: 'Charlie',
+                    userId: 3,
+                    lastMessage: 'Greetings!',
+                    messageDate: new Date('2023-08-01T09:12:34') // Sample date and time
+                },
+                {
+                    username: 'Eve',
+                    userId: 4,
+                    lastMessage: 'Hi everyone!',
+                    messageDate: new Date('2023-07-31T20:30:15') // Sample date and time
+                },
+                {
+                    username: 'Mallory',
+                    userId: 5,
+                    lastMessage: 'Goodbye!',
+                    messageDate: new Date('2023-07-30T18:45:10') // Sample date and time
+                },
+            ]);
+        }, 1000); // 1000 milliseconds = 1 second
+    });
+
+    const profiles = await fakeDBRequest;
+
+    return profiles;
+}
+
+async function getMessagesDiscussion(): Promise<Message[]> {
+    const fakeDBRequest: Promise<Message[]> = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([
+                {
+                    message: 'sed leo. Nulla facilisi. Aliquam',
+                    timestamp: '08/03 12:34',
+                    photoURL: 'https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c',
+                    displayName: 'Moi',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Lorem ipsum dolor sit amet',
+                    timestamp: '08/03 14:25',
+                    photoURL: 'https://example.com/avatar1.jpg',
+                    displayName: 'John',
+                    avatarDisp: false,
+                },
+                {
+                    message: 'consectetur adipiscing elit',
+                    timestamp: '08/03 15:10',
+                    photoURL: 'https://example.com/avatar2.jpg',
+                    displayName: 'Jane',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Ut id augue ut odio tincidunt pulvinar.',
+                    timestamp: '08/04 09:45',
+                    photoURL: 'https://example.com/avatar3.jpg',
+                    displayName: 'Jack',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Phasellus vel turpis vitae nunc elementum accumsan.',
+                    timestamp: '08/04 11:20',
+                    photoURL: 'https://example.com/avatar4.jpg',
+                    displayName: 'Alice',
+                    avatarDisp: false,
+                },
+                {
+                    message: 'Sed vitae erat nec elit venenatis bibendum.',
+                    timestamp: '08/04 13:15',
+                    photoURL: 'https://example.com/avatar5.jpg',
+                    displayName: 'Bob',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Donec et ipsum nec mauris mattis condimentum.',
+                    timestamp: '08/04 15:30',
+                    photoURL: 'https://example.com/avatar6.jpg',
+                    displayName: 'Eve',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Fusce rhoncus rhoncus nunc, eget pharetra magna viverra nec.',
+                    timestamp: '08/05 10:55',
+                    photoURL: 'https://example.com/avatar7.jpg',
+                    displayName: 'Michael',
+                    avatarDisp: false,
+                },
+                {
+                    message: 'Cras non est eu metus congue eleifend a vitae libero.',
+                    timestamp: '08/05 12:40',
+                    photoURL: 'https://example.com/avatar8.jpg',
+                    displayName: 'Sophia',
+                    avatarDisp: true,
+                },
+                {
+                    message: 'Curabitur volutpat facilisis enim in viverra.',
+                    timestamp: '08/05 14:20',
+                    photoURL: 'https://example.com/avatar9.jpg',
+                    displayName: 'Alex',
+                    avatarDisp: true,
+                },
+            ]);
+        }, 1000);
+    });
+    const messages = await fakeDBRequest;
+    return messages;
+}
+
+
 export default function Chat() {
     const containerStyle = {
         display: 'flex',
@@ -13,27 +153,53 @@ export default function Chat() {
     };
     //reflexion sur la structure des profiles message
     //{ username: string, userId: number, lastMessage:string, MessageDate: Date ou string ?  }
-    const [profiles, setProfiles] = useState([{ username: 'qsd', userId: 12 }, { username: 'qsqqqqqd', userId: 2 }]);
+    const [profiles, setProfiles] = useState<Profile[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [userIdOpenConv, changeActualConv] = useState(-1)
     const { message } = useContext(SocketContext);
 
+    //apelle au montage
+    useEffect(() => {
+        async function fetchProfiles() {
+            try {
+                const fetchedProfiles = await getProfilesDiscussion();
+                setProfiles(fetchedProfiles);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des profils:', error);
+            }
+        }
+        //a mettre sur un useffect qui focus userIdOpenConv
+        async function fetchMessage() {
+            try {
+                const fetchedMessage = await getMessagesDiscussion();
+                setMessages(fetchedMessage);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des messages:', error);
+            }
+        }
+
+        fetchProfiles();
+        fetchMessage();
+    }, []);
+
+    //apelle quand message change
     useEffect(() => {
         if (userIdOpenConv === message.userFrom) {
             console.log('new message')
         } else {
             console.log('profille')
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message])
-//charger les conversations active depuis la bdd
-//les poser dans BrowsingChatProfiles
+    //charger les conversations active depuis la bdd
+    //les poser dans BrowsingChatProfiles
 
 
-//changer de conv sur un click mettre le bonne id dans userIdOpenConv
-//charger le conv depuis chat avec un apelle en bdd
-//push le message dans la liste des messages de la conv si la conv actuelle est ouverte
-//sinons trouver l'utilisteur dans la liste des profiles 
-//mettre le message a 1 
+    //changer de conv sur un click mettre le bonne id dans userIdOpenConv
+    //charger le conv depuis chat avec un apelle en bdd
+    //push le message dans la liste des messages de la conv si la conv actuelle est ouverte
+    //sinons trouver l'utilisteur dans la liste des profiles 
+    //mettre le message a 1 
 
 
     return (
@@ -46,37 +212,19 @@ export default function Chat() {
                 <BrowsingChatProfiles profiles={profiles} />
             </Paper>
 
-            <Paper>
+            <Paper sx={{ width: '80%' }}>
                 <Paper id="style-1" >
-                    <MessageLeft
-                        message="sed leo. Nulla facilisi. Aliquam"
-                        timestamp="MM/DD 00:00"
-                        photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName="Moi"
-                        avatarDisp={true}
-                    />
-
-                    <MessageLeft
-                        message="s dignissim fermentum. Suspendisse luctus, tortor vel pharetra efficitur, nunc justo sollicitudin nisi, nec mollis orci nisl in enim. Pellentesque rutrum mollis auctor. Phasellus eget nulla vel leo condiment"
-                        timestamp="MM/DD 00:00"
-                        photoURL=""
-                        displayName="Louis"
-                        avatarDisp={false}
-                    />
-                    <MessageRight
-                        message="psum, elementum feugiat vehicula vitae, sodales ac enim. Proin varius, sem in malesuada accumsan, tort"
-                        timestamp="MM/DD 00:00"
-                        photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName="Vanille"
-                        avatarDisp={true}
-                    />
-                    <MessageRight
-                        message="or. Phasellus eget nulla vel leo condimentum sollicitudin "
-                        timestamp="MM/DD 00:00"
-                        photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        displayName="Jean"
-                        avatarDisp={false}
-                    />
+                    {
+                        messages.map((message) => {
+                            return <MessageLeft
+                                message= {message.message}
+                                timestamp={message.timestamp}
+                                photoURL={message.photoURL}
+                                displayName={message.displayName}
+                                avatarDisp={message.avatarDisp}
+                            />
+                        })
+                    }
                 </Paper>
                 <TextInput />
             </Paper>
