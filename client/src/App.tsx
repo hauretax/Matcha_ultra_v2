@@ -70,6 +70,7 @@ const socket = socketIOClient('http://localhost:8080');
 function testMessage() {
   socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 10003 })
 }
+
 function PublicPage() {
   return (<>
     <button onClick={testMessage}>helo</button>

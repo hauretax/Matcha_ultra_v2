@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { TextInput } from "./TextInput";
 import { MessageLeft } from "./Message";
@@ -158,10 +158,13 @@ export default function Chat() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [userIdOpenConv, changeActualConv] = useState(-1)
     const { message } = useContext(SocketContext);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+
+    const messageListRef = useRef<HTMLDivElement>(null);
 
     const handleClickProfile = (userId: number) => {
-        console.log('set as :', userId)
         changeActualConv(userId);
+        console.log(userId)
     };
 
     //apelle au montage
@@ -174,44 +177,61 @@ export default function Chat() {
                 console.error('Erreur lors de la récupération des profils:', error);
             }
         }
-
         fetchProfiles();
-       
+
+
+
     }, []);
 
+    // changement de conversation
     useEffect(() => {
         async function fetchMessage() {
             try {
                 const fetchedMessage = await getMessagesDiscussion();
                 setMessages(fetchedMessage);
-                console.log('chat change')
             } catch (error) {
                 console.error('Erreur lors de la récupération des messages:', error);
             }
         }
-
         fetchMessage();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userIdOpenConv])
 
-    //apelle quand message change
+    // un nouveaux message arrive
     useEffect(() => {
         if (userIdOpenConv === message.userFrom) {
+            setMessages([...messages, { message: message.message, avatarDisp: true, displayName: 'none', photoURL: 'http:nonon', timestamp: 'now' }])
             console.log('new message')
         } else {
             console.log('profille')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message])
+
+
+    useEffect(() => {
+        if (messageListRef.current && isScrolledToBottom) {
+            const messageList = messageListRef.current;
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messages])
+
     //charger les conversations active depuis la bdd
     //les poser dans BrowsingChatProfiles
 
-
-    //changer de conv sur un click mettre le bonne id dans userIdOpenConv
     //charger le conv depuis chat avec un apelle en bdd
     //push le message dans la liste des messages de la conv si la conv actuelle est ouverte
     //sinons trouver l'utilisteur dans la liste des profiles 
     //mettre le message a 1 
+
+    const checkIsScrolledToBottom = (event: any) => {
+        const div = event.target;
+        const { scrollTop, scrollHeight, clientHeight } = div;
+        const isBottom = scrollTop + clientHeight === scrollHeight;
+        setIsScrolledToBottom(isBottom);
+    };
 
 
     return (
@@ -226,7 +246,7 @@ export default function Chat() {
 
             <Paper sx={{ width: '80%', height: '200px' }}>
                 <Paper id="style-1" sx={{ height: '300px' }} >
-                    <Box sx={{ height: '300px', overflow: 'auto' }}>
+                    <Box onScroll={checkIsScrolledToBottom} ref={messageListRef} sx={{ height: '300px', overflow: 'auto' }}>
                         {
                             messages.map((message) => {
                                 return <MessageLeft
