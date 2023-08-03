@@ -185,6 +185,7 @@ export default function Chat() {
 
     // changement de conversation
     useEffect(() => {
+        setMessages([])
         async function fetchMessage() {
             try {
                 const fetchedMessage = await getMessagesDiscussion();
@@ -201,7 +202,6 @@ export default function Chat() {
     useEffect(() => {
         if (userIdOpenConv === message.userFrom) {
             setMessages([...messages, { message: message.message, avatarDisp: true, displayName: 'none', photoURL: 'http:nonon', timestamp: 'now' }])
-            console.log('new message')
         } else {
             console.log('profille')
         }
