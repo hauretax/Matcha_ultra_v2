@@ -27,6 +27,7 @@ function ProfilePage() {
       .catch((err: any) => {
         snackbar(buildErrorString(err, "Error while fetching interest list"), "error")
       })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.user])
 
   useEffect(() => {

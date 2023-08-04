@@ -232,12 +232,10 @@ export default function Chat() {
     }, [messages])
 
     //charger les conversations active depuis la bdd
-    //les poser dans BrowsingChatProfiles
 
-    //charger le conv depuis chat avec un apelle en bdd
-    //push le message dans la liste des messages de la conv si la conv actuelle est ouverte
-    //sinons trouver l'utilisteur dans la liste des profiles 
-    //mettre le message a 1 
+    //charger chat avec un apelle en bdd
+
+    //emvoyer les messages dans la bdd
 
     const checkIsScrolledToBottom = (event: any) => {
         const div = event.target;

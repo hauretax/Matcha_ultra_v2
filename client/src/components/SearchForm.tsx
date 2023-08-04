@@ -37,6 +37,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
       }
     }
     fetchOptions()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const setAgeRange = useCallback((ageRange: number[]) => {

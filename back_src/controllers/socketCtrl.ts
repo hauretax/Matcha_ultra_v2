@@ -16,15 +16,18 @@ function getSocketID(userId: number) {
 
 export default function handleSocket(socket, io) {
 	socket.on("authenticate", async ({ accessToken }) => {
+		
 		try {
 			const userId = validateJwt(accessToken);
 			if (!userId) {
 				throw new Error("Invalid token");
 			}
 			const user = await FindDb.userById(userId);
+		
 			if (!user) {
 				throw new Error("User not found");
 			}
+			
 			connectedUsers.set(socket.id, userId);
 			io.emit("connectedUsers", Array.from(connectedUsers.values()));
 		} catch (error) {
@@ -39,7 +42,6 @@ export default function handleSocket(socket, io) {
 
 		const userSockets = getSocketID(idTo);
 
-		console.log(userSockets);
 		userSockets.forEach((socketId) => {
 			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
 		});
