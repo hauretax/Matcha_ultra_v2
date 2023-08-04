@@ -68,7 +68,8 @@ function App() {
 const socket = socketIOClient('http://localhost:8080');
 
 function testMessage() {
-  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 10003 })
+  console.log('ete')
+  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 1 })
 }
 
 function PublicPage() {

@@ -40,6 +40,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
+     console.log('new message')
       setMessage({ userFrom: senderId, message })
     }
 

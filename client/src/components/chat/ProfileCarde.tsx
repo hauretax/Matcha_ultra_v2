@@ -12,6 +12,7 @@ const ProfileCard: React.FC<any> = ({ user }) => {
           <Typography gutterBottom variant="h5" component="div">
             {user.username}
           </Typography>
+          {user.haveUnseeMessage && <div>unsee message</div>}
         </CardContent>
       </Card>
     );

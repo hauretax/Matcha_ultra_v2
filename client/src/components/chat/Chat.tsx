@@ -12,6 +12,7 @@ interface Profile {
     userId: number;
     lastMessage: string;
     messageDate: Date;
+    haveUnseeMessage?: boolean;
 }
 interface Message {
     message: string;
@@ -186,6 +187,12 @@ export default function Chat() {
     // changement de conversation
     useEffect(() => {
         setMessages([])
+        const Change = profiles.map(profile =>{
+            if(profile.userId === userIdOpenConv)
+               return {...profile, haveUnseeMessage : false}
+            return profile;
+       });
+       setProfiles(Change)
         async function fetchMessage() {
             try {
                 const fetchedMessage = await getMessagesDiscussion();
@@ -203,8 +210,14 @@ export default function Chat() {
         if (userIdOpenConv === message.userFrom) {
             setMessages([...messages, { message: message.message, avatarDisp: true, displayName: 'none', photoURL: 'http:nonon', timestamp: 'now' }])
         } else {
-            console.log('profille')
+            const Change = profiles.map(profile =>{
+                 if(profile.userId === message.userFrom)
+                    return {...profile, haveUnseeMessage : true}
+                 return profile;
+            });
+            setProfiles(Change)
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message])
 
