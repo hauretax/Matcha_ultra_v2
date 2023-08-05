@@ -1,21 +1,28 @@
 import { Button, TextField } from '@mui/material';
-import React from 'react'
+import React, { useState } from 'react'
+import socketIOClient from 'socket.io-client';
 
+const socket = socketIOClient('http://localhost:8080');
 
+export const TextInput = (props: {userTo:number, userFrom:number}) => {
+    const [message, setMessage] = useState('')
 
+    function sendMessage(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.preventDefault();
+        console.log('ete')
+        socket.emit('sendMessage', { message: message, idFrom: props.userFrom, idTo: props.userTo })
+      }
 
-export const TextInput = () => {
     return (
         <>
-            <form   noValidate autoComplete="off">
             <TextField
                 id="standard-text"
                 label="un label"
-                //margin="normal"
+                value={message}
+                onChange={(event)=>setMessage(event.target.value)}
             />
-            <Button variant="contained" color="primary" >
+            <Button variant="contained" color="primary"  onClick={sendMessage}>
             </Button>
-            </form>
         </>
     )
 }

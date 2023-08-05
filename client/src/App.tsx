@@ -24,7 +24,7 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from './theme/classical'
 
 import { SocketProvider } from "./context/SocketProvider";
-import socketIOClient from 'socket.io-client';
+
 import  { ZoneProvider } from './context/zoneContext';
 
 
@@ -65,17 +65,10 @@ function App() {
   );
 }
 
-const socket = socketIOClient('http://localhost:8080');
-
-function testMessage() {
-  console.log('ete')
-  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 1 })
-}
 
 function PublicPage() {
   return (<>
-    <button onClick={testMessage}>helo</button>
-
+   
     <p>Public page</p></>
   )
 }
