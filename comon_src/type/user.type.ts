@@ -1,5 +1,3 @@
-import { Vector } from "./utils.type";
-
 export type UserProfile = {
   id: number;
   emailVerified: number;

@@ -11,23 +11,23 @@ const UpdateDb = {
 		return db.get(sql, [userFrom, userTo,note]); // get ?
 	},
 
-  update(table: string, columns: string[], values: any[], whereColumns: string[], whereValues: any[]) {
-    let sql = `UPDATE ${table} SET `;
-    for (let i = 0; i < columns.length; i++) {
-      sql += `${columns[i]} = ?`;
-      if (i < columns.length - 1) {
-        sql += ', ';
-      }
-    }
-    sql += ' WHERE ';
-    for (let i = 0; i < whereColumns.length; i++) {
-      sql += `${whereColumns[i]} = ?`;
-      if (i < whereColumns.length - 1) {
-        sql += ' AND ';
-      }
-    }
-    return db.run(sql, [...values, ...whereValues]);
-  }
+	update(table: string, columns: string[], values: any[], whereColumns: string[], whereValues: any[]) {
+		let sql = `UPDATE ${table} SET `;
+		for (let i = 0; i < columns.length; i++) {
+			sql += `${columns[i]} = ?`;
+			if (i < columns.length - 1) {
+				sql += ", ";
+			}
+		}
+		sql += " WHERE ";
+		for (let i = 0; i < whereColumns.length; i++) {
+			sql += `${whereColumns[i]} = ?`;
+			if (i < whereColumns.length - 1) {
+				sql += " AND ";
+			}
+		}
+		return db.run(sql, [...values, ...whereValues]);
+	}
 
 };
 

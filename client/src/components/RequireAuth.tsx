@@ -17,6 +17,7 @@ function RequireAuth() {
     if (auth.user?.customLocation === false) {
       fetchLocation((err: any) => snackbar(buildErrorString(err, "Position failed to update"), "error"));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   if (!auth.user) {

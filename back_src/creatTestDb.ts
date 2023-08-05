@@ -7,7 +7,7 @@ const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.39584
 const orientationTab = ["Heterosexual", "Bisexual", "Homosexual"];
 const genderTab = ["Male", "Female"];
 const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"];
-const randomPictureMale = ["profileMan1.webp", "profileMan2.jpg", "profileMan3.webp", "profileMan4.jpeg"]
+const randomPictureMale = ["profileMan1.webp", "profileMan2.jpg", "profileMan3.webp", "profileMan4.jpeg"];
 const randomPictureFemale = ["profileWoman1.webp", "profileWoman2.webp", "profileWoman3.jpeg"];
 
 /*
@@ -90,7 +90,7 @@ export default async function insertDataInDb() {
 			// Récupérer les éléments aléatoires du tableau
 			const Pictures: string[] = [];
 			for (let j = 0; j < randomCount; j++) {
-        const randomPicture = i % 2 === 0 ? randomPictureMale : randomPictureFemale;
+				const randomPicture = i % 2 === 0 ? randomPictureMale : randomPictureFemale;
 				const randomIndex = Math.floor(Math.random() * randomPicture.length);
 				Pictures.push(randomPicture[randomIndex]);
 			}

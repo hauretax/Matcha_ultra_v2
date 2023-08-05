@@ -7,7 +7,9 @@ import { validateBody, validateCoordinates } from "../utils/validateDataHelper";
 dotenv.config();
 
 export async function setUserPosition(req: Request, res: Response) {
-  if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
+
+	if (!validateBody(req, ["latitude", "longitude"], ["string", "string"])) {
+
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}

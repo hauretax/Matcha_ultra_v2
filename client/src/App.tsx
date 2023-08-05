@@ -17,6 +17,7 @@ import ProfilePage from './pages/ProfilePage'
 import ValideMailPage from "./pages/ValideMailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import BrowsePage from './pages/BrowsePage';
+import Chat from './components/chat/Chat';
 
 import RequireAuth from "./components/RequireAuth";
 
@@ -24,34 +25,40 @@ import themeOptions from './theme/classical'
 
 import { SocketProvider } from "./context/SocketProvider";
 import socketIOClient from 'socket.io-client';
+import  { ZoneProvider } from './context/zoneContext';
+
 
 const theme = createTheme(themeOptions)
 
 
 function App() {
 
+
   return (
     <SnackBarProvider>
       <AuthProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <SocketProvider>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<PublicPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/valide_mail" element={<ValideMailPage />} />
-                <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
-                <Route path="/reset_password" element={<ResetPasswordPage />} />
-                <Route path='/404' element={<div>404</div>} />
-                <Route element={<RequireAuth />} >
-                  <Route path='/home' element={<BrowsePage />} />
-                  <Route path='/profile' element={<ProfilePage />} />
+          <ZoneProvider >
+            <SocketProvider>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<PublicPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/valide_mail" element={<ValideMailPage />} />
+                  <Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
+                  <Route path="/reset_password" element={<ResetPasswordPage />} />
+                  <Route path='/404' element={<div>404</div>} />
+                  <Route element={<RequireAuth />} >
+                    <Route path='/home' element={<BrowsePage />} />
+                    <Route path='/profile' element={<ProfilePage />} />
+                    <Route path='/chat' element={<Chat />} />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
-          </SocketProvider>
+              </Routes>
+            </SocketProvider>
+          </ZoneProvider>
         </ThemeProvider>
       </AuthProvider >
     </SnackBarProvider >
@@ -61,7 +68,7 @@ function App() {
 const socket = socketIOClient('http://localhost:8080');
 
 function testMessage() {
-  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 501 })
+  socket.emit('sendMessage', { message: 'HELOOOOOOO', idFrom: 1, idTo: 10003 })
 }
 function PublicPage() {
   return (<>

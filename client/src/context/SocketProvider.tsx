@@ -1,17 +1,23 @@
-import React, { useEffect, useState, createContext, useContext } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import socketIOClient from 'socket.io-client';
 
 import { useAuth } from './AuthProvider';
 
 interface SocketContextType {
   connectedUsers: number[];
+  message: { userFrom: number, message: string };
 }
 
 const SocketContext = createContext<SocketContextType>(null!);
 
+export default SocketContext;
+
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [connectedUsers, setConnectedUsers] = useState<number[]>([]);
+  const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: 'default' })
   const auth = useAuth();
+  // to usr correct function on socket i need to give context 
+
 
   useEffect(() => {
     const socket = socketIOClient('http://localhost:8080');
@@ -33,8 +39,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       // Perform appropriate actions for unauthorized access
     };
 
-    const handleMessage = ({ message, senderId  }:{ message: string, senderId: number}) => {
-      alert(message + ' from ' + senderId)
+    const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
+      setMessage({ userFrom: senderId, message })
     }
 
     // Socket connection and authentication
@@ -62,13 +68,17 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
   }, [auth.user]);
 
-  const value = { connectedUsers };
-  console.log('tttt', value)
-  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+  const contextValue = {
+    connectedUsers,
+    message,
+  };
+
+
+  return <SocketContext.Provider value={contextValue}>{children}</SocketContext.Provider>;
 }
 
-function useSocket() {
-  return useContext(SocketContext);
-}
+// function useSocket() {                              
+//   return useContext(SocketContext);
+// }
 
-export default useSocket;
+// export default useSocket;
