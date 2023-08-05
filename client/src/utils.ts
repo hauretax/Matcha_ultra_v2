@@ -22,3 +22,22 @@ export const buildErrorString = (err: any, msg: string) => {
   }
   return msg;
 }
+
+export async function fetchLocation(printError: Function) {
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      try {
+        await apiProvider.updatePositionByLL(position.coords.latitude.toString(), position.coords.longitude.toString())
+      } catch (err) {
+        printError(err)
+      }
+    },
+    async (err) => {
+      try {
+        await apiProvider.updatePositionByIp()
+      } catch (err) {
+        printError(err)
+      }
+    }
+  )
+}

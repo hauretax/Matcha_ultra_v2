@@ -1,6 +1,6 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { buildErrorString, isProfileIncomplete } from "../utils";
+import { buildErrorString, fetchLocation, isProfileIncomplete } from "../utils";
 import { useSnackbar } from "../context/SnackBar";
 import { useEffect } from "react";
 import apiProvider from "../services/apiProvider";
@@ -13,27 +13,9 @@ function RequireAuth() {
 
   //INFO: since snackbar cannot be called outside of a component and since each api calls needs to be encapsulated, fetchLocation should not be in utils.ts but here ?
   useEffect(() => {
-    async function fetchLocation() {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            await apiProvider.updatePositionByLL(position.coords.latitude.toString(), position.coords.longitude.toString())
-          } catch (err) {
-            snackbar(buildErrorString(err, "Position failed to update"), "error")
-          }
-        },
-        async (err) => {
-          try {
-            await apiProvider.updatePositionByIp()
-          } catch (err) {
-            snackbar(buildErrorString(err, "Position failed to update"), "error")
-          }
-        }
-      )
-    }
 
     if (auth.user?.customLocation === false) {
-      fetchLocation();
+      fetchLocation((err: any) => snackbar(buildErrorString(err, "Position failed to update"), "error"));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
