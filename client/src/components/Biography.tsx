@@ -7,9 +7,8 @@ interface BiographyProps {
   biography: string;
 }
 
-//TODO: try to remove props.bio || ""
 const Biography: React.FC<BiographyProps> = (props) => {
-  const [biography, setBiography] = useState(props.biography || "");
+  const [biography, setBiography] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const auth = useAuth()
@@ -26,7 +25,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
   };
 
   useEffect(() => {
-    setBiography(props.biography || "");
+    setBiography(props.biography);
   }, [props]);
 
   return (

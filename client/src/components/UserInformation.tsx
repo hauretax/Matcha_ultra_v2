@@ -18,7 +18,6 @@ interface UserInformationProps {
   latitude: string;
 }
 
-//TODO: make one state variable
 const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState<string>('');
