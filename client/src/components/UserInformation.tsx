@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { Box, TextField, Typography, Paper, FormControl, InputLabel, Select, MenuItem, Grid, Switch, FormControlLabel, SelectChangeEvent } from '@mui/material';
+import { Box, Typography, Paper, Grid, Switch, FormControlLabel } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
 import EditableFields from './EditableFields';
 import MyTextField from './MyTextField';
 import MySelectField from './MySelectField';
 
-//TODO: make email and custom mandatory
 interface UserInformationProps {
   firstName: string;
   lastName: string;
   birthDate: string;
   gender: string;
   orientation: string;
-  email?: string;
-  customLocation?: boolean;
+  email: string;
+  customLocation: boolean;
   longitude: string;
   latitude: string;
 }
