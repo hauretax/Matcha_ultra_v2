@@ -8,12 +8,12 @@ import UserInformation from '../components/UserInformation'
 import { useLocation } from 'react-router-dom'
 import { useSnackbar } from '../context/SnackBar'
 import { useAuth } from '../context/AuthProvider'
-import { UserProfile } from '../../../comon_src/type/user.type'
+import { PersonalProfile } from '../../../comon_src/type/user.type'
 
 
 function ProfilePage() {
   const auth = useAuth()
-  const user: UserProfile = auth.user!
+  const user: PersonalProfile = auth.user!
   const location = useLocation()
   const snackbar = useSnackbar()
 

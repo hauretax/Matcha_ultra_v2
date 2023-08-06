@@ -1,7 +1,7 @@
 import React from "react";
 import { AxiosResponse } from "axios";
 
-import { UserProfile } from "../../../comon_src/type/user.type";
+import { PersonalProfile } from "../../../comon_src/type/user.type";
 
 import fakeAuthProvider from "../services/fakeAuthProvider";
 import authProvider from "../services/authProvider";
@@ -10,7 +10,7 @@ import { useSnackbar } from "./SnackBar";
 import apiProvider from "../services/apiProvider";
 
 interface AuthContextType {
-  user: UserProfile | null;
+  user: PersonalProfile | null;
   signin: (username: string, password: string) => Promise<void>;
   signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
   valideByMail: (mail: string, code: string) => Promise<void>,
@@ -29,7 +29,7 @@ interface AuthContextType {
 const AuthContext = React.createContext<AuthContextType>(null!);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<UserProfile | null>(null);
+  const [user, setUser] = React.useState<PersonalProfile | null>(null);
   const snackBar = useSnackbar();
 
   const handleError = (error: any, defaultMessage: string) => {
@@ -43,7 +43,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const signin = async (username: string, password: string): Promise<void> => {
     try {
       const res: AxiosResponse = await authProvider.signin(username, password);
-      const { jwt, profile }: { jwt: { refreshToken: string, accessToken: string }, profile: UserProfile } = res.data;
+      const { jwt, profile }: { jwt: { refreshToken: string, accessToken: string }, profile: PersonalProfile } = res.data;
       const { accessToken, refreshToken } = jwt
 
       // Store the JWT token in local storage
