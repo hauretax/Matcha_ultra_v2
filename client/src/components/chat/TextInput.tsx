@@ -9,7 +9,6 @@ export const TextInput = (props: {userTo:number, userFrom:number}) => {
 
     function sendMessage(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.preventDefault();
-        console.log('ete')
         socket.emit('sendMessage', { message: message, idFrom: props.userFrom, idTo: props.userTo })
       }
 

@@ -5,7 +5,7 @@ import { MessageLeft } from "./Message";
 import { Box, Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider"
-import {   useAuth } from "../../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 
 // les rendres accesible a tous
 interface Profile {
@@ -160,7 +160,7 @@ export default function Chat() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [userIdOpenConv, changeActualConv] = useState(-1)
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
-    
+
     const { message } = useContext(SocketContext);
     const { user } = useAuth();
     const messageListRef = useRef<HTMLDivElement>(null);
@@ -188,12 +188,12 @@ export default function Chat() {
     // changement de conversation
     useEffect(() => {
         setMessages([])
-        const Change = profiles.map(profile =>{
-            if(profile.userId === userIdOpenConv)
-               return {...profile, haveUnseeMessage : false}
+        const Change = profiles.map(profile => {
+            if (profile.userId === userIdOpenConv)
+                return { ...profile, haveUnseeMessage: false }
             return profile;
-       });
-       setProfiles(Change)
+        });
+        setProfiles(Change)
         async function fetchMessage() {
             try {
                 const fetchedMessage = await getMessagesDiscussion();
@@ -208,17 +208,21 @@ export default function Chat() {
 
     // un nouveaux message arrive
     useEffect(() => {
+        console.log(message, user?.id, user?.id, message.userFrom)
         if (userIdOpenConv === message.userFrom) {
             setMessages([...messages, { message: message.message, avatarDisp: true, displayName: 'none', photoURL: 'http:nonon', timestamp: 'now' }])
-        } 
+        }
+
         else if (user?.id === message.userFrom) {
+            console.log('test')
             setMessages([...messages, { message: message.message, avatarDisp: true, displayName: 'none', photoURL: 'http:nonon', timestamp: 'now' }])
         }
+
         else {
-            const Change = profiles.map(profile =>{
-                 if(profile.userId === message.userFrom)
-                    return {...profile, haveUnseeMessage : true}
-                 return profile;
+            const Change = profiles.map(profile => {
+                if (profile.userId === message.userFrom)
+                    return { ...profile, haveUnseeMessage: true }
+                return profile;
             });
             setProfiles(Change)
         }
@@ -260,9 +264,9 @@ export default function Chat() {
                 <Paper id="style-1" sx={{ height: '300px' }} >
                     <Box onScroll={checkIsScrolledToBottom} ref={messageListRef} sx={{ height: '300px', overflow: 'auto' }}>
                         {
-                            messages.map((message,key) => {
+                            messages.map((message, key) => {
                                 return <MessageLeft
-                                    key = {key}
+                                    key={key}
                                     message={message.message}
                                     timestamp={message.timestamp}
                                     photoURL={message.photoURL}
@@ -273,9 +277,9 @@ export default function Chat() {
                         }
                     </Box>
                 </Paper>
-                <TextInput userTo= {userIdOpenConv} userFrom= {user?.id || -1}/>
+                <TextInput userTo={userIdOpenConv} userFrom={user?.id || -1} />
             </Paper>
-            
+
         </div >
     );
 }

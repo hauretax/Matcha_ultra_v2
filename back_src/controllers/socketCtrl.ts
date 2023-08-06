@@ -36,13 +36,17 @@ export default function handleSocket(socket, io) {
 	});
 
 	socket.on("sendMessage", async ({ message, idTo, idFrom }) => {
-		socket.emit("messageReceived", { message: "Votre message a été reçu avec succès." });
 		console.log(connectedUsers);
 		console.log(message, idTo, idFrom);
 
-		const userSockets = getSocketID(idTo);
+		const userSocketsTo = getSocketID(idTo);
+		const userSocketsFrom = getSocketID(idFrom);
 
-		userSockets.forEach((socketId) => {
+		//on envois deux fois le meme event comme ca le front en as un de moins a ecouter et il geras lui meme pour savoir si il est from ou to
+		userSocketsTo.forEach((socketId) => {
+			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
+		});
+		userSocketsFrom.forEach((socketId) => {
 			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
 		});
 	});
