@@ -7,7 +7,6 @@ import { useSnackbar } from '../context/SnackBar';
 import apiProvider from '../services/apiProvider';
 
 interface InterestsProps {
-  readOnly: boolean;
   interests: string[];
 }
 
@@ -83,7 +82,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
             />
           ) : null}
         </Box>
-        {!props.readOnly && <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />}
+        <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
       </Paper>
     </Box>
   );

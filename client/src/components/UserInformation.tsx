@@ -6,8 +6,8 @@ import EditableFields from './EditableFields';
 import MyTextField from './MyTextField';
 import MySelectField from './MySelectField';
 
+//TODO: make email and custom mandatory
 interface UserInformationProps {
-  readOnly: boolean;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -19,6 +19,7 @@ interface UserInformationProps {
   latitude: string;
 }
 
+//TODO: make one state variable
 const UserInformation: React.FC<UserInformationProps> = (props) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState<string>('');
@@ -63,13 +64,11 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
       </Typography>
       <Paper elevation={5} sx={{ position: 'relative', minHeight: '250px', padding: '1rem' }}>
         <Grid container spacing={2}>
-          {!props.readOnly &&
-            <Grid item xs={12}>
-              <EditableFields isEditing={isEditing} value={email} label='Email' setState={setEmail}>
-                <MyTextField />
-              </EditableFields>
-            </Grid>
-          }
+          <Grid item xs={12}>
+            <EditableFields isEditing={isEditing} value={email} label='Email' setState={setEmail}>
+              <MyTextField />
+            </EditableFields>
+          </Grid>
           <Grid item xs={12} sm={4}>
             <EditableFields isEditing={isEditing} value={firstName} label='Firstname' setState={setFirstName} >
               <MyTextField />
@@ -95,7 +94,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               <MySelectField />
             </EditableFields>
           </Grid>
-          {!props.readOnly && <Grid item xs={12}>
+          <Grid item xs={12}>
             <FormControlLabel
               control={<Switch
                 checked={customLocation}
@@ -104,9 +103,9 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               />}
               label="Custom Location"
             />
-          </Grid>}
+          </Grid>
           {/* if customLocation is set to true, display input fields for longitude and latitude */}
-          {(customLocation || props.readOnly) &&
+          {customLocation &&
             <>
               <Grid item xs={12} sm={6}>
                 <EditableFields isEditing={isEditing} value={latitude} label='Latitude' setState={setLatitude} >
@@ -120,7 +119,7 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
               </Grid>
             </>
           }
-          {!props.readOnly && <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />}
+          <EditButton isEditing={isEditing} onClick={() => isEditing ? handleSave() : handleEdit()} isUploading={isUploading} />
         </Grid>
       </Paper>
     </Box>
