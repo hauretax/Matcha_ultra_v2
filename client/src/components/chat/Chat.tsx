@@ -6,22 +6,9 @@ import { Box, Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider"
 import { useAuth } from "../../context/AuthProvider";
+import { Message, Profile } from "../../../../comon_src/type/utils.type";
 
 // les rendres accesible a tous
-interface Profile {
-    username: string;
-    userId: number;
-    lastMessage: string;
-    messageDate: Date;
-    haveUnseeMessage?: boolean;
-}
-interface Message {
-    message: string;
-    timestamp: string;
-    photoURL: string;
-    displayName: string;
-    avatarDisp: boolean;
-}
 
 async function getProfilesDiscussion(): Promise<Profile[]> {
     const fakeDBRequest: Promise<Profile[]> = new Promise((resolve) => {
