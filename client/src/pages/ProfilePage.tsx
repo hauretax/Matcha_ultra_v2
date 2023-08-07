@@ -1,49 +1,69 @@
 import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import Profile from '../components/Profile'
+import { useParams } from 'react-router-dom'
+import apiProvider from '../services/apiProvider'
+import { buildErrorString } from '../utils'
+import { useSnackbar } from '../context/SnackBar'
 
 const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<any>({
     id: 0,
-    username: 'leadupont',
-    lastName: 'Dupont',
-    firstName: 'Léa',
-    biography: 'Je suis une catin et j\'en suis fier ! Que ça ne vous déplaise, plan sérieux s\'abstenir !',
-    gender: 'Female',
+    username: '',
+    lastName: '',
+    firstName: '',
+    biography: '',
+    gender: '',
     birthDate: '',
-    orientation: 'Heterosexual',
-    pictures: [{id: 1, src: '1690965605454.png'}, {id: 1, src: '1691332595896.png'}],
-    interests: ['netflix', 'escalade'],
+    orientation: '',
+    pictures: [],
+    interests: [],
     latitude: '',
     longitude: '',
-    distance: 16,
-    age: 29,
+    distance: 0,
+    age: 0,
     connected: false,
-    lastTime: '16 min ago',
-    linkStatus: 'likes you',
-    fameRating: 7.65,
+    lastTime: '',
+    linkStatus: '',
+    fameRating: 0,
     liked: false,
     blocked: false,
     reported: false,
   })
+  const { id } = useParams<{ id: string }>()
+  const snackbar = useSnackbar()
 
-  const like = () => {
-    setProfile({...profile, liked: !profile.liked})
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await apiProvider.getProfile(id!)
+        setProfile(res.data)
+      } catch (err) {
+        snackbar(buildErrorString(err, 'Failed to fetch profile'), 'error')
+      }
+    }
+
+    fetchProfile()
+  }, [id, snackbar])
+
+
+    const like = () => {
+      setProfile({ ...profile, liked: !profile.liked })
+    }
+
+    const block = () => {
+      setProfile({ ...profile, blocked: !profile.blocked })
+    }
+
+    const report = () => {
+      setProfile({ ...profile, reported: !profile.reported })
+    }
+
+    return (
+      <Box>
+        <Profile {...profile} like={like} block={block} report={report} />
+      </Box>
+    )
   }
-
-  const block = () => {
-    setProfile({...profile, blocked: !profile.blocked})
-  }
-
-  const report = () => {
-    setProfile({...profile, reported: !profile.reported})
-  }
-
-  return (
-    <Box>
-      <Profile {...profile} like={like} block={block} report={report} />
-    </Box>
-  )
-}
 
 export default ProfilePage
