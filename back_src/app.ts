@@ -36,7 +36,7 @@ class App {
 	}
 	private configureSocket(): void {
 		this.io.on("connection", (socket) => {
-			handleSocket(socket, this.io)
+			handleSocket(socket, this.io);
 			
 		});
 	}
