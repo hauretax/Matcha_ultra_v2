@@ -34,7 +34,7 @@ export type UserReqRegister = {
   password: string;
 }
 
-export type FullUser = UserProfile & {
+export type FullUser = PersonalProfile & {
   password: string;
   accessCode: string;
   id: number;
