@@ -72,7 +72,6 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-
       {activeIndex < imgs.length ?
         <Box sx={{ position: 'relative' }}>
           <Box
@@ -88,28 +87,30 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
             src={prefixBackendUrl(imgs[activeIndex].src)}
             alt={'Issue while fetching picture'}
           />
-          <Fab
-            color="primary"
-            aria-label={'edit'}
-            sx={{ position: 'absolute', bottom: 16, right: 84 }}
-            onClick={handleClick}
-            disabled={uploading}>
-            {uploading ?
-              <CircularProgress size={24} /> :
-              <Edit />
-            }
-          </Fab>
-          <Fab
-            color="primary"
-            aria-label={'delete'}
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            onClick={() => deleteImage(imgs[activeIndex].id)}
-            disabled={uploading}>
-            {uploading ?
-              <CircularProgress size={24} /> :
-              <Delete />
-            }
-          </Fab>
+          <Box>
+            <Fab
+              color="primary"
+              aria-label={'edit'}
+              sx={{ position: 'absolute', bottom: 16, right: 84 }}
+              onClick={handleClick}
+              disabled={uploading}>
+              {uploading ?
+                <CircularProgress size={24} /> :
+                <Edit />
+              }
+            </Fab>
+            <Fab
+              color="primary"
+              aria-label={'delete'}
+              sx={{ position: 'absolute', bottom: 16, right: 16 }}
+              onClick={() => deleteImage(imgs[activeIndex].id)}
+              disabled={uploading}>
+              {uploading ?
+                <CircularProgress size={24} /> :
+                <Delete />
+              }
+            </Fab>
+          </Box>
         </Box> :
         <Box sx={{ height: '300px', backgroundColor: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
           <Fab color="primary" aria-label="add" disabled={uploading} onClick={handleClick}>
@@ -132,7 +133,7 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
         onChange={handleFileInput}
         accept="image/*"
       />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'white' }}>
         <Button onClick={goLeft}>
           {theme.direction === 'rtl' ? (
             <KeyboardArrowRight />

@@ -17,7 +17,9 @@ const profile = {
   interests: ['sport', 'philosophy', 'dev', 'techno', 'board games'],
   biography: 'What\'s amazing about life is that you are ALL IN. Whether you want it or not. It WILL kill you at the end. So why not live the most amazing life you can ?',
   pictures: [{id: 1, src: process.env.PUBLIC_URL + '/images/profilePicture.png'}],
-  customLocation: false
+  customLocation: false,
+  latitude: '0',
+  longitude: '0'
 }
 
 const fakeAuthProvider = {

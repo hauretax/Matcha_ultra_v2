@@ -156,7 +156,7 @@ export default function InputFindUser(props: any) {
                     labelPlacement="top"
                 />
             </FormGroup>
-            <Interests setOptions={setinterestWanted} interests={interestWanted} options={options} updateDb={false} />
+            {/* <Interests setOptions={setinterestWanted} interests={interestWanted} options={options} updateDb={false} /> */}
             {/*TODO #7 */ }
             <Button onClick={() => { searchUsers(true); setOrderBy("distance") }} variant="contained">distance</Button>
             <Button onClick={() => { searchUsers(true); setOrderBy("age") }} variant="contained">age</Button>

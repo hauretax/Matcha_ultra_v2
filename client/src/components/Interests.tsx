@@ -2,31 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Paper, Chip, Autocomplete } from '@mui/material';
 import { useAuth } from '../context/AuthProvider';
 import EditButton from './EditButton';
+import { buildErrorString } from '../utils';
+import { useSnackbar } from '../context/SnackBar';
+import apiProvider from '../services/apiProvider';
 
 interface InterestsProps {
   interests: string[];
-  options: string[];
-  updateDb:boolean;
-  setOptions?: Function;
 }
 
 const Interests: React.FC<InterestsProps> = (props) => {
   const [interests, setInterests] = useState<string[]>(props.interests);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [options, setOptions] = useState<string[]>([]);
+  const snackbar = useSnackbar()
   const auth = useAuth()
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const res = await apiProvider.getOptions()
+        setOptions(res.data)
+      } catch (err: any) {
+        snackbar(buildErrorString(err, 'Failed to fetch options'), 'error')
+      }
+    }
+    fetchOptions()
+  }, [])
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
-    if (props.setOptions) {
-      props.setOptions(interests)
-    }
     setIsUploading(true);
-    if(props.updateDb)
-      await auth.updateInterests(interests)
+    await auth.updateInterests(interests)
     setIsEditing(false);
     setIsUploading(false);
   };
@@ -64,7 +74,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
           {isEditing ? (
             <Autocomplete
               freeSolo
-              options={props.options}
+              options={options}
               onChange={handleAddition}
               renderInput={(params) => (
                 <TextField {...params} variant='standard' placeholder="Add Interest" size="small" sx={{ minWidth: '150px' }} />

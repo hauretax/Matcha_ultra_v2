@@ -25,8 +25,8 @@ import themeOptions from './theme/classical'
 
 import { SocketProvider } from "./context/SocketProvider";
 import socketIOClient from 'socket.io-client';
+import PersonalProfilePage from './pages/PersonalProfilePage';
 import  { ZoneProvider } from './context/zoneContext';
-
 
 const theme = createTheme(themeOptions)
 
@@ -52,7 +52,8 @@ function App() {
                   <Route path='/404' element={<div>404</div>} />
                   <Route element={<RequireAuth />} >
                     <Route path='/home' element={<BrowsePage />} />
-                    <Route path='/profile' element={<ProfilePage />} />
+                    <Route path='/profile' element={<PersonalProfilePage />} />
+                    <Route path='/profile/:id' element={<ProfilePage />} />
                     <Route path='/chat' element={<Chat />} />
                   </Route>
                 </Route>

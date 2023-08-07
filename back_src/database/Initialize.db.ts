@@ -2,8 +2,9 @@ import db from "./db";
 
 const InitializeDb = {
 
-	userTable() {
-		const sql = `
+  //TODO: remove age and compute it from birthdate
+  userTable() {
+    const sql = `
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -18,6 +19,7 @@ const InitializeDb = {
         orientation TEXT,
         emailVerified INTEGER,
         accessCode TEXT,
+        resetPasswordCode TEXT,
 		    token TEXT, 
         latitude DECIMAL(9, 6),
         longitude DECIMAL(9, 6),

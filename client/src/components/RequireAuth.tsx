@@ -13,7 +13,6 @@ function RequireAuth() {
 
   //INFO: since snackbar cannot be called outside of a component and since each api calls needs to be encapsulated, fetchLocation should not be in utils.ts but here ?
   useEffect(() => {
-
     if (auth.user?.customLocation === false) {
       fetchLocation((err: any) => snackbar(buildErrorString(err, "Position failed to update"), "error"));
     }

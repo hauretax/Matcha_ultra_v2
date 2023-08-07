@@ -3,6 +3,7 @@ import { Button, Card, CardActions, CardContent, CardMedia, Typography, Box } fr
 import { LocationOn } from '@mui/icons-material';
 import UserInterestsList from "./UserInterestList";
 import { prefixBackendUrl } from "../utils";
+import { useNavigate } from "react-router-dom";
 
 interface UserCardProps {
   user: any;
@@ -10,7 +11,13 @@ interface UserCardProps {
 
 //TODO: improve image fitting proportion
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
+  const navigate = useNavigate()
   user.liked = false;
+
+  const navToProfile = () => {
+    navigate(`/profile/${user.userId}`)
+  }
+
   return (
     <Card>
       <CardMedia
@@ -29,7 +36,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         <UserInterestsList interests={user.interests} />
       </CardContent>
       <CardActions>
-        <Button size="small">View Profile</Button>
+        <Button onClick={navToProfile} size="small">View Profile</Button>
         <Button size="small">{user.liked ? "Dislike" : "Like"}</Button>
       </CardActions>
     </Card>

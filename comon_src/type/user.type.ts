@@ -1,7 +1,5 @@
-export type UserProfile = {
+export interface BaseProfile {
   id: number;
-  emailVerified: number;
-  email: string;
   username: string;
   lastName: string;
   firstName: string;
@@ -11,11 +9,19 @@ export type UserProfile = {
   orientation: string;
   pictures: { id: number; src: string }[];
   interests: string[];
-  distance?: number;
-  age?: number;
+  latitude: string;
+  longitude: string;
+}
+
+export interface PersonalProfile extends BaseProfile {
+  emailVerified: number;
+  email: string;
   customLocation: boolean;
-  latitude?: string;
-  longitude?: string;
+}
+
+export interface UserProfile extends BaseProfile {
+  distance: number;
+  age: number;
 }
 /**
  * 
@@ -28,7 +34,7 @@ export type UserReqRegister = {
   password: string;
 }
 
-export type FullUser = UserProfile & {
+export type FullUser = PersonalProfile & {
   password: string;
   accessCode: string;
   id: number;
@@ -44,14 +50,14 @@ export type UserPayload = {
     refreshToken: string,
     accessToken: string
   };
-  profile: UserProfile;
+  profile: PersonalProfile;
 }
 
 export type userInDb = UserProfile & {
   image_srcs: string;
   interests: string;
-  gender:Gender;
-  user_note:number;
+  gender: Gender;
+  user_note: number;
 }
 
 type Gender = "Female" | "Male" | "Other";
@@ -65,6 +71,6 @@ export type UserPublic = {
   pictures: string[];
   interests: string[];
   distance: number;
-  note:number;
-  userId?:number;
+  note: number;
+  userId?: number;
 }
