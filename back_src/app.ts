@@ -88,13 +88,13 @@ const initFunctions = [
 ];
 
 
-// import insertDataInDb from "./creatTestDb";
+import insertDataInDb from "./creatTestDb";
 
 Promise.all(initFunctions.map(initFunc => initFunc()))
 	.then(() => {
 		app.start(Bport);
 		// generate user for test
-		// insertDataInDb();
+		insertDataInDb();
 	})
 	.catch(err => {
 		console.error("An error occurred while initializing the tables:", err);

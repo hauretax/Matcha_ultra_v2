@@ -1,6 +1,7 @@
 
 import GetDb from "./database/Get.db";
 import db from "./database/db";
+import bcrypt from "bcrypt";
 // Plage de latitudes et de longitudes
 const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960767524 };
 const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.395843454044868 };
@@ -46,10 +47,84 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
+	const password = "test@test.com1";
+	const encryptedPassword = await bcrypt.hash(password, 10);
+
+	const test1 = `
+	INSERT OR IGNORE INTO users (
+		email,
+		username,
+		firstName,
+		gender,
+		orientation,
+		birthDate,
+		age,
+		latitude,
+		longitude,
+		emailVerified,
+		biography,
+		password
+
+	)
+	VALUES ("test@test.com", 
+	"test@test.com", "oui", "Male", "Heterosexual", "1999-12-12","23"
+	, "48.259207", "3.174191", "1", "1",?);
+	`;
+	const test2 = `
+	INSERT OR IGNORE INTO users (
+		email,
+		username,
+		firstName,
+		gender,
+		orientation,
+		birthDate,
+		age,
+		latitude,
+		longitude,
+		emailVerified,
+		biography,
+		password
+	)
+	VALUES ("test@test2.com", "test", "oui", "Female", "Heterosexual", "1999-12-12","23"
+	, "48.259207", "3.174191", "1", "1",?)
+	`;
+
+	const link1=`
+	INSERT OR IGNORE  INTO user_notes (
+		from_id,
+		to_id,
+		note
+	)
+	VALUES ("1","2","5")
+	`;
+
+	const link2=`
+	INSERT OR IGNORE  INTO user_notes (
+		from_id,
+		to_id,
+		note
+	)
+	VALUES ("2","1","5")
+	`;
+
+
+	await db.run(test1, [encryptedPassword]);
+	await db.run(test2, [encryptedPassword]);
+	await db.run(link1);
+	await db.run(link2);
+	await db.run(`
+	INSERT OR IGNORE INTO  user_interests (user_id, interest_id)
+	VALUES ("1","1")
+	`);
+	await db.run(`
+	INSERT OR IGNORE INTO pictures (user_id, src)
+	VALUES ("1", "profileMan2.jpg")
+	 `);
+
 	for (let i = 1; i < 500; i++) {
 
 		const sql = `
-        INSERT INTO users (
+        INSERT OR IGNORE INTO users (
 			email,
         	username,
 			firstName,
