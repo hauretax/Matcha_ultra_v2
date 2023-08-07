@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UserProfile } from "../../comon_src/type/user.type";
+import { PersonalProfile, UserProfile } from "../../comon_src/type/user.type";
 
 export async function isPictureOwner(req: Request, res: Response, next: NextFunction) {
   const user: UserProfile = res.locals.fulluser; // from validsecurRequest
@@ -18,7 +18,7 @@ export async function isPictureOwner(req: Request, res: Response, next: NextFunc
 }
 
 export async function isProfileCompleted(req: Request, res: Response, next: NextFunction) {
-  const user: UserProfile = res.locals.fulluser; // from validsecurRequest
+  const user: PersonalProfile = res.locals.fulluser; // from validsecurRequest
 
   if (!user.emailVerified) {
     res.status(422).json({ error: "unverified email" });
@@ -32,7 +32,7 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
   next();
 }
 
-const isProfileInfoMissing = (user: UserProfile) => {
+const isProfileInfoMissing = (user: PersonalProfile) => {
   return (
     !user.gender ||
     !user.orientation ||
