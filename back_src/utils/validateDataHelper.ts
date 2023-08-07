@@ -32,15 +32,15 @@ export function validateMail(mail: string): boolean {
 }
 
 export function validateCoordinates(latitude: string, longitude: string): boolean {
-  const latitudeFloat = parseFloat(latitude);
-  const longitudeFloat = parseFloat(longitude);
+	const latitudeFloat = parseFloat(latitude);
+	const longitudeFloat = parseFloat(longitude);
 
-  if (Number.isNaN(latitudeFloat) || Number.isNaN(longitudeFloat))
-    return false;
-  if (latitudeFloat < -90 || latitudeFloat > 90)
-    return false;
-  if (longitudeFloat < -180 || longitudeFloat > 180)
-    return false;
+	if (Number.isNaN(latitudeFloat) || Number.isNaN(longitudeFloat))
+		return false;
+	if (latitudeFloat < -90 || latitudeFloat > 90)
+		return false;
+	if (longitudeFloat < -180 || longitudeFloat > 180)
+		return false;
 
-  return true;
+	return true;
 }

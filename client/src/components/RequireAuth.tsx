@@ -1,6 +1,6 @@
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { buildErrorString, isProfileIncomplete } from "../utils";
+import { buildErrorString, fetchLocation, isProfileIncomplete } from "../utils";
 import { useSnackbar } from "../context/SnackBar";
 import { useEffect } from "react";
 import apiProvider from "../services/apiProvider";
@@ -36,8 +36,9 @@ function RequireAuth() {
     }
 
     if (auth.user?.customLocation === false) {
-      fetchLocation();
+      fetchLocation((err: any) => snackbar(buildErrorString(err, "Position failed to update"), "error"));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   if (!auth.user) {

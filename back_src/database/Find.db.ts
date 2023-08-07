@@ -24,7 +24,7 @@ const FindDb = {
 	async user(username: string): Promise<FullUser | null> {
 		const sql = "SELECT * FROM users WHERE username = ?";
 		const user = await db.get(sql, [username]);
-    user.customLocation = Boolean(user.customLocation)
+		user.customLocation = Boolean(user.customLocation);
 		if (user) {
 			return Promise.all([
 				this.picturesByUserId(user.id),
@@ -106,7 +106,7 @@ const FindDb = {
 		default:
 			throw new Error("Invalid order by");
 		}
-    //TODO: prevent homosexual men to be queried by heterosexual women
+		//TODO: prevent homosexual men to be queried by heterosexual women
 		const sql = `
 		SELECT
 			u.id,
