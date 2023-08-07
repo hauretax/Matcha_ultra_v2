@@ -116,7 +116,7 @@ function RegisterPage() {
       'username': "tonio",
       'firstName': "Antoine",
       'lastName': "Labalette",
-      'email': "labalette@gmail.com",
+      'email': "antoine.auth@gmail.com",
       'password': "@Antoine1",
       'confirmPassword': "@Antoine1",
     };
