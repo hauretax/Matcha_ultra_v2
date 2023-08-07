@@ -20,51 +20,56 @@ const DisplayCaroussel: React.FC<Props> = ({ imgs }) => {
 
   return (
     <Box sx={{ position: 'relative' }}>
-      <Box
-        component="img"
-        sx={{
-          height: '300px',
-          width: '100%',
-          display: 'block',
-          overflow: 'hidden',
-          objectFit: 'contain',
-          backgroundColor: 'white'
-        }}
-        src={prefixBackendUrl(imgs[activeIndex].src)}
-        alt={'Issue while fetching picture'}
-      />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Fab
-          color="primary"
-          onClick={handleLeft}
-          sx={{ position: 'absolute', left: 10, top: 122 }}
-        >
-          <ArrowLeft />
-        </Fab>
-        <Fab
-          color="primary"
-          onClick={handleRight}
-          sx={{ position: 'absolute', right: 10, top: 122 }}
-        >
-          <ArrowRight />
-        </Fab>
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', bottom: '5px' }}>
-        {imgs.map((_img, index) => (
-          <span
-            key={index}
-            style={{
-              height: index === activeIndex ? '15px' : '10px',
-              width: index === activeIndex ? '15px' : '10px',
-              margin: '0 5px',
-              backgroundColor: index === activeIndex ? 'white' : 'gray',
-              borderRadius: '50%',
-              display: 'inline-block',
-              border: index === activeIndex ? '1px solid black' : '0'
+      {imgs.length ?
+        <>
+          <Box
+            component="img"
+            sx={{
+              height: '300px',
+              width: '100%',
+              display: 'block',
+              overflow: 'hidden',
+              objectFit: 'contain',
+              backgroundColor: 'white'
             }}
+            src={prefixBackendUrl(imgs[activeIndex].src)}
+            alt={'Issue while fetching picture'}
           />
-        ))}
-      </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Fab
+              color="primary"
+              onClick={handleLeft}
+              sx={{ position: 'absolute', left: 10, top: 122 }}
+            >
+              <ArrowLeft />
+            </Fab>
+            <Fab
+              color="primary"
+              onClick={handleRight}
+              sx={{ position: 'absolute', right: 10, top: 122 }}
+            >
+              <ArrowRight />
+            </Fab>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', width: '100%', bottom: '5px' }}>
+            {imgs.map((_img, index) => (
+              <span
+                key={index}
+                style={{
+                  height: index === activeIndex ? '15px' : '10px',
+                  width: index === activeIndex ? '15px' : '10px',
+                  margin: '0 5px',
+                  backgroundColor: index === activeIndex ? 'white' : 'gray',
+                  borderRadius: '50%',
+                  display: 'inline-block',
+                  border: index === activeIndex ? '1px solid black' : '0'
+                }}
+              />
+            ))}
+          </Box>
+        </> :
+        <Box sx={{ height: '300px', width: '100%', backgroundColor: 'white' }} />
+      }
     </Box>
   )
 }
