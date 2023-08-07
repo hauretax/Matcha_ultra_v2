@@ -60,7 +60,7 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
-	const password = "test@test.com1";
+	const password = "test@test.com1A";
 	const encryptedPassword = await bcrypt.hash(password, 10);
 
 	const test1 = `
@@ -80,7 +80,7 @@ export default async function insertDataInDb() {
 
 	)
 	VALUES ("test@test.com", 
-	"test@test.com", "oui", "Male", "Heterosexual", "1999-12-12","23"
+	"test1", "oui", "Male", "Heterosexual", "1999-12-12","23"
 	, "48.259207", "3.174191", "1", "1",?);
 	`;
 	const test2 = `
@@ -98,7 +98,7 @@ export default async function insertDataInDb() {
 		biography,
 		password
 	)
-	VALUES ("test@test2.com", "test", "oui", "Female", "Heterosexual", "1999-12-12","23"
+	VALUES ("test@test2.com", "test2", "oui", "Female", "Heterosexual", "1999-12-12","23"
 	, "48.259207", "3.174191", "1", "1",?)
 	`;
 
