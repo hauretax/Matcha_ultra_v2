@@ -15,6 +15,7 @@ export default SocketContext;
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [connectedUsers, setConnectedUsers] = useState<number[]>([]);
   const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: 'default' })
+
   const auth = useAuth();
   // to usr correct function on socket i need to give context 
 
@@ -40,6 +41,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
+     console.log('new message')
       setMessage({ userFrom: senderId, message })
     }
 
@@ -70,7 +72,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
   const contextValue = {
     connectedUsers,
-    message,
+    message
   };
 
 

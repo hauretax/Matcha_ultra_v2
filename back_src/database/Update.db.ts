@@ -11,6 +11,7 @@ const UpdateDb = {
 		return db.get(sql, [userFrom, userTo,note]); // get ?
 	},
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	update(table: string, columns: string[], values: any[], whereColumns: string[], whereValues: any[]) {
 		let sql = `UPDATE ${table} SET `;
 		for (let i = 0; i < columns.length; i++) {
