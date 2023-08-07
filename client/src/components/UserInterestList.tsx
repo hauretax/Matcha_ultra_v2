@@ -7,7 +7,7 @@ interface UserInterestsListProps {
 
 const UserInterestsList: React.FC<UserInterestsListProps> = ({ interests }) => {
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: 1, overflow: "hidden",  height: "32px" }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mb: 2, overflow: "hidden",  height: "32px" }}>
       {
         interests.map((interest, index) => (
           <Chip

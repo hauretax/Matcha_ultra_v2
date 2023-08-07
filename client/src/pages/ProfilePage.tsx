@@ -1,51 +1,69 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
-
+import Profile from '../components/Profile'
+import { useParams } from 'react-router-dom'
 import apiProvider from '../services/apiProvider'
-
-import Caroussel from '../components/Caroussel'
-import Biography from '../components/Biography'
-import Interests from '../components/Interests'
-import UserInformation from '../components/UserInformation'
-import { useLocation } from 'react-router-dom'
-import { useSnackbar } from '../context/SnackBar'
-import { useAuth } from '../context/AuthProvider'
 import { buildErrorString } from '../utils'
+import { useSnackbar } from '../context/SnackBar'
 
-
-function ProfilePage() {
-  const auth = useAuth()
-  const [options, setOptions] = useState<string[]>([])
-  const location = useLocation();
-  let snackbar = useSnackbar()
+const ProfilePage: React.FC = () => {
+  const [profile, setProfile] = useState<any>({
+    id: 0,
+    username: '',
+    lastName: '',
+    firstName: '',
+    biography: '',
+    gender: '',
+    birthDate: '',
+    orientation: '',
+    pictures: [],
+    interests: [],
+    latitude: '',
+    longitude: '',
+    distance: 0,
+    age: 0,
+    connected: false,
+    lastTime: '',
+    linkStatus: '',
+    fameRating: 0,
+    liked: false,
+    blocked: false,
+    reported: false,
+  })
+  const { id } = useParams<{ id: string }>()
+  const snackbar = useSnackbar()
 
   useEffect(() => {
-    apiProvider.getOptions()
-      .then((res: any) => {
-        setOptions(res.data)
-      })
-      .catch((err: any) => {
-        snackbar(buildErrorString(err, "Error while fetching interest list"), "error")
-      })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.user])
+    const fetchProfile = async () => {
+      try {
+        const res = await apiProvider.getProfile(id!)
+        setProfile(res.data)
+      } catch (err) {
+        snackbar(buildErrorString(err, 'Failed to fetch profile'), 'error')
+      }
+    }
 
-  useEffect(() => {
-    if (location.state?.profileIncomplete) snackbar("Tell us a bit more about yourself before meeting other people", "info")
-  }, [location.state?.profileIncomplete, snackbar])
+    fetchProfile()
+  }, [id, snackbar])
 
 
-  //TODO: extract props from UserInformation
+    const like = () => {
+      setProfile({ ...profile, liked: !profile.liked })
+    }
 
-  return (
-    <Box>
-      <Caroussel imgs={auth.user!.pictures} />
-      <Biography biography={auth.user!.biography} />
-      <Interests interests={auth.user!.interests} options={options} updateDb={true} />
-      <UserInformation firstName={auth.user!.firstName} lastName={auth.user!.lastName} birthDate={auth.user!.birthDate} gender={auth.user!.gender} orientation={auth.user!.orientation} email={auth.user!.email} customLocation= {auth.user!.customLocation} latitude={auth.user!.latitude} longitude={auth.user!.longitude} />
-    </Box>
+    const block = () => {
+      setProfile({ ...profile, blocked: !profile.blocked })
+    }
 
-  )
-}
+    const report = () => {
+      setProfile({ ...profile, reported: !profile.reported })
+    }
+
+    return (
+      <Box>
+        <Profile {...profile} like={like} block={block} report={report} />
+      </Box>
+    )
+  }
 
 export default ProfilePage

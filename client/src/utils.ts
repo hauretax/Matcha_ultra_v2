@@ -1,10 +1,11 @@
-import { UserProfile } from "../../comon_src/type/user.type";
+import { PersonalProfile } from "../../comon_src/type/user.type";
+import apiProvider from "./services/apiProvider";
 
 export const prefixBackendUrl = (path: string) => {
   return path ? `${process.env.REACT_APP_BACKEND_URL}/images/${path}` : '';
 }
 
-export const isProfileIncomplete = (user: UserProfile) => {
+export const isProfileIncomplete = (user: PersonalProfile) => {
   return user.username === '' ||
     user.firstName === '' ||
     user.lastName === '' ||
@@ -21,4 +22,26 @@ export const buildErrorString = (err: any, msg: string) => {
     return `${msg} : ${err.response?.data?.error}`;
   }
   return msg;
+}
+
+export async function fetchLocation(printError: Function) {
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      try {
+        await apiProvider.updatePositionByLL(position.coords.latitude.toString(), position.coords.longitude.toString())
+      } catch (err) {
+        printError(err)
+      }
+    },
+    async (err) => {
+      try {
+        await apiProvider.updatePositionByIp()
+      } catch (err) {
+        printError(err)
+      }
+    },
+    {
+      enableHighAccuracy: true,
+    }
+  )
 }

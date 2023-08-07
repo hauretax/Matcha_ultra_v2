@@ -48,7 +48,7 @@ const FindDb = {
 				this.interestsByUserId(user.id)
 			]).then(([pictures, interests]) => {
 				user.pictures = pictures;
-				user.interests = interests.map(interestObj => interestObj.interest);
+				user.interests = interests;
 				return user;
 			});
 		} else {

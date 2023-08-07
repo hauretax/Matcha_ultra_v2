@@ -58,7 +58,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       // Perform appropriate actions for connection error
     });
 
-    socket.on('error', (error) => {
+    socket.on('error', (error: Error) => {
       console.log('Socket error:', error.message);
       // Perform appropriate actions for socket error
     });
