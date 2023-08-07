@@ -22,6 +22,7 @@ export interface PersonalProfile extends BaseProfile {
 export interface UserProfile extends BaseProfile {
   distance: number;
   age: number;
+  liked: boolean;
 }
 /**
  * 

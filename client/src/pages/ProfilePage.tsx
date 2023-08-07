@@ -47,23 +47,28 @@ const ProfilePage: React.FC = () => {
   }, [id, snackbar])
 
 
-    const like = () => {
+  const like = async () => {
+    try {
+      const res = await apiProvider.like(profile.id, !profile.liked)
       setProfile({ ...profile, liked: !profile.liked })
+    } catch (err) {
+      snackbar(buildErrorString(err, 'Failed to like profile'), 'error')
     }
-
-    const block = () => {
-      setProfile({ ...profile, blocked: !profile.blocked })
-    }
-
-    const report = () => {
-      setProfile({ ...profile, reported: !profile.reported })
-    }
-
-    return (
-      <Box>
-        <Profile {...profile} like={like} block={block} report={report} />
-      </Box>
-    )
   }
+
+  const block = () => {
+    setProfile({ ...profile, blocked: !profile.blocked })
+  }
+
+  const report = () => {
+    setProfile({ ...profile, reported: !profile.reported })
+  }
+
+  return (
+    <Box>
+      <Profile {...profile} like={like} block={block} report={report} />
+    </Box>
+  )
+}
 
 export default ProfilePage

@@ -77,6 +77,10 @@ const apiProvider = {
     &index=${index}
     &orderBy=${orderBy}`);
 
+  },
+
+  like(likeeId: number, status: boolean) {
+    return axiosPrivate.post('/like', { likeeId, status })
   }
 }
 

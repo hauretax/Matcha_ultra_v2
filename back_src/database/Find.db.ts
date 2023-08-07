@@ -1,5 +1,5 @@
 import db from "./db";
-import { FullUser, UserPublic, userInDb } from "../../comon_src/type/user.type";
+import { FullUser, UserProfile, UserPublic, userInDb } from "../../comon_src/type/user.type";
 import { findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
@@ -68,10 +68,7 @@ const FindDb = {
 		}
 	},
 
-
-
-
-	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy, userId }: findTenUsersParams): Promise<UserPublic[]> {
+	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy, userId }: findTenUsersParams): Promise<any[]> {
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
 
@@ -192,6 +189,12 @@ const FindDb = {
 		}, []);
 		return publicUsers;
 	},
+
+  async isLikedBy(likerId: number, likeeId: number): Promise<boolean> {
+    const sql = "SELECT COUNT(*) AS count FROM user_likes WHERE liker_id = ? AND likee_id = ?";
+    const result = await db.get(sql, [likerId, likeeId]);
+    return result.count > 0;
+  },
 };
 
 export default FindDb;

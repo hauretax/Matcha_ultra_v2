@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import apiProvider from '../services/apiProvider';
 import { Box, Button } from '@mui/material';
@@ -63,10 +63,23 @@ const BrowsePage: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
+  const handleLike = useCallback(async (likeeId: number, status: boolean) => {
+    try {
+      await apiProvider.like(likeeId, status)
+      setProfiles(prevProfiles => 
+        prevProfiles.map(profile => 
+           profile.userId === likeeId ? { ...profile, liked: status } : profile
+        )
+     );     
+    } catch (err) {
+      snackbar(buildErrorString(err, 'Failed to like profile'), 'error')
+    }
+  }, [])
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <SearchForm setFilters={setFilters} />
-      <BrowsingResult users={profiles} />
+      <BrowsingResult users={profiles} handleLike={handleLike} />
       {!end && <Button sx={{ marginTop: 2 }} variant="outlined" onClick={handleNext}>LOAD MORE...</Button>}
     </Box>
   )

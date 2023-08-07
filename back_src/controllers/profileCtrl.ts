@@ -127,6 +127,8 @@ export async function getProfileById(req: Request, res: Response) {
     return;
   }
 
+  const liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.id);
+
   res.json({
     id: user.id,
     username: user.username,
@@ -142,6 +144,7 @@ export async function getProfileById(req: Request, res: Response) {
     longitude: user.longitude,
     distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
     age: getAge(user.birthDate),
+    liked: liked,
   })
 }
 
@@ -392,9 +395,30 @@ export async function getProfiles(req: Request, res: Response) {
 
   console.log("------------------", paramsForSearch);
 
-  const profiles = await FindDb.tenUsers(paramsForSearch);
+  const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
+    user.liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.userId);
+    return user;
+  }));
+
+  console.log(profiles)
 
   res.status(200).json(profiles);
   return;
 }
 
+export async function like(req: Request, res: Response) {
+  if (!validateBody(req, ['likeeId', 'status'], ['number', 'boolean'])) {
+    res.status(400).json({ error: 'missing parameters' });
+    return;
+  }
+
+  const { likeeId, status } = req.body;
+
+  if (status) {
+    await InsertDb.like(res.locals.fulluser.id, likeeId);
+  } else {
+    await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+  }
+
+  res.status(200).json({ message: "liked" });
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Button, Card, CardActions, CardContent, CardMedia, Typography, Box } from "@mui/material";
 import { LocationOn } from '@mui/icons-material';
 import UserInterestsList from "./UserInterestList";
@@ -7,16 +7,20 @@ import { useNavigate } from "react-router-dom";
 
 interface UserCardProps {
   user: any;
+  handleLike: (userId: number, liked: boolean) => void;
 }
 
 //TODO: improve image fitting proportion
-const UserCard: React.FC<UserCardProps> = ({ user }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, handleLike }) => {
   const navigate = useNavigate()
-  user.liked = false;
 
-  const navToProfile = () => {
+  const navToProfile = useCallback(() => {
     navigate(`/profile/${user.userId}`)
-  }
+  }, [user.userId, navigate])
+
+  const updateLike = useCallback(() => {
+    handleLike(user.userId, !user.liked)
+  }, [handleLike, user.userId, user.liked])
 
   return (
     <Card>
@@ -37,10 +41,10 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
       </CardContent>
       <CardActions>
         <Button onClick={navToProfile} size="small">View Profile</Button>
-        <Button size="small">{user.liked ? "Dislike" : "Like"}</Button>
+        <Button onClick={updateLike} size="small">{user.liked ? "Dislike" : "Like"}</Button>
       </CardActions>
     </Card>
   );
 }
 
-export default UserCard;
+export default React.memo(UserCard);
