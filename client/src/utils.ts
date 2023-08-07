@@ -39,6 +39,9 @@ export async function fetchLocation(printError: Function) {
       } catch (err) {
         printError(err)
       }
+    },
+    {
+      enableHighAccuracy: true,
     }
   )
 }
