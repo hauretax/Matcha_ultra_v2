@@ -1,6 +1,7 @@
 
-import GetDb from "./database/Get.db";
-import db from "./database/db";
+import GetDb from "./back_src/database/Get.db";
+import InitializeDb from "./back_src/database/Initialize.db";
+import db from "./back_src/database/db";
 import bcrypt from "bcrypt";
 // Plage de latitudes et de longitudes
 const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960767524 };
@@ -44,6 +45,18 @@ function generateRandomDateOfBirth(): string {
 }
 
 export default async function insertDataInDb() {
+
+
+	const initFunctions = [
+		InitializeDb.userTable,
+		InitializeDb.pictureTable,
+		InitializeDb.interestsTable,
+		InitializeDb.userInterestsTable,
+		InitializeDb.userNoteTable
+	// ... add any additional table initializers here
+	];
+	await Promise.all(initFunctions.map(initFunc => initFunc()));
+
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
@@ -186,7 +199,7 @@ export default async function insertDataInDb() {
 
 
 
-
+insertDataInDb();
 
 // SELECT id, username, biography, gender, birthDate, orientation, latitude, longitude,
 // (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance,
