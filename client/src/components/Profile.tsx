@@ -51,7 +51,7 @@ const Profile: React.FC<Props> = (props) => {
         <Box sx={{ mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <LocationOn sx={{ fontSize: '1rem', mr: 1, mb: '2px', fontVariant: "body2", color: "text.secondary" }} />
-            <Typography variant="body2" color="text.secondary">À {props.distance} km</Typography>
+            <Typography variant="body2" color="text.secondary">À {Math.round(props.distance)} km</Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Circle sx={{ fontSize: '1rem', mr: 1, mb: '2px', fontVariant: "body2", color: props.connected ? "green" : "red" }} />
