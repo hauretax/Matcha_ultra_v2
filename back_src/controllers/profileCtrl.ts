@@ -348,7 +348,7 @@ export async function insertPicture(req: Request, res: Response, next: NextFunct
 // No need to check if pictureId is a number or if picture exists. The middleware does it.
 export async function updatePicture(req: Request, res: Response, next: NextFunction) {
 	if (!req.file) {
-		next(new MulterError("LIMIT_FILE_COUNT"));
+		next(new MulterError('LIMIT_FILE_COUNT'));
 		return;
 	}
 
