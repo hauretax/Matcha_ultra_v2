@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import { validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateQueryParams } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -23,7 +23,7 @@ import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
 
-import { getDistanceInKm, getAge } from "../utils/misc";
+import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -348,7 +348,7 @@ export async function insertPicture(req: Request, res: Response, next: NextFunct
 // No need to check if pictureId is a number or if picture exists. The middleware does it.
 export async function updatePicture(req: Request, res: Response, next: NextFunction) {
 	if (!req.file) {
-		next(new MulterError('LIMIT_FILE_COUNT'));
+		next(new MulterError("LIMIT_FILE_COUNT"));
 		return;
 	}
 
@@ -370,15 +370,14 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-	if (!req.query) {
-		res.status(400).json({ error: "need argument" });
+	const missingParams = validateQueryParams(req);
+
+	if (missingParams.length) {
+		res.status(400).json({ error: "missing parameters: " + missingParams.join(", ") });
 		return;
 	}
+
 	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
-	if (!ageMin || !ageMax || !orientation || !index || !distanceMax || !orderBy) {
-		res.status(400).json({ error: "invalid gender" });
-		return;
-	}
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
@@ -393,14 +392,13 @@ export async function getProfiles(req: Request, res: Response) {
 		userId: res.locals.fulluser.id,
 	};
 
-	console.log("------------------", paramsForSearch);
-
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
-		user.liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.userId);
-		return user;
+		const sanitizedUser = {
+			...sanitizeUser(user),
+			liked : await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+		};
+		return sanitizedUser;
 	}));
-
-	console.log(profiles);
 
 	res.status(200).json(profiles);
 	return;
@@ -422,3 +420,5 @@ export async function like(req: Request, res: Response) {
 
 	res.status(200).json({ message: "liked" });
 }
+
+
