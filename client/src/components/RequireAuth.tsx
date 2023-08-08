@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthProvider";
 import { buildErrorString, fetchLocation, isProfileIncomplete } from "../utils";
 import { useSnackbar } from "../context/SnackBar";
 import { useEffect } from "react";
-import apiProvider from "../services/apiProvider";
 
 
 function RequireAuth() {

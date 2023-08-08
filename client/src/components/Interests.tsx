@@ -28,6 +28,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
       }
     }
     fetchOptions()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleEdit = () => {

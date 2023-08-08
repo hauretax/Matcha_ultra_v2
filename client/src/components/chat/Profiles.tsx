@@ -9,7 +9,6 @@ function BrowsingChatProfiles(props: { profiles: Profile[], handleClickProfile: 
                 props.profiles.map((profile) => (
                     <Grid item xs={12} key={profile.id} onClick={() => props.handleClickProfile(profile.id)}>
                         <ProfileCard user={profile} />
-
                     </Grid>
                 ))}
         </Grid>

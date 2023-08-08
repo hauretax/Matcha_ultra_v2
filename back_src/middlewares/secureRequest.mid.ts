@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validateJwt } from "../utils/jwt";
-import { PersonalProfile, UserProfile } from "../../comon_src/type/user.type";
+import { PersonalProfile } from "../../comon_src/type/user.type";
 import FindDb from "../database/Find.db";
 
 

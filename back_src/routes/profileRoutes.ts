@@ -1,6 +1,6 @@
 import express from "express";
 import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById } from "../controllers/profileCtrl";
-import { getActualConversation } from "../controllers/chatCtrl"
+import { getActualConversation } from "../controllers/chatCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
