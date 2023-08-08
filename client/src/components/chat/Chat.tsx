@@ -167,9 +167,6 @@ export default function Chat() {
             }
         }
         fetchProfiles();
-
-
-
     }, []);
 
     // changement de conversation
