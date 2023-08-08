@@ -49,7 +49,7 @@ const ProfilePage: React.FC = () => {
 
   const like = async () => {
     try {
-      const res = await apiProvider.like(profile.id, !profile.liked)
+      await apiProvider.like(profile.id, !profile.liked)
       setProfile({ ...profile, liked: !profile.liked })
     } catch (err) {
       snackbar(buildErrorString(err, 'Failed to like profile'), 'error')

@@ -84,7 +84,7 @@ const initFunctions = [
 	InitializeDb.interestsTable,
 	InitializeDb.userInterestsTable,
 	InitializeDb.userNoteTable,
-  InitializeDb.userLikesTable,
+	InitializeDb.userLikesTable,
 	// ... add any additional table initializers here
 ];
 

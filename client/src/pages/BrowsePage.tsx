@@ -74,7 +74,7 @@ const BrowsePage: React.FC = () => {
     } catch (err) {
       snackbar(buildErrorString(err, 'Failed to like profile'), 'error')
     }
-  }, [])
+  }, [snackbar])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>

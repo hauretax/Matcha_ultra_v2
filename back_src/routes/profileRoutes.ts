@@ -33,7 +33,7 @@ router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"),
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));
 
 router.get("/users", validsecurRequest, profileCompletedGroup, asyncHandler(getProfiles));
-router.post('/like', profileCompletedGroup, asyncHandler(like));
+router.post("/like", profileCompletedGroup, asyncHandler(like));
 router.get("/profile/:id", privateGroup, asyncHandler(getProfileById));
 
 export default router;  
