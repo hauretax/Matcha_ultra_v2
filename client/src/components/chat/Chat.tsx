@@ -11,48 +11,48 @@ import apiProvider from "../../services/apiProvider";
 
 // les rendres accesible a tous
 
-async function getProfilesDiscussion(): Promise<Profile[]> {
-    const fakeDBRequest: Promise<Profile[]> = new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                {
-                    username: 'Alice',
-                    userId: 1,
-                    lastMessage: 'Hello there!',
-                    messageDate: new Date('2023-08-03T12:34:56') // Sample date and time
-                },
-                {
-                    username: 'Bob',
-                    userId: 2,
-                    lastMessage: 'Hey Alice, how are you?',
-                    messageDate: new Date('2023-08-02T15:23:45') // Sample date and time
-                },
-                {
-                    username: 'Charlie',
-                    userId: 3,
-                    lastMessage: 'Greetings!',
-                    messageDate: new Date('2023-08-01T09:12:34') // Sample date and time
-                },
-                {
-                    username: 'Eve',
-                    userId: 4,
-                    lastMessage: 'Hi everyone!',
-                    messageDate: new Date('2023-07-31T20:30:15') // Sample date and time
-                },
-                {
-                    username: 'Mallory',
-                    userId: 5,
-                    lastMessage: 'Goodbye!',
-                    messageDate: new Date('2023-07-30T18:45:10') // Sample date and time
-                },
-            ]);
-        }, 1000); // 1000 milliseconds = 1 second
-    });
+// async function getProfilesDiscussion(): Promise<Profile[]> {
+//     const fakeDBRequest: Promise<Profile[]> = new Promise((resolve) => {
+//         setTimeout(() => {
+//             resolve([
+//                 {
+//                     username: 'Alice',
+//                     userId: 1,
+//                     lastMessage: 'Hello there!',
+//                     messageDate: new Date('2023-08-03T12:34:56') // Sample date and time
+//                 },
+//                 {
+//                     username: 'Bob',
+//                     userId: 2,
+//                     lastMessage: 'Hey Alice, how are you?',
+//                     messageDate: new Date('2023-08-02T15:23:45') // Sample date and time
+//                 },
+//                 {
+//                     username: 'Charlie',
+//                     userId: 3,
+//                     lastMessage: 'Greetings!',
+//                     messageDate: new Date('2023-08-01T09:12:34') // Sample date and time
+//                 },
+//                 {
+//                     username: 'Eve',
+//                     userId: 4,
+//                     lastMessage: 'Hi everyone!',
+//                     messageDate: new Date('2023-07-31T20:30:15') // Sample date and time
+//                 },
+//                 {
+//                     username: 'Mallory',
+//                     userId: 5,
+//                     lastMessage: 'Goodbye!',
+//                     messageDate: new Date('2023-07-30T18:45:10') // Sample date and time
+//                 },
+//             ]);
+//         }, 1000); // 1000 milliseconds = 1 second
+//     });
 
-    const profiles = await fakeDBRequest;
+//     const profiles = await fakeDBRequest;
 
-    return profiles;
-}
+//     return profiles;
+// }
 
 async function getMessagesDiscussion(): Promise<Message[]> {
     const fakeDBRequest: Promise<Message[]> = new Promise((resolve) => {
@@ -161,9 +161,16 @@ export default function Chat() {
     useEffect(() => {
         async function fetchProfiles() {
             try {
-                console.log('helo',await apiProvider.getConversations())
-                const fetchedProfiles = await getProfilesDiscussion();
-                setProfiles(fetchedProfiles);
+                const conversations = await apiProvider.getConversations();
+                // conversations.data.map((conversation: Profile) => {
+                //     return {
+                //         userId: conversation.id
+                //     }
+                // })
+                // console.log('helo', await apiProvider.getConversations())
+                // const fetchedProfiles = await getProfilesDiscussion();
+                console.log(conversations.data)
+                setProfiles(conversations.data.profiles);
             } catch (error) {
                 console.error('Erreur lors de la récupération des profils:', error);
             }
@@ -175,7 +182,7 @@ export default function Chat() {
     useEffect(() => {
         setMessages([])
         const Change = profiles.map(profile => {
-            if (profile.userId === userIdOpenConv)
+            if (profile.id === userIdOpenConv)
                 return { ...profile, haveUnseeMessage: false }
             return profile;
         });
@@ -206,7 +213,7 @@ export default function Chat() {
 
         else {
             const Change = profiles.map(profile => {
-                if (profile.userId === message.userFrom)
+                if (profile.id === message.userFrom)
                     return { ...profile, haveUnseeMessage: true }
                 return profile;
             });

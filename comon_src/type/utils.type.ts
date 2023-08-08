@@ -51,9 +51,9 @@ export interface Message {
 }
 
 export interface Profile {
-    username: string;
-    userId: number;
-    lastMessage: string;
-    messageDate: Date;
-    haveUnseeMessage?: boolean;
+    username: string,
+    id: number,
+    lastMessage: string,
+    messageDate: Date,
+    profilePicture: string
 }
