@@ -43,11 +43,11 @@ export interface filtersList {
 
 
 export interface Message {
-    message: string;
-    timestamp: string;
-    photoURL: string;
+    msg: string;
+    sendDate: string;
     displayName: string;
-    avatarDisp: boolean;
+    userIdFrom?: number;
+    userIdTo?: number;
 }
 
 export interface Profile {

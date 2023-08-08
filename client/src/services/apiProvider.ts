@@ -10,6 +10,10 @@ const apiProvider = {
     return axiosPrivate.get('/chat/getConv')
   },
 
+  getChat(id: number) {
+    return axiosPrivate.get('/chat/getChat/'+id)
+  },
+
   getOptions() {
     return axiosPrivate.get('/options')
   },

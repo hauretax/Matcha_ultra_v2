@@ -40,7 +40,6 @@ const GetDb = {
 		return db.get(sql, [userId]);
 	},
 
-	//TODO il faudrais le fair correspondre a profiles
 	async allConversation(userId: number): Promise<Profile[]> {
 		const sql = `
 		SELECT
@@ -75,6 +74,15 @@ const GetDb = {
 	);
 		`;
 		return db.all(sql, [ userId, userId]);
+	},
+
+	async chat(idFrom: number, idTo:number): Promise<Profile[]> {
+		const sql = `
+		SELECT *
+		FROM chats
+		WHERE userIdFrom = ? AND userIdTo = ?
+		`;
+		return db.all(sql, [ idFrom, idTo]);
 	}
 
 };
