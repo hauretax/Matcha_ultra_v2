@@ -83,7 +83,8 @@ const initFunctions = [
 	InitializeDb.pictureTable,
 	InitializeDb.interestsTable,
 	InitializeDb.userInterestsTable,
-	InitializeDb.userNoteTable
+	InitializeDb.userNoteTable,
+	InitializeDb.chatsTable
 	// ... add any additional table initializers here
 ];
 

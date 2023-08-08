@@ -1,0 +1,12 @@
+-- database: c:\Users\hutri\Documents\Matcha_ultra_v2\database.sqlite
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT u.username, u.id
+			FROM users u
+			WHERE EXISTS (
+			SELECT 1
+			FROM user_notes n1
+			JOIN user_notes n2 ON n1.to_id = n2.from_id AND n2.to_id = n1.from_id
+			WHERE n1.from_id = 1 AND n1.to_id = u.id AND n2.from_id = u.id AND n2.to_id = 1
+			);

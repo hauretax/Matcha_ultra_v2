@@ -1,3 +1,4 @@
+import { Profile } from "../../comon_src/type/utils.type";
 import db from "./db";
 
 const GetDb = {
@@ -23,7 +24,7 @@ const GetDb = {
 		return ret;
 	},
 
-	async userLocalisation(id:number): Promise<{ latitude: number, longitude: number }>{
+	async userLocalisation(id: number): Promise<{ latitude: number, longitude: number }> {
 		const sql = `SELECT latitude, longitude 
 		FROM "users"
 		WHERE id = ?`;
@@ -37,6 +38,21 @@ const GetDb = {
 			WHERE id = ?
     	`;
 		return db.get(sql, [userId]);
+	},
+
+	//TODO il faudrais le fair correspondre a profiles
+	async allConversation(userId: number): Promise<{ profiles: Profile[] }> {
+		const sql = `
+			SELECT u.*
+			FROM users u
+			WHERE EXISTS (
+			SELECT ?
+			FROM user_notes n1
+			JOIN user_notes n2 ON n1.to_id = n2.from_id AND n2.to_id = n1.from_id
+			WHERE n1.from_id = ? AND n1.to_id = u.id AND n2.from_id = u.id AND n2.to_id = ?
+			);
+		`;
+		return db.get(sql, [userId, userId, userId]);
 	}
 
 };

@@ -40,3 +40,20 @@ export interface filtersList {
   interests: string[];
   orderBy: OrderBy;
 }
+
+
+export interface Message {
+    message: string;
+    timestamp: string;
+    photoURL: string;
+    displayName: string;
+    avatarDisp: boolean;
+}
+
+export interface Profile {
+    username: string;
+    userId: number;
+    lastMessage: string;
+    messageDate: Date;
+    haveUnseeMessage?: boolean;
+}
