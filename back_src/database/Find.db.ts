@@ -1,5 +1,5 @@
 import db from "./db";
-import { FullUser, UserProfile, UserPublic, userInDb } from "../../comon_src/type/user.type";
+import { FullUser, userInDb } from "../../comon_src/type/user.type";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
@@ -171,16 +171,16 @@ function generateInterestConditions(interestWanted: string[]): string {
 
 function generateOrderByClause(orderBy: OrderBy): string {
 	switch (orderBy) {
-		case "distance":
-			return "d.distance ASC";
-		case "age":
-			return "u.age ASC";
-		case "popularity":
-			return "u.popularity DESC";
-		case "tag":
-			return "interestCount DESC";
-		default:
-			throw new Error("Invalid order by");
+	case "distance":
+		return "d.distance ASC";
+	case "age":
+		return "u.age ASC";
+	case "popularity":
+		return "u.popularity DESC";
+	case "tag":
+		return "interestCount DESC";
+	default:
+		throw new Error("Invalid order by");
 	}
 }
 

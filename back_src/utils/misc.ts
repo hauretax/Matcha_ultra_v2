@@ -1,4 +1,4 @@
-import { UserProfile, userInDb } from "../../comon_src/type/user.type";
+import { userInDb } from "../../comon_src/type/user.type";
 
 export function getDistanceInKm(lat1, lon1, lat2, lon2) {
 	const R = 6371; // Radius of the earth in km
@@ -32,7 +32,7 @@ export function getAge(birthdate: string) {
 export function sanitizeUser(user: userInDb) {
 	const sanitizedUser = {
 		distance: Math.max(Math.floor(user.distance), 1),
-		pictures: user.image_srcs.split(',').map((src, index) => ({
+		pictures: user.image_srcs.split(",").map((src, index) => ({
 			src,
 			id: parseInt(user.picture_ids.split(",")[index])
 		})),

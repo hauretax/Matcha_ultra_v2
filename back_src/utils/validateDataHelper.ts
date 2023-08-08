@@ -49,5 +49,5 @@ export function validateQueryParams(req: Request): string[] {
 	const requiredParams = ["ageMin", "ageMax", "orientation", "index", "distanceMax", "orderBy"];
 	const missingParams = requiredParams.filter(param => !req.query[param]);
 
-	return missingParams
+	return missingParams;
 }
