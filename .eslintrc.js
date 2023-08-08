@@ -25,11 +25,11 @@ module.exports = {
 			"unix"
 		],
 		"quotes": [
-			"warn",
+			"error",
 			"double"
 		],
 		"semi": [
-			"warn",
+			"error",
 			"always"
 		]
 	}
