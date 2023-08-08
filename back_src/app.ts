@@ -16,7 +16,7 @@ import handleSocket from "./controllers/socketCtrl";
 class App {
 	private app: Application;
 	private server: http.Server;
-	private io: Server;
+	public io: Server;
 	private connectedUsers: Map<string, number> = new Map<string, number>();
 
 	constructor() {

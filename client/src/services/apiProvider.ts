@@ -52,6 +52,10 @@ const apiProvider = {
     });
   },
 
+  insertMessage(data: { message: string, idFrom: number, idTo: number }) {
+    return axiosPrivate.post('/chat/new', data);
+  },
+
   updatePicture(formData: FormData, id: number) {
     return axiosPrivate.put(`/picture/${id}/edit`, formData, {
       headers: {

@@ -1,6 +1,6 @@
 import express from "express";
 import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById } from "../controllers/profileCtrl";
-import { getActualConversation } from "../controllers/chatCtrl";
+import { getActualConversation, newMessage } from "../controllers/chatCtrl";
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
@@ -20,6 +20,7 @@ router.get("/verify_email", publicGroup, asyncHandler(validByEmail));
 router.post("/request_password_reset", publicGroup, asyncHandler(RequestpasswordReset));
 router.post("/reset_password", publicGroup, asyncHandler(passwordReset));
 router.post("/newToken", publicGroup, asyncHandler(createNewJwt));
+router.post("/chat/new", profileCompletedGroup, asyncHandler(newMessage));
 
 router.post("/setLocalisation", privateGroup, asyncHandler(setUserPosition));
 router.post("/setLocationByIP", privateGroup, asyncHandler(setUserPositionByIP));

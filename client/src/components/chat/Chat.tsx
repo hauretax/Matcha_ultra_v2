@@ -162,14 +162,6 @@ export default function Chat() {
         async function fetchProfiles() {
             try {
                 const conversations = await apiProvider.getConversations();
-                // conversations.data.map((conversation: Profile) => {
-                //     return {
-                //         userId: conversation.id
-                //     }
-                // })
-                // console.log('helo', await apiProvider.getConversations())
-                // const fetchedProfiles = await getProfilesDiscussion();
-                console.log(conversations.data)
                 setProfiles(conversations.data.profiles);
             } catch (error) {
                 console.error('Erreur lors de la récupération des profils:', error);
