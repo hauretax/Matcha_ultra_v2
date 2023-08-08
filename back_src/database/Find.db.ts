@@ -68,9 +68,6 @@ const FindDb = {
 		}
 	},
 
-
-
-
 	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy, userId }: findTenUsersParams): Promise<UserPublic[]> {
 
 		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");

@@ -6,6 +6,10 @@ const apiProvider = {
     return axiosPrivate.get('/profile/' + id)
   },
 
+  getConversations() {
+    return axiosPrivate.get('/chat/getConv')
+  },
+
   getOptions() {
     return axiosPrivate.get('/options')
   },

@@ -41,18 +41,40 @@ const GetDb = {
 	},
 
 	//TODO il faudrais le fair correspondre a profiles
-	async allConversation(userId: number): Promise<{ profiles: Profile[] }> {
+	async allConversation(userId: number): Promise<Profile[]> {
 		const sql = `
-			SELECT u.*
-			FROM users u
-			WHERE EXISTS (
-			SELECT ?
-			FROM user_notes n1
-			JOIN user_notes n2 ON n1.to_id = n2.from_id AND n2.to_id = n1.from_id
-			WHERE n1.from_id = ? AND n1.to_id = u.id AND n2.from_id = u.id AND n2.to_id = ?
-			);
+		SELECT
+		u.username,
+		u.id,
+		c.msg AS lastMessage,
+		c.sendDate AS messageDate,
+		p.src AS profilePicture
+	FROM users u
+	LEFT JOIN (
+		SELECT
+			MAX(id) AS maxId,
+			userIdFrom,
+			userIdTo
+		FROM chats
+		GROUP BY userIdFrom, userIdTo
+	) latest_chats ON (u.id = latest_chats.userIdFrom OR u.id = latest_chats.userIdTo)
+	LEFT JOIN chats c ON (c.id = latest_chats.maxId)
+	LEFT JOIN (
+		SELECT
+			user_id,
+			MIN(id) AS minId
+		FROM pictures
+		GROUP BY user_id
+	) first_pictures ON u.id = first_pictures.user_id
+	LEFT JOIN pictures p ON p.id = first_pictures.minId
+	WHERE EXISTS (
+		SELECT 1
+		FROM user_notes n1
+		JOIN user_notes n2 ON n1.to_id = n2.from_id AND n2.to_id = n1.from_id
+		WHERE n1.from_id = ? AND n1.to_id = u.id AND n2.from_id = u.id AND n2.to_id = ?
+	);
 		`;
-		return db.get(sql, [userId, userId, userId]);
+		return db.all(sql, [ userId, userId]);
 	}
 
 };

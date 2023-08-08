@@ -7,6 +7,7 @@ import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider"
 import { useAuth } from "../../context/AuthProvider";
 import { Message, Profile } from "../../../../comon_src/type/utils.type";
+import apiProvider from "../../services/apiProvider";
 
 // les rendres accesible a tous
 
@@ -160,6 +161,7 @@ export default function Chat() {
     useEffect(() => {
         async function fetchProfiles() {
             try {
+                console.log('helo',await apiProvider.getConversations())
                 const fetchedProfiles = await getProfilesDiscussion();
                 setProfiles(fetchedProfiles);
             } catch (error) {
