@@ -2,9 +2,9 @@ import db from "./db";
 
 const InitializeDb = {
 
-  //TODO: remove age and compute it from birthdate
-  userTable() {
-    const sql = `
+	//TODO: remove age and compute it from birthdate
+	userTable() {
+		const sql = `
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -82,6 +82,18 @@ const InitializeDb = {
             UNIQUE (from_id, to_id)
         )
         `;
+		return db.run(sql);
+	},
+
+	userLikesTable() {
+		const sql = `
+      CREATE TABLE IF NOT EXISTS user_likes (
+        liker_id INT,
+        likee_id INT,
+        PRIMARY KEY (liker_id, likee_id),
+        FOREIGN KEY (liker_id) REFERENCES users(user_id),
+        FOREIGN KEY (likee_id) REFERENCES users(user_id)
+      )`;
 		return db.run(sql);
 	}
 

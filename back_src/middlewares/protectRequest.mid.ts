@@ -18,7 +18,7 @@ export async function isPictureOwner(req: Request, res: Response, next: NextFunc
 }
 
 export async function isProfileCompleted(req: Request, res: Response, next: NextFunction) {
-  const user: PersonalProfile = res.locals.fulluser; // from validsecurRequest
+	const user: PersonalProfile = res.locals.fulluser; // from validsecurRequest
 
 	if (!user.emailVerified) {
 		res.status(422).json({ error: "unverified email" });
@@ -33,8 +33,8 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
 }
 
 const isProfileInfoMissing = (user: PersonalProfile) => {
-  return (
-    !user.gender ||
+	return (
+		!user.gender ||
     !user.orientation ||
     !user.biography ||
     !user.birthDate ||

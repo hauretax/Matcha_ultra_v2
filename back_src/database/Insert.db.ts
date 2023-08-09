@@ -71,6 +71,14 @@ const InsertDb = {
     	`;
 		await db.run(sql, [token, userId]);
 	},
+
+	async like(likerId: number, likeeId: number): Promise<void> {
+		const sql = `
+      INSERT INTO user_likes(liker_id, likee_id)
+      VALUES (?, ?)
+    `;
+		await db.run(sql, [likerId, likeeId]);
+	}
 };
 
 export default InsertDb;

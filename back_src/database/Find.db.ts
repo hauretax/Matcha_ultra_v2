@@ -1,6 +1,6 @@
 import db from "./db";
-import { FullUser, UserPublic, userInDb } from "../../comon_src/type/user.type";
-import { findTenUsersParams } from "../../comon_src/type/utils.type";
+import { FullUser, userInDb } from "../../comon_src/type/user.type";
+import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -67,45 +67,24 @@ const FindDb = {
 				.then((result) => result.lastID);
 		}
 	},
+	async tenUsers(params: findTenUsersParams): Promise<userInDb[]> {
 
-
-
-
-	async tenUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy, userId }: findTenUsersParams): Promise<UserPublic[]> {
-
-		const interestConditions = interestWanted.map(() => "interests LIKE ?").join(" OR ");
+		const interestConditions = generateInterestConditions(params.interestWanted);
+		const orderByClause = generateOrderByClause(params.orderBy);
 
 		const completTab = [
-			...interestWanted,
-			latitude, longitude, latitude,
-			userId,
-			distanceMax,
-			ageMax,
-			ageMin,
-			...orientation,
-			...interestWanted.map(interest => `%${interest}%`),
-			userId,
-			index
+			...params.interestWanted,
+			params.latitude, params.longitude, params.latitude,
+			params.userId,
+			params.distanceMax,
+			params.ageMax,
+			params.ageMin,
+			...params.orientation,
+			...params.interestWanted.map(interest => `%${interest}%`),
+			params.userId,
+			params.index
 		];
 
-		let orderByClause = "";
-		/*TODO #7 */
-		switch (orderBy) {
-		case "distance":
-			orderByClause = "d.distance ASC";
-			break;
-		case "age":
-			orderByClause = "u.age ASC";
-			break;
-		case "popularity":
-			orderByClause = "u.popularity DESC";
-			break;
-		case "tag":
-			orderByClause = "interestCount DESC";
-			break;
-		default:
-			throw new Error("Invalid order by");
-		}
 		//TODO: prevent homosexual men to be queried by heterosexual women
 		const sql = `
 		SELECT
@@ -121,9 +100,10 @@ const FindDb = {
 			d.distance,
 			(
 				SELECT COUNT(*) FROM user_interests ui
-				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${interestWanted.map(() => "?").join(",")}))
+				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${params.interestWanted.map(() => "?").join(",")}))
 			) AS interestCount,
 			interests,
+			picture_ids,
 			image_srcs,
 			un.note AS user_note
 		FROM
@@ -141,6 +121,7 @@ const FindDb = {
 			LEFT JOIN (
 				SELECT
 					user_id,
+					GROUP_CONCAT(id, ',') AS picture_ids,
 					GROUP_CONCAT(src, ',') AS image_srcs
 				FROM
 					pictures
@@ -163,7 +144,7 @@ const FindDb = {
 			d.distance < ?
 			AND u.age <= ?
 			AND u.age >= ?
-			AND u.gender IN (${orientation.map(() => "?").join(",")})
+			AND u.gender IN (${params.orientation.map(() => "?").join(",")})
 			AND ${interestConditions}
 			AND u.id <> ?
 		ORDER BY
@@ -174,24 +155,33 @@ const FindDb = {
 			?;
 		`;
 		const users = await db.all(sql, completTab);
-		const publicUsers = users.reduce((result: UserPublic[], user: userInDb) => {
-			const newUser: UserPublic = {
-				distance: Math.floor(user.distance) ? Math.floor(user.distance) : 1,
-				pictures: user.image_srcs ? user.image_srcs.split(",") : [],
-				interests: user.interests ? user.interests.split(",") : [],
-				username: user.username,
-				gender: user.gender,
-				orientation: user.orientation,
-				age: user.age,
-				biography: user.biography,
-				note: user.user_note,
-				userId: user.id
-			};
-			result.push(newUser);
-			return result;
-		}, []);
-		return publicUsers;
+		return users;
+	},
+
+	async isLikedBy(likerId: number, likeeId: number): Promise<boolean> {
+		const sql = "SELECT COUNT(*) AS count FROM user_likes WHERE liker_id = ? AND likee_id = ?";
+		const result = await db.get(sql, [likerId, likeeId]);
+		return result.count > 0;
 	},
 };
+
+function generateInterestConditions(interestWanted: string[]): string {
+	return interestWanted.map(() => "interests LIKE ?").join(" OR ");
+}
+
+function generateOrderByClause(orderBy: OrderBy): string {
+	switch (orderBy) {
+	case "distance":
+		return "d.distance ASC";
+	case "age":
+		return "u.age ASC";
+	case "popularity":
+		return "u.popularity DESC";
+	case "tag":
+		return "interestCount DESC";
+	default:
+		throw new Error("Invalid order by");
+	}
+}
 
 export default FindDb;

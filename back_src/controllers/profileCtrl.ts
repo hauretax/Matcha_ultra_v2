@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import { validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateQueryParams } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -23,7 +23,7 @@ import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
 
-import { getDistanceInKm, getAge } from '../utils/misc'
+import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -118,31 +118,34 @@ export function getProfile(req: Request, res: Response) {
 }
 
 export async function getProfileById(req: Request, res: Response) {
-  const { id } = req.params;
+	const { id } = req.params;
 
-  const user = await FindDb.userById(parseInt(id));
+	const user = await FindDb.userById(parseInt(id));
 
-  if (!user) {
-    res.status(404).json({ error: "user not found" });
-    return;
-  }
+	if (!user) {
+		res.status(404).json({ error: "user not found" });
+		return;
+	}
 
-  res.json({
-    id: user.id,
-    username: user.username,
-    lastName: user.lastName,
-    firstName: user.firstName,
-    biography: user.biography,
-    gender: user.gender,
-    birthDate: user.birthDate,
-    orientation: user.orientation,
-    pictures: user.pictures,
-    interests: user.interests,
-    latitude: user.latitude,
-    longitude: user.longitude,
-    distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
-    age: getAge(user.birthDate),
-  })
+	const liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.id);
+
+	res.json({
+		id: user.id,
+		username: user.username,
+		lastName: user.lastName,
+		firstName: user.firstName,
+		biography: user.biography,
+		gender: user.gender,
+		birthDate: user.birthDate,
+		orientation: user.orientation,
+		pictures: user.pictures,
+		interests: user.interests,
+		latitude: user.latitude,
+		longitude: user.longitude,
+		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
+		age: getAge(user.birthDate),
+		liked: liked,
+	});
 }
 
 export async function getOptions(req: Request, res: Response) {
@@ -278,53 +281,53 @@ export async function deletePicture(req: Request, res: Response) {
 }
 
 export async function RequestpasswordReset(req: Request, res: Response) {
-  if (!validateBody(req, ['email'], ['string'])) {
-    res.status(400).json({ error: 'email is missing' })
-  }
+	if (!validateBody(req, ["email"], ["string"])) {
+		res.status(400).json({ error: "email is missing" });
+	}
 
-  const { email } = req.body
+	const { email } = req.body;
 
-  const user = await GetDb.userbyMail(email);
+	const user = await GetDb.userbyMail(email);
 
-  if (!user) {
-    res.status(404).json({ error: "account not found" });
-    return;
-  }
+	if (!user) {
+		res.status(404).json({ error: "account not found" });
+		return;
+	}
 
-  const code = generateRandomString(16);
+	const code = generateRandomString(16);
 
-  await UpdateDb.update('users', ['resetPasswordCode'], [code], ['email'], [email])
+	await UpdateDb.update("users", ["resetPasswordCode"], [code], ["email"], [email]);
 
-  sendEmail(email, "Click on this link to create a new password: http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "[Matcha] Reset password");
+	sendEmail(email, "Click on this link to create a new password: http://" + "localhost:" + "3000/reset_password?code=" + code + "&email=" + email, "[Matcha] Reset password");
 
-  res.status(200).json({ message: "reset password link sent to your mailbox" });
+	res.status(200).json({ message: "reset password link sent to your mailbox" });
 }
 
 export async function passwordReset(req: Request, res: Response) {
-  if (!validateBody(req, ['email', 'code', 'newPassword'], ['string', 'string', 'string'])) {
-    res.status(400).json({ error: 'missing parameters' });
-    return;
-  }
+	if (!validateBody(req, ["email", "code", "newPassword"], ["string", "string", "string"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
 
-  const { email, code, newPassword } = req.body
+	const { email, code, newPassword } = req.body;
 
-  const user = await GetDb.userbyMail(email);
+	const user = await GetDb.userbyMail(email);
 
-  if (!user) {
-    res.status(404).json({ message: "not found" });
-    return;
-  }
+	if (!user) {
+		res.status(404).json({ message: "not found" });
+		return;
+	}
 
-  if (code !== user.resetPasswordCode) {
-    res.status(400).json({ message: "invalid link" });
-    return;
-  }
+	if (code !== user.resetPasswordCode) {
+		res.status(400).json({ message: "invalid link" });
+		return;
+	}
 
-  const encryptedPassword = await bcrypt.hash(newPassword, 10);
+	const encryptedPassword = await bcrypt.hash(newPassword, 10);
 
-  await UpdateDb.update('users', ['password', 'resetPasswordCode'], [encryptedPassword, null], ['email'], [email])
+	await UpdateDb.update("users", ["password", "resetPasswordCode"], [encryptedPassword, null], ["email"], [email]);
 
-  res.status(200).json({ message: "password reset" });
+	res.status(200).json({ message: "password reset" });
 }
 
 export async function insertPicture(req: Request, res: Response, next: NextFunction) {
@@ -367,34 +370,55 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-  if (!req.query) {
-    res.status(400).json({ error: "need argument" });
-    return;
-  }
-  const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
-  if (!ageMin || !ageMax || !orientation || !index || !distanceMax || !orderBy) {
-    res.status(400).json({ error: "invalid gender" });
-    return;
-  }
+	const missingParams = validateQueryParams(req);
 
-  const paramsForSearch: findTenUsersParams = {
-    latitude: parseFloat(res.locals.fulluser.latitude),
-    longitude: parseFloat(res.locals.fulluser.longitude),
-    distanceMax: parseFloat(distanceMax as string),
-    ageMin: parseInt(ageMin as string, 10),
-    ageMax: parseInt(ageMax as string, 10),
-    orientation: (orientation as string).split(",").map((value) => value.trim()),
-    interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
-    index: parseInt(index as string),
-    orderBy: orderBy as OrderBy,
-    userId: res.locals.fulluser.id,
-  };
+	if (missingParams.length) {
+		res.status(400).json({ error: "missing parameters: " + missingParams.join(", ") });
+		return;
+	}
 
-  console.log("------------------", paramsForSearch);
+	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
 
-  const profiles = await FindDb.tenUsers(paramsForSearch);
+	const paramsForSearch: findTenUsersParams = {
+		latitude: parseFloat(res.locals.fulluser.latitude),
+		longitude: parseFloat(res.locals.fulluser.longitude),
+		distanceMax: parseFloat(distanceMax as string),
+		ageMin: parseInt(ageMin as string, 10),
+		ageMax: parseInt(ageMax as string, 10),
+		orientation: (orientation as string).split(",").map((value) => value.trim()),
+		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
+		index: parseInt(index as string),
+		orderBy: orderBy as OrderBy,
+		userId: res.locals.fulluser.id,
+	};
 
-  res.status(200).json(profiles);
-  return;
+	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
+		const sanitizedUser = {
+			...sanitizeUser(user),
+			liked : await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+		};
+		return sanitizedUser;
+	}));
+
+	res.status(200).json(profiles);
+	return;
 }
+
+export async function like(req: Request, res: Response) {
+	if (!validateBody(req, ["likeeId", "status"], ["number", "boolean"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { likeeId, status } = req.body;
+
+	if (status) {
+		await InsertDb.like(res.locals.fulluser.id, likeeId);
+	} else {
+		await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+	}
+
+	res.status(200).json({ message: "liked" });
+}
+
 
