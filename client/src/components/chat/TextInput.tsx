@@ -1,16 +1,23 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react'
 import apiProvider from '../../services/apiProvider';
+import { useAuth } from '../../context/AuthProvider';
 
 
-export const TextInput = (props: {userTo:number, userFrom:number}) => {
+export const TextInput = (props: { userTo: number, userFrom: number }) => {
     const [message, setMessage] = useState('')
 
-    function sendMessage(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const auth = useAuth()
+    async function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         event.preventDefault();
-        apiProvider.insertMessage({ message: message, idFrom: props.userFrom, idTo: props.userTo })
-        // socket.emit('sendMessage', { message: message, idFrom: props.userFrom, idTo: props.userTo })
-      }
+        try {
+            console.log('helo')
+            await apiProvider.insertMessage({ message: message, idFrom: props.userFrom, idTo: props.userTo })
+        } catch (error) {
+            console.log('test')
+            auth.handleError(error, 'Message not send')
+        }
+    }
 
     return (
         <>
@@ -18,9 +25,9 @@ export const TextInput = (props: {userTo:number, userFrom:number}) => {
                 id="standard-text"
                 label="un label"
                 value={message}
-                onChange={(event)=>setMessage(event.target.value)}
+                onChange={(event) => setMessage(event.target.value)}
             />
-            <Button variant="contained" color="primary"  onClick={sendMessage}>
+            <Button variant="contained" color="primary" onClick={handleClick}>
             </Button>
         </>
     )

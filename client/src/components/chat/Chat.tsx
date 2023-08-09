@@ -87,7 +87,7 @@ export default function Chat() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message])
 
-
+    //fair en sorte de rester en bas du scroll
     useEffect(() => {
         if (messageListRef.current && isScrolledToBottom) {
             const messageList = messageListRef.current;
