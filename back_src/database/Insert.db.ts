@@ -79,19 +79,19 @@ const InsertDb = {
 
 	async like(likerId: number, likeeId: number): Promise<void> {
 		const sql = `
-      INSERT INTO notifications(fromId, toId, type)
-      VALUES (?, ?, 'like')
+      INSERT INTO user_likes(fromId, toId)
+      VALUES (?, ?)
     `;
 		await db.run(sql, [likerId, likeeId]);
 	},
 
-	async visit(viewerID: number, viewedId: number): Promise<void> {
+	async notification(fromId: number, toId: number, type: string): Promise<void> {
 		const sql = `
-      INSERT INTO notifications(fromId, toId, type)
-      VALUES (?, ?, 'visit')
-    `;
-		await db.run(sql, [viewerID, viewedId]);
-	}
+			INSERT INTO notifications(fromId, toId, type)
+			VALUES (?, ?, ?)
+		`;
+		await db.run(sql, [fromId, toId, type]);
+	},
 };
 
 export default InsertDb;

@@ -402,7 +402,7 @@ export async function getProfiles(req: Request, res: Response) {
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
 		const sanitizedUser = {
 			...sanitizeUser(user),
-			liked : await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
 		};
 		return sanitizedUser;
 	}));
@@ -422,11 +422,20 @@ export async function like(req: Request, res: Response) {
 
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
+		// If user is already liked, an error will be thrown and next line we not be executed
+		await InsertDb.notification(res.locals.fulluser.id, likeeId, "like");
+		await UpdateDb.incrementLikes(likeeId);
+		res.status(200).json({ message: "liked" });
 	} else {
-		await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+		const result = await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+		if (result) {
+			await InsertDb.notification(res.locals.fulluser.id, likeeId, "dislike");
+			await UpdateDb.decrementLikes(likeeId);
+			res.status(200).json({ message: "disliked" });
+		} else {
+			res.status(400).json({ message: "already disliked" });
+		}
 	}
-
-	res.status(200).json({ message: "liked" });
 }
 
 export async function viewProfile(req: Request, res: Response) {
@@ -439,9 +448,10 @@ export async function viewProfile(req: Request, res: Response) {
 
 	const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, viewedId);
 	if (hasBeenVisited) {
-		res.status(200).json({ message: "already viewed" });
+		res.status(200).json({ message: "already visited" });
 	} else {
-		await InsertDb.visit(res.locals.fulluser.id, viewedId);
-		res.status(200).json({ message: "viewed" });
+		await InsertDb.notification(res.locals.fulluser.id, viewedId, "visit");
+		await UpdateDb.incrementViews(viewedId);
+		res.status(200).json({ message: "added to the visit history" });
 	}
 }

@@ -157,7 +157,7 @@ const FindDb = {
 	},
 
 	async isLikedBy(likerId: number, likeeId: number): Promise<boolean> {
-		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'like'";
+		const sql = "SELECT COUNT(*) AS count FROM user_likes WHERE fromId = ? AND toId = ?";
 		const result = await db.get(sql, [likerId, likeeId]);
 		return result.count > 0;
 	},

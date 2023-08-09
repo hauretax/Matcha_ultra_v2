@@ -86,7 +86,7 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-	notification() {
+	async notification() {
 		const sql = `
       CREATE TABLE IF NOT EXISTS notifications (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,7 +97,14 @@ const InitializeDb = {
         FOREIGN KEY (toId) REFERENCES users(user_id),
         FOREIGN KEY (fromId) REFERENCES users(user_id)
       )`;
-		return db.run(sql);
+		await db.run(sql);
+
+		const indexSql = `
+			CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_notifications 
+			ON notifications(fromId, toId, type) 
+			WHERE type = 'visit';
+			`;
+		return db.run(indexSql);
 	}
 
 };
