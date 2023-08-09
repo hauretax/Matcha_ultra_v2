@@ -83,6 +83,14 @@ const InsertDb = {
       VALUES (?, ?, 'like')
     `;
 		await db.run(sql, [likerId, likeeId]);
+	},
+
+	async view(viewerID: number, viewedId: number): Promise<void> {
+		const sql = `
+      INSERT INTO notifications(fromId, toId, type)
+      VALUES (?, ?, 'view')
+    `;
+		await db.run(sql, [viewerID, viewedId]);
 	}
 };
 

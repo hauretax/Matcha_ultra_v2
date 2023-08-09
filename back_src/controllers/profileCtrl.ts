@@ -429,4 +429,15 @@ export async function like(req: Request, res: Response) {
 	res.status(200).json({ message: "liked" });
 }
 
+export async function viewProfile(req: Request, res: Response) {
+	if (!validateBody(req, ["viewedId"], ["number"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
 
+	const { viewedId } = req.body;
+
+	await InsertDb.view(res.locals.fulluser.id, viewedId);
+
+	res.status(200).json({ message: "viewed" });
+}
