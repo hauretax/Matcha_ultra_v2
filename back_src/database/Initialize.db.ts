@@ -74,6 +74,18 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
+	userLikesTable() {
+		const sql = `
+			CREATE TABLE IF NOT EXISTS user_likes (
+				fromId INTEGER,
+				toId INTEGER,
+				PRIMARY KEY (fromId, toId),
+				FOREIGN KEY(fromId) REFERENCES users(id),
+				FOREIGN KEY(toId) REFERENCES users(id)
+			)`;
+		return db.run(sql);
+	},
+
 	notification() {
 		const sql = `
       CREATE TABLE IF NOT EXISTS notifications (
