@@ -41,6 +41,7 @@ const ProfilePage: React.FC = () => {
 				if (id !== undefined) {
 					const res = await apiProvider.getProfile(id);
 					setProfile(res.data);
+					await apiProvider.visit(parseInt(id));
 				}
 			} catch (err) {
 				snackbar(buildErrorString(err as ErrorResponse, "Failed to fetch profile"), "error");
