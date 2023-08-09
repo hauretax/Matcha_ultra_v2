@@ -19,6 +19,7 @@ const Interests: React.FC<InterestsProps> = (props) => {
 	const snackbar = useSnackbar();
 	const auth = useAuth();
 
+
 	useEffect(() => {
 		const fetchOptions = async () => {
 			try {

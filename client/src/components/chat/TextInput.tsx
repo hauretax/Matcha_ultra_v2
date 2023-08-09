@@ -1,16 +1,19 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
-import socketIOClient from "socket.io-client";
+import apiProvider from "../../services/apiProvider";
 
-const socket = socketIOClient("http://localhost:8080");
+
 
 export const TextInput = (props: {userTo:number, userFrom:number}) => {
 	const [message, setMessage] = useState("");
 
+
 	function sendMessage(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 		event.preventDefault();
-		socket.emit("sendMessage", { message: message, idFrom: props.userFrom, idTo: props.userTo });
+		apiProvider.insertMessage({ message: message, idFrom: props.userFrom, idTo: props.userTo });
+		// socket.emit('sendMessage', { message: message, idFrom: props.userFrom, idTo: props.userTo })
 	}
+
 
 	return (
 		<>

@@ -3,7 +3,9 @@ import { useAuth } from "../context/AuthProvider";
 import { buildErrorString, fetchLocation, isProfileIncomplete } from "../utils";
 import { useSnackbar } from "../context/SnackBar";
 import { useEffect } from "react";
+
 import { ErrorResponse } from "../../../comon_src/type/error.type";
+
 
 function RequireAuth() {
 	const auth = useAuth();

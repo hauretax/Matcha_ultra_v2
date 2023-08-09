@@ -23,7 +23,9 @@ import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
 
+
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
+
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -127,6 +129,7 @@ export async function getProfileById(req: Request, res: Response) {
 		return;
 	}
 
+
 	const liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.id);
 
 	res.json({
@@ -144,6 +147,7 @@ export async function getProfileById(req: Request, res: Response) {
 		longitude: user.longitude,
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
+
 		liked: liked,
 	});
 }
@@ -370,6 +374,7 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
+
 	const missingParams = validateQueryParams(req);
 
 	if (missingParams.length) {
@@ -378,6 +383,7 @@ export async function getProfiles(req: Request, res: Response) {
 	}
 
 	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
+
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
@@ -392,6 +398,7 @@ export async function getProfiles(req: Request, res: Response) {
 		userId: res.locals.fulluser.id,
 	};
 
+
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
 		const sanitizedUser = {
 			...sanitizeUser(user),
@@ -399,6 +406,7 @@ export async function getProfiles(req: Request, res: Response) {
 		};
 		return sanitizedUser;
 	}));
+
 
 	res.status(200).json(profiles);
 	return;

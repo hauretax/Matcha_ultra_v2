@@ -2,7 +2,6 @@ import db from "./db";
 
 const InitializeDb = {
 
-	//TODO: remove age and compute it from birthdate
 	userTable() {
 		const sql = `
       CREATE TABLE IF NOT EXISTS users (
@@ -36,7 +35,7 @@ const InitializeDb = {
             userIdFrom INTEGER,
             userIdTo INTEGER,
             msg TEXT,
-            sendDate DATE,
+            sendDate DATE
         )`;
 		return db.run(sql);
 	},

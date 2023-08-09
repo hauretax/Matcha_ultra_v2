@@ -24,6 +24,7 @@ import RequireAuth from "./components/RequireAuth";
 import themeOptions from "./theme/classical";
 
 import { SocketProvider } from "./context/SocketProvider";
+
 import PersonalProfilePage from "./pages/PersonalProfilePage";
 import  { ZoneProvider } from "./context/zoneContext";
 

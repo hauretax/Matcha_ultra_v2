@@ -69,6 +69,7 @@ const FindDb = {
 	},
 	async tenUsers(params: findTenUsersParams): Promise<userInDb[]> {
 
+
 		const interestConditions = generateInterestConditions(params.interestWanted);
 		const orderByClause = generateOrderByClause(params.orderBy);
 

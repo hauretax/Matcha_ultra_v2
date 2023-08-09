@@ -6,148 +6,9 @@ import { Box, Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
 import SocketContext from "../../context/SocketProvider";
 import { useAuth } from "../../context/AuthProvider";
-// import { Message, Profile } from "../../../../comon_src/type/utils.type";
 
-type Profile = {
-	username: string;
-	userId: number;
-	lastMessage: string;
-	messageDate: Date;
-}
-
-type Message = {
-	message: string;
-	timestamp: string;
-	photoURL: string;
-	displayName: string;
-	avatarDisp: boolean;
-}
-// les rendres accesible a tous
-
-async function getProfilesDiscussion(): Promise<Profile[]> {
-	const fakeDBRequest: Promise<Profile[]> = new Promise((resolve) => {
-		setTimeout(() => {
-			resolve([
-				{
-					username: "Alice",
-					userId: 1,
-					lastMessage: "Hello there!",
-					messageDate: new Date("2023-08-03T12:34:56") // Sample date and time
-				},
-				{
-					username: "Bob",
-					userId: 2,
-					lastMessage: "Hey Alice, how are you?",
-					messageDate: new Date("2023-08-02T15:23:45") // Sample date and time
-				},
-				{
-					username: "Charlie",
-					userId: 3,
-					lastMessage: "Greetings!",
-					messageDate: new Date("2023-08-01T09:12:34") // Sample date and time
-				},
-				{
-					username: "Eve",
-					userId: 4,
-					lastMessage: "Hi everyone!",
-					messageDate: new Date("2023-07-31T20:30:15") // Sample date and time
-				},
-				{
-					username: "Mallory",
-					userId: 5,
-					lastMessage: "Goodbye!",
-					messageDate: new Date("2023-07-30T18:45:10") // Sample date and time
-				},
-			]);
-		}, 1000); // 1000 milliseconds = 1 second
-	});
-
-	const profiles = await fakeDBRequest;
-
-	return profiles;
-}
-
-async function getMessagesDiscussion(): Promise<Message[]> {
-	const fakeDBRequest: Promise<Message[]> = new Promise((resolve) => {
-		setTimeout(() => {
-			resolve([
-				{
-					message: "sed leo. Nulla facilisi. Aliquam",
-					timestamp: "08/03 12:34",
-					photoURL: "",
-					displayName: "Moi",
-					avatarDisp: false,
-				},
-				{
-					message: "Lorem ipsum dolor sit amet",
-					timestamp: "08/03 14:25",
-					photoURL: "",
-					displayName: "John",
-					avatarDisp: false,
-				},
-				{
-					message: "consectetur adipiscing elit",
-					timestamp: "08/03 15:10",
-					photoURL: "",
-					displayName: "Jane",
-					avatarDisp: false,
-				},
-				{
-					message: "Ut id augue ut odio tincidunt pulvinar.",
-					timestamp: "08/04 09:45",
-					photoURL: "",
-					displayName: "Jack",
-					avatarDisp: false,
-				},
-				{
-					message: "Phasellus vel turpis vitae nunc elementum accumsan.",
-					timestamp: "08/04 11:20",
-					photoURL: "",
-					displayName: "Alice",
-					avatarDisp: false,
-				},
-				{
-					message: "Sed vitae erat nec elit venenatis bibendum.",
-					timestamp: "08/04 13:15",
-					photoURL: "",
-					displayName: "Bob",
-					avatarDisp: false,
-				},
-				{
-					message: "Donec et ipsum nec mauris mattis condimentum.",
-					timestamp: "08/04 15:30",
-					photoURL: "",
-					displayName: "Eve",
-					avatarDisp: false,
-				},
-				{
-					message: "Fusce rhoncus rhoncus nunc, eget pharetra magna viverra nec.",
-					timestamp: "08/05 10:55",
-					photoURL: "",
-					displayName: "Michael",
-					avatarDisp: false,
-				},
-				{
-					message: "Cras non est eu metus congue eleifend a vitae libero.",
-					timestamp: "08/05 12:40",
-					photoURL: "",
-					displayName: "Sophia",
-					avatarDisp: false,
-				},
-				{
-					message: "Curabitur volutpat facilisis enim in viverra.",
-					timestamp: "08/05 14:20",
-					photoURL: "",
-					displayName: "Alex",
-					avatarDisp: false,
-				},
-			]);
-		}, 1000);
-	});
-	const messages = await fakeDBRequest;
-	return messages;
-}
-
+import { Message, Profile } from "../../../../comon_src/type/utils.type";
+import apiProvider from "../../services/apiProvider";
 
 export default function Chat() {
 	const containerStyle = {
@@ -174,31 +35,28 @@ export default function Chat() {
 	useEffect(() => {
 		async function fetchProfiles() {
 			try {
-				const fetchedProfiles = await getProfilesDiscussion();
-				setProfiles(fetchedProfiles);
+				const conversations = await apiProvider.getConversations();
+				setProfiles(conversations.data.profiles);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des profils:", error);
 			}
 		}
 		fetchProfiles();
-
-
-
 	}, []);
 
 	// changement de conversation
 	useEffect(() => {
 		setMessages([]);
 		const Change = profiles.map(profile => {
-			if (profile.userId === userIdOpenConv)
+			if (profile.id === userIdOpenConv)
 				return { ...profile, haveUnseeMessage: false };
 			return profile;
 		});
 		setProfiles(Change);
 		async function fetchMessage() {
 			try {
-				const fetchedMessage = await getMessagesDiscussion();
-				setMessages(fetchedMessage);
+				const fetchedMessage = await apiProvider.getChat(userIdOpenConv);
+				setMessages(fetchedMessage.data.chat);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des messages:", error);
 			}
@@ -210,17 +68,17 @@ export default function Chat() {
 	useEffect(() => {
 		console.log(message, user?.id, user?.id, message.userFrom);
 		if (userIdOpenConv === message.userFrom) {
-			setMessages([...messages, { message: message.message, avatarDisp: true, displayName: "none", photoURL: "http:nonon", timestamp: "now" }]);
+			setMessages([...messages, { msg: message.message, displayName: "none", sendDate: "now" }]);
 		}
 
 		else if (user?.id === message.userFrom) {
 			console.log("test");
-			setMessages([...messages, { message: message.message, avatarDisp: true, displayName: "none", photoURL: "http:nonon", timestamp: "now" }]);
+			setMessages([...messages, { msg: message.message, displayName: "none", sendDate: "now" }]);
 		}
 
 		else {
 			const Change = profiles.map(profile => {
-				if (profile.userId === message.userFrom)
+				if (profile.id === message.userFrom)
 					return { ...profile, haveUnseeMessage: true };
 				return profile;
 			});
@@ -238,15 +96,10 @@ export default function Chat() {
 
 	}, [messages]);
 
-	//charger les conversations active depuis la bdd
-
-	//charger chat avec un apelle en bdd
-
-	//emvoyer les messages dans la bdd
 	
 
 	const checkIsScrolledToBottom = (event: React.UIEvent<HTMLDivElement>) => {
-		const div = event.currentTarget; // change "target" to "currentTarget"
+		const div = event.currentTarget;
 		const { scrollTop, scrollHeight, clientHeight } = div;
 		const isBottom = scrollTop + clientHeight === scrollHeight;
 		setIsScrolledToBottom(isBottom);
@@ -264,13 +117,12 @@ export default function Chat() {
 					<Box onScroll={checkIsScrolledToBottom} ref={messageListRef} sx={{ height: "300px", overflow: "auto" }}>
 						{
 							messages.map((message, key) => {
+								console.log(message);
 								return <MessageLeft
 									key={key}
-									message={message.message}
-									timestamp={message.timestamp}
-									photoURL={message.photoURL}
+									message={message.msg}
+									timestamp={message.sendDate}
 									displayName={message.displayName}
-									avatarDisp={message.avatarDisp}
 								/>;
 							})
 						}
@@ -281,5 +133,6 @@ export default function Chat() {
 
 		</div >
 	);
+
 }
 

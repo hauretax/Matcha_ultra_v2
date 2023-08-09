@@ -1,17 +1,19 @@
 import { Grid } from "@mui/material";
 import ProfileCard from "./ProfileCarde";
+import { Profile } from "../../../../comon_src/type/utils.type";
 
-function BrowsingChatProfiles(props: { profiles: { username: string, userId: number }[], handleClickProfile: (id:number) => void }) {
+function BrowsingChatProfiles(props: { profiles: Profile[], handleClickProfile: (id: number) => void }) {
 	return (
 		<Grid container spacing={2}  >
-			{props.profiles.map((profile) => (
-				<Grid item xs={12} key={profile.userId} onClick={() => props.handleClickProfile(profile.userId)}>
-					<ProfileCard user={profile} />
-
-				</Grid>
-			))}
+			{props.profiles &&
+				props.profiles.map((profile) => (
+					<Grid item xs={12} key={profile.id} onClick={() => props.handleClickProfile(profile.id)}>
+						<ProfileCard user={profile} />
+					</Grid>
+				))}
 		</Grid>
 	);
+
 }
 
 export default BrowsingChatProfiles;

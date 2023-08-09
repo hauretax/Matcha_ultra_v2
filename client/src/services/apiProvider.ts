@@ -6,6 +6,16 @@ const apiProvider = {
 		return axiosPrivate.get("/profile/" + id);
 	},
 
+
+	getConversations() {
+		return axiosPrivate.get("/chat/getConv");
+	},
+
+	getChat(id: number) {
+		return axiosPrivate.get("/chat/getChat/"+id);
+	},
+
+
 	getOptions() {
 		return axiosPrivate.get("/options");
 	},
@@ -46,6 +56,11 @@ const apiProvider = {
 				"Content-Type": "multipart/form-data",
 			},
 		});
+	},
+
+
+	insertMessage(data: { message: string, idFrom: number, idTo: number }) {
+		return axiosPrivate.post("/chat/new", data);
 	},
 
 	updatePicture(formData: FormData, id: number) {

@@ -16,7 +16,7 @@ import handleSocket from "./controllers/socketCtrl";
 class App {
 	private app: Application;
 	private server: http.Server;
-	private io: Server;
+	public io: Server;
 	private connectedUsers: Map<string, number> = new Map<string, number>();
 
 	constructor() {
@@ -84,6 +84,7 @@ const initFunctions = [
 	InitializeDb.interestsTable,
 	InitializeDb.userInterestsTable,
 	InitializeDb.userNoteTable,
+	InitializeDb.chatsTable,
 	InitializeDb.userLikesTable,
 	// ... add any additional table initializers here
 ];

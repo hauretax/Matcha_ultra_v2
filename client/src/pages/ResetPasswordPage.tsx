@@ -1,3 +1,4 @@
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,6 +11,7 @@ import { useAuth } from "../context/AuthProvider";
 import React, { useState } from "react";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 
 interface IFields {
 	[key: string]: string;
