@@ -7,13 +7,13 @@ const apiProvider = {
 	},
 
 
-  getConversations() {
-    return axiosPrivate.get('/chat/getConv')
-  },
+	getConversations() {
+		return axiosPrivate.get("/chat/getConv");
+	},
 
-  getChat(id: number) {
-    return axiosPrivate.get('/chat/getChat/'+id)
-  },
+	getChat(id: number) {
+		return axiosPrivate.get("/chat/getChat/"+id);
+	},
 
 
 	getOptions() {
@@ -59,9 +59,9 @@ const apiProvider = {
 	},
 
 
-  insertMessage(data: { message: string, idFrom: number, idTo: number }) {
-    return axiosPrivate.post('/chat/new', data);
-  },
+	insertMessage(data: { message: string, idFrom: number, idTo: number }) {
+		return axiosPrivate.post("/chat/new", data);
+	},
 
 	updatePicture(formData: FormData, id: number) {
 		return axiosPrivate.put(`/picture/${id}/edit`, formData, {
