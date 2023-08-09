@@ -6,7 +6,7 @@ import path from "path";
 
 import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
-import { validateBody, validateDate, validateInterests, validateMail, validatePictureId } from "../utils/validateDataHelper";
+import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateQueryParams } from "../utils/validateDataHelper";
 
 import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
@@ -23,7 +23,9 @@ import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
 
-import { getDistanceInKm, getAge } from "../utils/misc";
+
+import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
+
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -127,6 +129,9 @@ export async function getProfileById(req: Request, res: Response) {
 		return;
 	}
 
+
+	const liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.id);
+
 	res.json({
 		id: user.id,
 		username: user.username,
@@ -142,6 +147,8 @@ export async function getProfileById(req: Request, res: Response) {
 		longitude: user.longitude,
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
+
+		liked: liked,
 	});
 }
 
@@ -367,15 +374,16 @@ export async function updatePicture(req: Request, res: Response, next: NextFunct
 }
 
 export async function getProfiles(req: Request, res: Response) {
-	if (!req.query) {
-		res.status(400).json({ error: "need argument" });
+
+	const missingParams = validateQueryParams(req);
+
+	if (missingParams.length) {
+		res.status(400).json({ error: "missing parameters: " + missingParams.join(", ") });
 		return;
 	}
+
 	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
-	if (!ageMin || !ageMax || !orientation || !index || !distanceMax || !orderBy) {
-		res.status(400).json({ error: "invalid gender" });
-		return;
-	}
+
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
@@ -390,11 +398,35 @@ export async function getProfiles(req: Request, res: Response) {
 		userId: res.locals.fulluser.id,
 	};
 
-	console.log("------------------", paramsForSearch);
 
-	const profiles = await FindDb.tenUsers(paramsForSearch);
+	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
+		const sanitizedUser = {
+			...sanitizeUser(user),
+			liked : await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+		};
+		return sanitizedUser;
+	}));
+
 
 	res.status(200).json(profiles);
 	return;
 }
+
+export async function like(req: Request, res: Response) {
+	if (!validateBody(req, ["likeeId", "status"], ["number", "boolean"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { likeeId, status } = req.body;
+
+	if (status) {
+		await InsertDb.like(res.locals.fulluser.id, likeeId);
+	} else {
+		await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+	}
+
+	res.status(200).json({ message: "liked" });
+}
+
 

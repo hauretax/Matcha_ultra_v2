@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && node dist/back_src/app.js",
     "track": "tsc --watch && node dist/back_src/app.js",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts,.tsx",
     "lf": "eslint . --ext .ts,.tsx --fix",
     "test": "jest --testPathPatten=back_test"
   },

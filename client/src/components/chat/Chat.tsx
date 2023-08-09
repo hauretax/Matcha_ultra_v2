@@ -4,8 +4,9 @@ import { TextInput } from "./TextInput";
 import { MessageLeft } from "./Message";
 import { Box, Paper } from "@mui/material";
 import BrowsingChatProfiles from "./Profiles";
-import SocketContext from "../../context/SocketProvider"
+import SocketContext from "../../context/SocketProvider";
 import { useAuth } from "../../context/AuthProvider";
+
 import { Message, Profile } from "../../../../comon_src/type/utils.type";
 import apiProvider from "../../services/apiProvider";
 
@@ -133,5 +134,6 @@ export default function Chat() {
 
         </div >
     );
+
 }
 

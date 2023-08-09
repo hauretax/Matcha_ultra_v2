@@ -13,6 +13,7 @@ function BrowsingChatProfiles(props: { profiles: Profile[], handleClickProfile: 
                 ))}
         </Grid>
     )
+
 }
 
-export default BrowsingChatProfiles
+export default BrowsingChatProfiles;

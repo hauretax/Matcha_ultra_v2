@@ -82,6 +82,18 @@ const InitializeDb = {
         )
         `;
 		return db.run(sql);
+	},
+
+	userLikesTable() {
+		const sql = `
+      CREATE TABLE IF NOT EXISTS user_likes (
+        liker_id INT,
+        likee_id INT,
+        PRIMARY KEY (liker_id, likee_id),
+        FOREIGN KEY (liker_id) REFERENCES users(user_id),
+        FOREIGN KEY (likee_id) REFERENCES users(user_id)
+      )`;
+		return db.run(sql);
 	}
 
 };
