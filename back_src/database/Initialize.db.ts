@@ -23,7 +23,9 @@ const InitializeDb = {
         latitude DECIMAL(9, 6),
         longitude DECIMAL(9, 6),
         ip TEXT,
-        customLocation BIT DEFAULT 0
+        customLocation BIT DEFAULT 0,
+				views INTEGER DEFAULT 0,
+				likes INTEGER DEFAULT 0
       )`;
 		return db.run(sql);
 	},
