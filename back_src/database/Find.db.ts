@@ -76,7 +76,6 @@ const FindDb = {
 		const completTab = [
 			...params.interestWanted,
 			params.latitude, params.longitude, params.latitude,
-			params.userId,
 			params.distanceMax,
 			params.ageMax,
 			params.ageMin,
@@ -85,7 +84,7 @@ const FindDb = {
 			params.userId,
 			params.index
 		];
-
+		
 		//TODO: prevent homosexual men to be queried by heterosexual women
 		const sql = `
 		SELECT
@@ -105,8 +104,7 @@ const FindDb = {
 			) AS interestCount,
 			interests,
 			picture_ids,
-			image_srcs,
-			un.note AS user_note
+			image_srcs
 		FROM
 			users AS u
 			LEFT JOIN (
@@ -140,7 +138,6 @@ const FindDb = {
 				FROM
 					users
 			) AS d ON u.id = d.id
-			LEFT JOIN user_notes AS un ON un.from_id = ? AND un.to_id = u.id
 		WHERE
 			d.distance < ?
 			AND u.age <= ?
@@ -160,7 +157,7 @@ const FindDb = {
 	},
 
 	async isLikedBy(likerId: number, likeeId: number): Promise<boolean> {
-		const sql = "SELECT COUNT(*) AS count FROM user_likes WHERE liker_id = ? AND likee_id = ?";
+		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'like'";
 		const result = await db.get(sql, [likerId, likeeId]);
 		return result.count > 0;
 	},

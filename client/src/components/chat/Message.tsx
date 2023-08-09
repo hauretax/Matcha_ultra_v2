@@ -1,7 +1,7 @@
 import { Avatar } from "@mui/material";
 import React from "react";
 
-export const MessageLeft = (props: { message: string; timestamp: string; photoURL: string; displayName: string; avatarDisp: boolean;}) => {
+export const MessageLeft = (props: { message: string; timestamp: string; photoURL: string; displayName: string;}) => {
 	const message = props.message ? props.message : "no message";
 	const timestamp = props.timestamp ? props.timestamp : "";
 	const photoURL = props.photoURL ? props.photoURL : "dummy.js";

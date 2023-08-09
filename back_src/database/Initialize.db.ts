@@ -72,26 +72,16 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-	userNoteTable() {
+	notification() {
 		const sql = `
-        CREATE TABLE IF NOT EXISTS user_notes (
-            from_id INTEGER,
-            to_id INTEGER,
-            note INTEGER,
-            UNIQUE (from_id, to_id)
-        )
-        `;
-		return db.run(sql);
-	},
-
-	userLikesTable() {
-		const sql = `
-      CREATE TABLE IF NOT EXISTS user_likes (
-        liker_id INT,
-        likee_id INT,
-        PRIMARY KEY (liker_id, likee_id),
-        FOREIGN KEY (liker_id) REFERENCES users(user_id),
-        FOREIGN KEY (likee_id) REFERENCES users(user_id)
+      CREATE TABLE IF NOT EXISTS notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fromId INT,
+        toId INT,
+        type TEXT,
+        date DATE DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (toId) REFERENCES users(user_id),
+        FOREIGN KEY (fromId) REFERENCES users(user_id)
       )`;
 		return db.run(sql);
 	}
