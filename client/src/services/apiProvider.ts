@@ -1,85 +1,88 @@
-import { findTenUsersParams } from '../../../comon_src/type/utils.type'
-import axiosPrivate from './axiosPrivate'
+import { findTenUsersParams } from "../../../comon_src/type/utils.type";
+import axiosPrivate from "./axiosPrivate";
 
 const apiProvider = {
-  getProfile(id: string) {
-    return axiosPrivate.get('/profile/' + id)
-  },
+	getProfile(id: string) {
+		return axiosPrivate.get("/profile/" + id);
+	},
 
-  getConversations() {
-    return axiosPrivate.get('/chat/getConv')
-  },
 
-  getChat(id: number) {
-    return axiosPrivate.get('/chat/getChat/'+id)
-  },
+	getConversations() {
+		return axiosPrivate.get("/chat/getConv");
+	},
 
-  getOptions() {
-    return axiosPrivate.get('/options')
-  },
+	getChat(id: number) {
+		return axiosPrivate.get("/chat/getChat/"+id);
+	},
 
-  updatePositionByIp() {
-    return axiosPrivate.post('/setLocationByIP')
-  },
 
-  /*
+	getOptions() {
+		return axiosPrivate.get("/options");
+	},
+
+	updatePositionByIp() {
+		return axiosPrivate.post("/setLocationByIP");
+	},
+
+	/*
   * update position by longitude and latitude
   */
-  updatePositionByLL(latitude: string, longitude: string) {
-    return axiosPrivate.post('/setLocalisation', {
-      latitude,
-      longitude
-    })
-  },
+	updatePositionByLL(latitude: string, longitude: string) {
+		return axiosPrivate.post("/setLocalisation", {
+			latitude,
+			longitude
+		});
+	},
 
-  updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) {
-    return axiosPrivate.patch('/profile', { firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude })
-  },
+	updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) {
+		return axiosPrivate.patch("/profile", { firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude });
+	},
 
-  updateBio(biography: string) {
-    return axiosPrivate.patch('/profileBio', { biography })
-  },
+	updateBio(biography: string) {
+		return axiosPrivate.patch("/profileBio", { biography });
+	},
 
-  updateInterests(interests: string[]) {
-    return axiosPrivate.patch('/profileInterests', { interests })
-  },
+	updateInterests(interests: string[]) {
+		return axiosPrivate.patch("/profileInterests", { interests });
+	},
 
-  deletePicture(id: number) {
-    return axiosPrivate.delete(`/picture/${id}`);
-  },
+	deletePicture(id: number) {
+		return axiosPrivate.delete(`/picture/${id}`);
+	},
 
-  insertPicture(formData: FormData) {
-    return axiosPrivate.post('/picture/new', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
+	insertPicture(formData: FormData) {
+		return axiosPrivate.post("/picture/new", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+	},
 
-  insertMessage(data: { message: string, idFrom: number, idTo: number }) {
-    return axiosPrivate.post('/chat/new', data);
-  },
 
-  updatePicture(formData: FormData, id: number) {
-    return axiosPrivate.put(`/picture/${id}/edit`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
+	insertMessage(data: { message: string, idFrom: number, idTo: number }) {
+		return axiosPrivate.post("/chat/new", data);
+	},
 
-  noteUsers({ note, userTo }: { note: number, userTo: number }) {
-    return axiosPrivate.post(`/note/userTo`, { note, userTo })
-  },
+	updatePicture(formData: FormData, id: number) {
+		return axiosPrivate.put(`/picture/${id}/edit`, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+	},
 
-  /*
+	noteUsers({ note, userTo }: { note: number, userTo: number }) {
+		return axiosPrivate.post("/note/userTo", { note, userTo });
+	},
+
+	/*
   *age|birthdate
   *localisation : latitude, longitude
   * interests array
   * genderFind array
   */
-  getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams) {
-    return axiosPrivate.get(`/users?latitude=${latitude}
+	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams) {
+		return axiosPrivate.get(`/users?latitude=${latitude}
     &longitude=${longitude}
     &distanceMax=${distanceMax}
     &ageMin=${ageMin}
@@ -89,7 +92,11 @@ const apiProvider = {
     &index=${index}
     &orderBy=${orderBy}`);
 
-  }
-}
+	},
 
-export default apiProvider
+	like(likeeId: number, status: boolean) {
+		return axiosPrivate.post("/like", { likeeId, status });
+	}
+};
+
+export default apiProvider;

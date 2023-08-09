@@ -1,6 +1,8 @@
 import express from "express";
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById } from "../controllers/profileCtrl";
+
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like } from "../controllers/profileCtrl";
 import { getActualConversations, getChat, newMessage } from "../controllers/chatCtrl";
+
 import asyncHandler from "express-async-handler";
 import { createNewJwt } from "../controllers/jwtCtrl";
 import { validsecurRequest } from "../middlewares/secureRequest.mid";
@@ -35,6 +37,7 @@ router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"),
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));
 
 router.get("/users", validsecurRequest, profileCompletedGroup, asyncHandler(getProfiles));
+router.post("/like", profileCompletedGroup, asyncHandler(like));
 router.get("/profile/:id", privateGroup, asyncHandler(getProfileById));
 router.get("/chat/getConv", profileCompletedGroup, asyncHandler(getActualConversations));
 router.get("/chat/getChat/:id", profileCompletedGroup, asyncHandler(getChat));

@@ -72,15 +72,17 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-	userNoteTable() {
+	notification() {
 		const sql = `
-        CREATE TABLE IF NOT EXISTS user_notes (
-            from_id INTEGER,
-            to_id INTEGER,
-            note INTEGER,
-            UNIQUE (from_id, to_id)
-        )
-        `;
+      CREATE TABLE IF NOT EXISTS notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fromId INT,
+        toId INT,
+        type TEXT,
+        date DATE DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (toId) REFERENCES users(user_id),
+        FOREIGN KEY (fromId) REFERENCES users(user_id)
+      )`;
 		return db.run(sql);
 	}
 
