@@ -60,12 +60,26 @@ export type UserPayload = {
 	profile: PersonalProfile;
 }
 
-export type userInDb = UserProfile & {
+export type userInDb1 = PersonalProfile & {
 	image_srcs: string;
 	picture_ids: string;
 	interests: string;
 	gender: Gender;
 	user_note: number;
+	views: number;
+	likes: number;
+}
+
+export type userInDb2 = PersonalProfile & {
+	image_srcs: string;
+	picture_ids: string;
+	interests: string;
+	gender: Gender;
+	user_note: number;
+	views: number;
+	likes: number;
+	age: number;
+	distance: number;
 }
 
 type Gender = "Female" | "Male" | "Other";

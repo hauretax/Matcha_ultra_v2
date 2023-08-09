@@ -147,8 +147,8 @@ export async function getProfileById(req: Request, res: Response) {
 		longitude: user.longitude,
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
-
 		liked: liked,
+		fameRating: user.likes / user.views
 	});
 }
 
@@ -402,7 +402,8 @@ export async function getProfiles(req: Request, res: Response) {
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
 		const sanitizedUser = {
 			...sanitizeUser(user),
-			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id),
+			fameRating: user.likes / user.views
 		};
 		return sanitizedUser;
 	}));
@@ -425,6 +426,12 @@ export async function like(req: Request, res: Response) {
 		// If user is already liked, an error will be thrown and next line we not be executed
 		await InsertDb.notification(res.locals.fulluser.id, likeeId, "like");
 		await UpdateDb.incrementLikes(likeeId);
+		//If user is liked, his profile is set as visited
+		const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
+		if (!hasBeenVisited) {
+			await InsertDb.notification(res.locals.fulluser.id, likeeId, "visit");
+			await UpdateDb.incrementViews(likeeId);
+		}
 		res.status(200).json({ message: "liked" });
 	} else {
 		const result = await DeletDb.dislike(res.locals.fulluser.id, likeeId);
