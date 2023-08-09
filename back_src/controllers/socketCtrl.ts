@@ -1,6 +1,7 @@
 import { validateJwt } from "../utils/jwt";
 import FindDb from "../database/Find.db";
 import app from "../app";
+import { notification } from "../../comon_src/type/utils.type";
 
 export const connectedUsers: Map<string, number> = new Map<string, number>();
 
@@ -12,6 +13,13 @@ function getSocketID(userId: number) {
 		}
 	}
 	return userSockets;
+}
+
+export function sendNotification(notification: notification) {
+	const userSocketsTo = getSocketID(notification.toId);
+	userSocketsTo.forEach((socketId) => {
+		app.io.to(socketId).emit("newNotification", notification);
+	});
 }
 
 export function sendMessage(message, idFrom, idTo) {
