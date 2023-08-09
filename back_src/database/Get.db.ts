@@ -68,9 +68,9 @@ const GetDb = {
 	LEFT JOIN pictures p ON p.id = first_pictures.minId
 	WHERE EXISTS (
 		SELECT 1
-		FROM user_notes n1
-		JOIN user_notes n2 ON n1.to_id = n2.from_id AND n2.to_id = n1.from_id
-		WHERE n1.from_id = ? AND n1.to_id = u.id AND n2.from_id = u.id AND n2.to_id = ?
+		FROM notifications n1
+		JOIN notifications n2 ON n1.toId = n2.fromId AND n2.toId = n1.fromId AND n1.type = 'like'
+		WHERE n1.fromId = ? AND n1.toId = u.id AND n2.fromId = u.id AND n2.toId = ? AND n2.type = 'like'
 	);
 		`;
 		return db.all(sql, [ userId, userId]);
