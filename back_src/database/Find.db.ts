@@ -161,6 +161,12 @@ const FindDb = {
 		const result = await db.get(sql, [likerId, likeeId]);
 		return result.count > 0;
 	},
+
+	async hasBeenVisitedBy(visitorId: number, visiteeId: number): Promise<boolean> {
+		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'visit'";
+		const result = await db.get(sql, [visitorId, visiteeId]);
+		return result.count > 0;
+	}
 };
 
 function generateInterestConditions(interestWanted: string[]): string {

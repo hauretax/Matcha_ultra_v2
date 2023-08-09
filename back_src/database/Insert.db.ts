@@ -85,10 +85,10 @@ const InsertDb = {
 		await db.run(sql, [likerId, likeeId]);
 	},
 
-	async view(viewerID: number, viewedId: number): Promise<void> {
+	async visit(viewerID: number, viewedId: number): Promise<void> {
 		const sql = `
       INSERT INTO notifications(fromId, toId, type)
-      VALUES (?, ?, 'view')
+      VALUES (?, ?, 'visit')
     `;
 		await db.run(sql, [viewerID, viewedId]);
 	}

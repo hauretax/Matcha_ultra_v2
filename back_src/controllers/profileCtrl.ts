@@ -437,7 +437,11 @@ export async function viewProfile(req: Request, res: Response) {
 
 	const { viewedId } = req.body;
 
-	await InsertDb.view(res.locals.fulluser.id, viewedId);
-
-	res.status(200).json({ message: "viewed" });
+	const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, viewedId);
+	if (hasBeenVisited) {
+		res.status(200).json({ message: "already viewed" });
+	} else {
+		await InsertDb.visit(res.locals.fulluser.id, viewedId);
+		res.status(200).json({ message: "viewed" });
+	}
 }
