@@ -41,7 +41,6 @@ export interface filtersList {
   orderBy: OrderBy;
 }
 
-
 export interface Message {
     msg: string;
     sendDate: string;
@@ -56,4 +55,13 @@ export interface Profile {
     lastMessage: string,
     messageDate: Date,
     profilePicture: string
+}
+
+export type notificationType = "like" | "message" | "visite" | "match" | "unlike"
+
+export interface notification{
+    type: notificationType,
+    id: number,
+    fromId: number,
+    toId: number,
 }

@@ -19,8 +19,8 @@ const DeletDb = {
 
 	async dislike(likerId: number, likeeId: number): Promise<void> {
 		const sql = `
-      DELETE FROM user_likes
-      WHERE liker_id = ? AND likee_id = ?;
+      DELETE FROM notifications
+      WHERE fromId = ? AND toId = ? AND type = 'like';
     `;
 		await db.run(sql, [likerId, likeeId]);
 	},

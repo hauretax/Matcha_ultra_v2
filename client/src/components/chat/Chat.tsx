@@ -123,6 +123,7 @@ export default function Chat() {
 									message={message.msg}
 									timestamp={message.sendDate}
 									displayName={message.displayName}
+									photoURL="https://www.w3schools.com/howto/img_avatar.png"
 								/>;
 							})
 						}
