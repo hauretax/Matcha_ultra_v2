@@ -81,6 +81,7 @@ const GetDb = {
 		SELECT *
 		FROM chats
 		WHERE userIdFrom = ? AND userIdTo = ?
+		ORDER BY sendDate
 		`;
 		return db.all(sql, [ idFrom, idTo]);
 	}
