@@ -16,8 +16,7 @@ export default function Chat() {
 		justifyContent: "space-between",
 		height: "200px"
 	};
-	//reflexion sur la structure des profiles message
-	//{ username: string, userId: number, lastMessage:string, MessageDate: Date ou string ?  }
+    
 	const [profiles, setProfiles] = useState<Profile[]>([]);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [userIdOpenConv, changeActualConv] = useState(-1);
@@ -87,7 +86,7 @@ export default function Chat() {
 
 	}, [message]);
 
-
+	//fair en sorte de rester en bas du scroll
 	useEffect(() => {
 		if (messageListRef.current && isScrolledToBottom) {
 			const messageList = messageListRef.current;

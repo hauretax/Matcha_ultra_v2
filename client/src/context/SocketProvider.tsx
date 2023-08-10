@@ -2,6 +2,7 @@ import React, { useEffect, useState, createContext } from "react";
 import socketIOClient from "socket.io-client";
 
 import { useAuth } from "./AuthProvider";
+import { notification } from "../../../comon_src/type/utils.type";
 
 interface SocketContextType {
   connectedUsers: number[];
@@ -48,12 +49,17 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 			setMessage({ userFrom: senderId, message });
 		};
 
+		const handleNotification = (notification:notification)=> {
+			console.log(notification);
+		};
+
 		// Socket connection and authentication
 		authenticateSocket();
 
 		socket.on("connectedUsers", handleAuthenticated);
 		socket.on("unauthorized", handleUnauthorized);
 
+		socket.on("newNotification", handleNotification);
 		socket.on("newMessage", handleMessage);
 		// Error handling
 		socket.on("connect_error", (error) => {

@@ -22,7 +22,7 @@ import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
-
+import { newNotification } from "./notificationCtrl";
 
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
@@ -215,8 +215,8 @@ export async function updateProfile(req: Request, res: Response) {
 
 	await UpdateDb.update(
 		"users",
-		["firstName", "lastName", "birthDate", "gender", "orientation", "email", "emailVerified", "customLocation"],
-		[firstName, lastName, birthDate, gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
+		["firstName", "lastName", "birthDate","age", "gender", "orientation", "email", "emailVerified", "customLocation"],
+		[firstName, lastName, birthDate, getAge(birthDate), gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
 		["id"],
 		[res.locals.fulluser.id]
 	);
@@ -402,7 +402,7 @@ export async function getProfiles(req: Request, res: Response) {
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
 		const sanitizedUser = {
 			...sanitizeUser(user),
-			liked : await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
+			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id)
 		};
 		return sanitizedUser;
 	}));
@@ -422,11 +422,11 @@ export async function like(req: Request, res: Response) {
 
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
+		newNotification("like", res.locals.fulluser.id, likeeId);
 	} else {
 		await DeletDb.dislike(res.locals.fulluser.id, likeeId);
+		newNotification("unlike", res.locals.fulluser.id, likeeId);
 	}
 
 	res.status(200).json({ message: "liked" });
 }
-
-

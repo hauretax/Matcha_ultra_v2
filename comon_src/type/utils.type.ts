@@ -60,8 +60,9 @@ export interface Profile {
 export type notificationType = "like" | "message" | "visite" | "match" | "unlike"
 
 export interface notification{
-    type: notificationType,
     id: number,
+    type: notificationType,
     fromId: number,
     toId: number,
+    date: Date
 }
