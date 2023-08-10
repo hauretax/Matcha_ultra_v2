@@ -188,11 +188,11 @@ export async function validByEmail(req: Request, res: Response) {
 }
 
 export async function updateProfile(req: Request, res: Response) {
-	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "orientation", "email", "customLocation"], ["string", "string", "string", "string", "string", "string", "boolean"])) {
+	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "preferences", "email", "customLocation"], ["string", "string", "string", "string", "object", "string", "boolean"])) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { firstName, lastName, birthDate, gender, orientation, email, customLocation } = req.body;
+	const { firstName, lastName, birthDate, gender, preferences, email, customLocation } = req.body;
 
 	// Age validation
 	if (!validateDate(birthDate)) {
@@ -206,9 +206,9 @@ export async function updateProfile(req: Request, res: Response) {
 		return;
 	}
 
-	// Orientation validation
-	if (!["Homosexual", "Heterosexual", "Bisexual"].includes(orientation)) {
-		res.status(400).json({ error: "invalid orientation" });
+	// Preferences validation
+	if (!validateInterests(preferences)) {
+		res.status(400).json({ error: "invalid preferences" });
 		return;
 	}
 
@@ -222,8 +222,8 @@ export async function updateProfile(req: Request, res: Response) {
 
 	await UpdateDb.update(
 		"users",
-		["firstName", "lastName", "birthDate", "age", "gender", "orientation", "email", "emailVerified", "customLocation"],
-		[firstName, lastName, birthDate, getAge(birthDate), gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
+		["firstName", "lastName", "birthDate", "age", "gender", "email", "emailVerified", "customLocation"],
+		[firstName, lastName, birthDate, getAge(birthDate), gender, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
 		["id"],
 		[res.locals.fulluser.id]
 	);
