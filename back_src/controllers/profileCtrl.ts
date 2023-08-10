@@ -422,12 +422,20 @@ export async function like(req: Request, res: Response) {
 	const { likeeId, status } = req.body;
 
 	if (status) {
-		await InsertDb.like(res.locals.fulluser.id, likeeId);
+		const likePromise = await InsertDb.like(res.locals.fulluser.id, likeeId);
 		// If user is already liked, an error will be thrown and next line we not be executed
-		await newNotification("like", res.locals.fulluser.id, likeeId);
-		await UpdateDb.incrementLikes(likeeId);
+		const notificationPromise = await newNotification("like", res.locals.fulluser.id, likeeId);
+		const incrementLikesPromise = await UpdateDb.incrementLikes(likeeId);
 		//If user is liked, his profile is set as visited
-		const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
+		const hasBeenVisitedPromise = FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
+
+		const [hasBeenVisited] = await Promise.all([
+			hasBeenVisitedPromise,
+			likePromise,
+			notificationPromise,
+			incrementLikesPromise
+		]);
+
 		if (!hasBeenVisited) {
 			await newNotification("visit", res.locals.fulluser.id, likeeId);
 			await UpdateDb.incrementViews(likeeId);

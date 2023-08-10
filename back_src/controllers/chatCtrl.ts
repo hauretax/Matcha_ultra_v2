@@ -48,7 +48,6 @@ export async function newMessage(req: Request, res: Response) {
 		return;
 	}
 
-	//TODO #9: add message to notification table
 	await InsertDb.message(message, res.locals.fulluser.id, idTo);
 
 	sendMessage(message, res.locals.fulluser.id, idTo);
