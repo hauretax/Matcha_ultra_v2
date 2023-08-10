@@ -3,7 +3,6 @@ import { AxiosResponse } from "axios";
 
 import { PersonalProfile } from "../../../comon_src/type/user.type";
 
-import fakeAuthProvider from "../services/fakeAuthProvider";
 import authProvider from "../services/authProvider";
 
 import { useSnackbar } from "./SnackBar";
@@ -206,8 +205,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 	// TODO #4
 	const signout = async (): Promise<void> => {
 		try {
-
-			await fakeAuthProvider.signout();
 			localStorage.removeItem("jwtToken");
 			setUser(null);
 			snackBar("Logout successfull", "success");

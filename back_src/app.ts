@@ -70,7 +70,7 @@ class App {
 
 	public start(port: number) {
 		const server = this.server.listen(port, () => {
-			console.log(`Le serveur est en cours d"exécution http://localhost:${port}`);
+			console.warn(`Le serveur est en cours d"exécution http://localhost:${port}`);
 		});
 		return server;
 	}

@@ -8,7 +8,6 @@ export async function newNotification(type: notificationType, fromId: number, to
 		throw new Error("Missing required parameters");
 	}
 	const notification = await InsertDb.notification(fromId, toId, type) as unknown;
-	console.log(notification);
 	sendNotification(notification as notification);
 
 }

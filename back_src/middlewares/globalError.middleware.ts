@@ -7,7 +7,7 @@ const globalErrorMiddleware = (
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	next: NextFunction
 ) => {
-	console.log(err.stack);
+	console.error(err.stack);
 	return res.status(500).send("Une erreur est survenue sur le serveur.");
 };
 

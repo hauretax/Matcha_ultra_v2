@@ -23,8 +23,6 @@ export function sendNotification(notification: notification) {
 }
 
 export function sendMessage(message, idFrom, idTo) {
-	console.log(connectedUsers);
-	console.log(message, idTo, idFrom);
 
 	const userSocketsTo = getSocketID(idTo);
 	const userSocketsFrom = getSocketID(idFrom);
@@ -60,7 +58,6 @@ export default function handleSocket(socket, io) {
 	});
 
 	socket.on("disconnect", () => {
-		console.log("user disconnected");
 		connectedUsers.delete(socket.id);
 		io.emit("connectedUsers", Array.from(connectedUsers.values()));
 	});
