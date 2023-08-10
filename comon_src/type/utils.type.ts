@@ -41,19 +41,28 @@ export interface filtersList {
   orderBy: OrderBy;
 }
 
+export interface Message {
+    msg: string;
+    sendDate: string;
+    displayName: string;
+    userIdFrom?: number;
+    userIdTo?: number;
+}
 
 export interface Profile {
     username: string,
-    userId: number,
+    id: number,
     lastMessage: string,
-    messageDate: Date // Sample date and time
-
+    messageDate: Date,
+    profilePicture: string
 }
 
-export interface Message {
-    message: string,
-    timestamp: string,
-    photoURL: string,
-    displayName: string,
-    avatarDisp: boolean,
+export type notificationType = "like" | "message" | "visit" | "match" | "unlike"
+
+export interface notification{
+    id: number,
+    type: notificationType,
+    fromId: number,
+    toId: number,
+    date: Date
 }

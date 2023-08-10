@@ -1,8 +1,9 @@
 import { validateJwt } from "../utils/jwt";
 import FindDb from "../database/Find.db";
+import app from "../app";
+import { notification } from "../../comon_src/type/utils.type";
 
-const connectedUsers: Map<string, number> = new Map<string, number>();
-
+export const connectedUsers: Map<string, number> = new Map<string, number>();
 
 function getSocketID(userId: number) {
 	const userSockets = [];
@@ -14,20 +15,41 @@ function getSocketID(userId: number) {
 	return userSockets;
 }
 
+export function sendNotification(notification: notification) {
+	const userSocketsTo = getSocketID(notification.toId);
+	userSocketsTo.forEach((socketId) => {
+		app.io.to(socketId).emit("newNotification", notification);
+	});
+}
+
+export function sendMessage(message, idFrom, idTo) {
+
+	const userSocketsTo = getSocketID(idTo);
+	const userSocketsFrom = getSocketID(idFrom);
+
+	//on envois deux fois le meme event comme ca le front en as un de moins a ecouter et il geras lui meme pour savoir si il est from ou to
+	userSocketsTo.forEach((socketId) => {
+		app.io.to(socketId).emit("newMessage", { message, senderId: idFrom });
+	});
+	userSocketsFrom.forEach((socketId) => {
+		app.io.to(socketId).emit("newMessage", { message, senderId: idFrom });
+	});
+}
+
 export default function handleSocket(socket, io) {
 	socket.on("authenticate", async ({ accessToken }) => {
-		
+
 		try {
 			const userId = validateJwt(accessToken);
 			if (!userId) {
 				throw new Error("Invalid token");
 			}
 			const user = await FindDb.userById(userId);
-		
+
 			if (!user) {
 				throw new Error("User not found");
 			}
-			
+
 			connectedUsers.set(socket.id, userId);
 			io.emit("connectedUsers", Array.from(connectedUsers.values()));
 		} catch (error) {
@@ -35,24 +57,7 @@ export default function handleSocket(socket, io) {
 		}
 	});
 
-	socket.on("sendMessage", async ({ message, idTo, idFrom }) => {
-		console.log(connectedUsers);
-		console.log(message, idTo, idFrom);
-
-		const userSocketsTo = getSocketID(idTo);
-		const userSocketsFrom = getSocketID(idFrom);
-
-		//on envois deux fois le meme event comme ca le front en as un de moins a ecouter et il geras lui meme pour savoir si il est from ou to
-		userSocketsTo.forEach((socketId) => {
-			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
-		});
-		userSocketsFrom.forEach((socketId) => {
-			io.to(socketId).emit("newMessage", { message, senderId: idFrom });
-		});
-	});
-
 	socket.on("disconnect", () => {
-		console.log("user disconnected");
 		connectedUsers.delete(socket.id);
 		io.emit("connectedUsers", Array.from(connectedUsers.values()));
 	});

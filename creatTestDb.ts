@@ -21,8 +21,6 @@ async function insertInterests() {
 	const query = `INSERT OR IGNORE INTO interests (interest) VALUES ${values}`;
 
 	await db.run(query);
-
-	console.log("Interests inserted successfully");
 }
 
 function generateRandomPoint(latitudeRange: { minLatitude: number, maxLatitude: number }, longitudeRange: { minLongitude: number, maxLongitude: number }): { latitude: number, longitude: number } {
@@ -189,8 +187,7 @@ export default async function insertDataInDb() {
 		} catch (error) {
 			console.error("Erreur lors de l'insertion des données :", error);
 		}
-		console.log(i, ", added");
-
+		console.warn(i, ", added");
 	}
 }
 

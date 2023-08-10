@@ -2,9 +2,8 @@ import db from "./db";
 
 const InitializeDb = {
 
-  //TODO: remove age and compute it from birthdate
-  userTable() {
-    const sql = `
+	userTable() {
+		const sql = `
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -24,7 +23,9 @@ const InitializeDb = {
         latitude DECIMAL(9, 6),
         longitude DECIMAL(9, 6),
         ip TEXT,
-        customLocation BIT DEFAULT 0
+        customLocation BIT DEFAULT 0,
+				views INTEGER DEFAULT 0,
+				likes INTEGER DEFAULT 0
       )`;
 		return db.run(sql);
 	},
@@ -36,7 +37,7 @@ const InitializeDb = {
             userIdFrom INTEGER,
             userIdTo INTEGER,
             msg TEXT,
-            sendDate DATE,
+            sendDate DATE
         )`;
 		return db.run(sql);
 	},
@@ -73,16 +74,38 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
-	userNoteTable() {
+	userLikesTable() {
 		const sql = `
-        CREATE TABLE IF NOT EXISTS user_notes (
-            from_id INTEGER,
-            to_id INTEGER,
-            note INTEGER,
-            UNIQUE (from_id, to_id)
-        )
-        `;
+			CREATE TABLE IF NOT EXISTS user_likes (
+				fromId INTEGER,
+				toId INTEGER,
+				PRIMARY KEY (fromId, toId),
+				FOREIGN KEY(fromId) REFERENCES users(id),
+				FOREIGN KEY(toId) REFERENCES users(id)
+			)`;
 		return db.run(sql);
+	},
+
+	async notification() {
+		const sql = `
+      CREATE TABLE IF NOT EXISTS notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fromId INT,
+        toId INT,
+        type TEXT,
+        seen BIT DEFAULT 0,
+        date DATE DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (toId) REFERENCES users(user_id),
+        FOREIGN KEY (fromId) REFERENCES users(user_id)
+      )`;
+		await db.run(sql);
+
+		const indexSql = `
+			CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_notifications 
+			ON notifications(fromId, toId, type) 
+			WHERE type = 'visit';
+			`;
+		return db.run(indexSql);
 	}
 
 };

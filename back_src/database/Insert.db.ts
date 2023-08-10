@@ -4,7 +4,7 @@ import db from "./db";
 import { DatabaseError, UniqueConstraintError } from "./errors";
 
 const InsertDb = {
-	
+
 	async user(user: UserReqRegister): Promise<number> {
 		const accessCode = Math.floor(Math.random() * 90000 + 10000);
 		const query = `
@@ -56,6 +56,11 @@ const InsertDb = {
 		await Promise.all(addInterestPromises);
 	},
 
+	async message(message: string, idFrom: number, idTo: number) {
+		const sql = "INSERT INTO chats(userIdFrom, userIdTo, msg, sendDate) VALUES(?, ?, ?, datetime('now'))";
+		const result = await db.run(sql, [idFrom, idTo, message]);
+		return result.lastID;
+	},
 
 	async picture(userId: number, src: string) {
 		const sql = "INSERT INTO pictures(user_id, src) VALUES(?, ?)";
@@ -71,6 +76,24 @@ const InsertDb = {
     	`;
 		await db.run(sql, [token, userId]);
 	},
+
+	async like(likerId: number, likeeId: number): Promise<void> {
+		const sql = `
+      INSERT INTO user_likes(fromId, toId)
+      VALUES (?, ?)
+    `;
+		await db.run(sql, [likerId, likeeId]);
+	},
+
+	async notification(fromId: number, toId: number, type: string): Promise<void> {
+		const sql = `
+      INSERT INTO notifications(fromId, toId, type)
+      VALUES (?, ?, ?)
+    `;
+		await db.run(sql, [fromId, toId, type]);
+		return await db.get("SELECT * FROM notifications WHERE id = last_insert_rowid()");
+	}
+
 };
 
 export default InsertDb;

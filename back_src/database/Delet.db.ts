@@ -17,6 +17,14 @@ const DeletDb = {
 		return res.changes === 1 ? picture : null;
 	},
 
+	async dislike(likerId: number, likeeId: number): Promise<number> {
+		const sql = `
+      DELETE FROM user_likes
+      WHERE fromId = ? AND toId = ?;
+    `;
+		const res = await db.run(sql, [likerId, likeeId]);
+		return res.changes;
+	},
 };
 
 export default DeletDb;

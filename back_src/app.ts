@@ -16,7 +16,7 @@ import handleSocket from "./controllers/socketCtrl";
 class App {
 	private app: Application;
 	private server: http.Server;
-	private io: Server;
+	public io: Server;
 	private connectedUsers: Map<string, number> = new Map<string, number>();
 
 	constructor() {
@@ -70,7 +70,7 @@ class App {
 
 	public start(port: number) {
 		const server = this.server.listen(port, () => {
-			console.log(`Le serveur est en cours d"exécution http://localhost:${port}`);
+			console.warn(`Le serveur est en cours d"exécution http://localhost:${port}`);
 		});
 		return server;
 	}
@@ -83,7 +83,9 @@ const initFunctions = [
 	InitializeDb.pictureTable,
 	InitializeDb.interestsTable,
 	InitializeDb.userInterestsTable,
-	InitializeDb.userNoteTable
+	InitializeDb.chatsTable,
+	InitializeDb.userLikesTable,
+	InitializeDb.notification
 	// ... add any additional table initializers here
 ];
 
