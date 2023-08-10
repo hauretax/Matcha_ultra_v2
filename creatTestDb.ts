@@ -103,21 +103,19 @@ export default async function insertDataInDb() {
 	`;
 
 	const link1=`
-	INSERT OR IGNORE  INTO user_notes (
-		from_id,
-		to_id,
-		note
+	INSERT OR IGNORE  INTO user_likes (
+		fromId,
+		toId
 	)
-	VALUES ("1","2","5")
+	VALUES ("1","2")
 	`;
 
 	const link2=`
-	INSERT OR IGNORE  INTO user_notes (
-		from_id,
-		to_id,
-		note
+	INSERT OR IGNORE  INTO user_likes (
+		fromId,
+		toId
 	)
-	VALUES ("2","1","5")
+	VALUES ("2","1")
 	`;
 
 
