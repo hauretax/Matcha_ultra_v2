@@ -61,7 +61,6 @@ const InitializeDb = {
             src TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )`;
-				console.log('picture table')
 		return db.run(sql);
 	},
 

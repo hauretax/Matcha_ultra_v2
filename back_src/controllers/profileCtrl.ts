@@ -26,7 +26,7 @@ import { newNotification } from "./notificationCtrl";
 
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
-import { getUserPreferences } from "../service/userPreferences";
+import { getUserPreferences, updateUserPreferences } from "../service/userPreferences";
 
 
 export async function createProfile(req: Request, res: Response) {
@@ -147,7 +147,6 @@ export async function getProfileById(req: Request, res: Response) {
 		biography: user.biography,
 		gender: user.gender,
 		birthDate: user.birthDate,
-		preferences: user.preferences,
 		pictures: user.pictures,
 		interests: user.interests,
 		latitude: user.latitude,
@@ -155,7 +154,8 @@ export async function getProfileById(req: Request, res: Response) {
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
 		liked: liked,
-		fameRating: user.likes / user.views
+		fameRating: user.likes / user.views,
+		preferences: await getUserPreferences(user.id),
 	});
 }
 
@@ -201,7 +201,7 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// Gender validation
-	if (!["Male", "Female", "Other"].includes(gender)) {
+	if (!["Male", "Female"].includes(gender)) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
@@ -227,6 +227,8 @@ export async function updateProfile(req: Request, res: Response) {
 		["id"],
 		[res.locals.fulluser.id]
 	);
+
+	await updateUserPreferences(res.locals.fulluser.id, preferences);
 
 	if (customLocation) {
 		setUserPosition(req, res); //Why not ?
@@ -389,8 +391,9 @@ export async function getProfiles(req: Request, res: Response) {
 		return;
 	}
 
-	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
+	const { distanceMax, ageMin, ageMax, interestWanted, index, orderBy } = req.query;
 
+	const preferences = await getUserPreferences(res.locals.fulluser.id);
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
@@ -398,10 +401,11 @@ export async function getProfiles(req: Request, res: Response) {
 		distanceMax: parseFloat(distanceMax as string),
 		ageMin: parseInt(ageMin as string, 10),
 		ageMax: parseInt(ageMax as string, 10),
-		orientation: (orientation as string).split(",").map((value) => value.trim()),
+		preferences: preferences,
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
 		index: parseInt(index as string),
 		orderBy: orderBy as OrderBy,
+		gender: res.locals.fulluser.gender,
 		userId: res.locals.fulluser.id,
 	};
 
@@ -412,6 +416,7 @@ export async function getProfiles(req: Request, res: Response) {
 			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id),
 			fameRating: user.likes / user.views
 		};
+		console.log(sanitizedUser)
 		return sanitizedUser;
 	}));
 
@@ -460,12 +465,15 @@ export async function viewProfile(req: Request, res: Response) {
 
 	const { viewedId } = req.body;
 
-	const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, viewedId);
-	if (hasBeenVisited) {
-		res.status(200).json({ message: "already visited" });
-	} else {
+	try {
 		await newNotification("visit", res.locals.fulluser.id, viewedId);
 		await UpdateDb.incrementViews(viewedId);
 		res.status(200).json({ message: "added to the visit history" });
+	} catch (error) {
+		if (error instanceof UniqueConstraintError) {
+			res.status(200).json({ message: "already visited" });
+		} else {
+			throw error;
+		}
 	}
 }

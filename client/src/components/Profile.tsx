@@ -1,7 +1,7 @@
 import React from "react";
 import DisplayCaroussel from "./DisplayCaroussel";
 import { Box, Button, Typography } from "@mui/material";
-import { LocationOn, Circle, FavoriteBorder, EmojiEvents, Recommend, NotInterested, Flag } from "@mui/icons-material";
+import { LocationOn, Circle, FavoriteBorder, EmojiEvents, Recommend, NotInterested, Flag, Lan } from "@mui/icons-material";
 import UserInterestsList from "./UserInterestList";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   lastName: string;
   firstName: string;
   gender: string;
-  orientation: string;
+  preferences: string[];
   pictures: { id: number; src: string }[];
   interests: string[];
   biography: string;
@@ -39,7 +39,7 @@ const Profile: React.FC<Props> = (props) => {
 						{props.username}, {props.age}
 					</Typography>
 					<Typography variant="body2" component="div">
-						{props.firstName} {props.lastName}, {props.gender}, {props.orientation}
+						{props.firstName} {props.lastName}, {props.gender}
 					</Typography>
 				</Box>
 				<Box sx={{ mb: 2 }}>
@@ -56,6 +56,10 @@ const Profile: React.FC<Props> = (props) => {
 					<Box sx={{ display: "flex", alignItems: "center" }}>
 						<Circle sx={{ fontSize: "1rem", mr: 1, mb: "2px", fontVariant: "body2", color: props.connected ? "green" : "red" }} />
 						<Typography variant="body2" color="text.secondary">{props.connected ? "Connected" : "Last seen " + props.lastTime}</Typography>
+					</Box>
+					<Box sx={{ display: "flex", alignItems: "center" }}>
+						<Lan sx={{ fontSize: "1rem", mr: 1, mb: "2px", fontVariant: "body2", color: "text.secondary" }} />
+						<Typography variant="body2" color="text.secondary">{props.preferences.join(", ")}</Typography>
 					</Box>
 					<Box sx={{ display: "flex", alignItems: "center" }}>
 						<FavoriteBorder sx={{ fontSize: "1rem", mr: 1, mb: "2px", fontVariant: "body2", color: "text.secondary" }} />

@@ -26,10 +26,11 @@ export type findTenUsersParams = {
     distanceMax:number;
     ageMin:number;
     ageMax:number;
-    orientation:Array<string>;
+    preferences:Array<string>;
     interestWanted:Array<string>;
     index:number;
     orderBy: OrderBy;
+		gender: string;
     userId?:number;
 }
 

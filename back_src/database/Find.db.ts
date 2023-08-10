@@ -79,9 +79,10 @@ const FindDb = {
 			params.distanceMax,
 			params.ageMax,
 			params.ageMin,
-			...params.orientation,
+			...params.preferences,
 			...params.interestWanted.map(interest => `%${interest}%`),
 			params.userId,
+			params.gender,
 			params.index
 		];
 		
@@ -93,7 +94,6 @@ const FindDb = {
 			u.biography,
 			u.gender,
 			u.birthDate,
-			u.orientation,
 			u.latitude,
 			u.longitude,
 			u.age,
@@ -107,6 +107,7 @@ const FindDb = {
 			image_srcs
 		FROM
 			users AS u
+			INNER JOIN user_preferences AS u_p ON u.id = u_p.user_id
 			LEFT JOIN (
 				SELECT
 					user_id,
@@ -142,9 +143,10 @@ const FindDb = {
 			d.distance < ?
 			AND u.age <= ?
 			AND u.age >= ?
-			AND u.gender IN (${params.orientation.map(() => "?").join(",")})
+			AND u.gender IN (${params.preferences.map(() => "?").join(",")})
 			AND ${interestConditions}
 			AND u.id <> ?
+			AND u_p.name = ?
 		ORDER BY
 			${orderByClause}
 		LIMIT

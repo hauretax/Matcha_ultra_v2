@@ -17,7 +17,7 @@ const ProfilePage: React.FC = () => {
 		biography: "",
 		gender: "",
 		birthDate: "",
-		orientation: "",
+		preferences: [],
 		pictures: [],
 		interests: [],
 		latitude: "",

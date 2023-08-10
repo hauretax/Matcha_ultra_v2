@@ -25,6 +25,14 @@ const DeletDb = {
 		const res = await db.run(sql, [likerId, likeeId]);
 		return res.changes;
 	},
+
+	async removePreferences(userId: number): Promise<void> {
+		const sql = `
+			DELETE FROM user_preferences
+			WHERE user_id = ?;
+		`;
+		await db.run(sql, [userId]);
+	},
 };
 
 export default DeletDb;

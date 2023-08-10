@@ -34,8 +34,8 @@ const apiProvider = {
 		});
 	},
 
-	updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) {
-		return axiosPrivate.patch("/profile", { firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude });
+	updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) {
+		return axiosPrivate.patch("/profile", { firstName, lastName, birthDate, gender, preferences, email, customLocation, latitude, longitude });
 	},
 
 	updateBio(biography: string) {

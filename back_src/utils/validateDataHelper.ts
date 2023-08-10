@@ -18,7 +18,7 @@ export function validateDate(birthDate: string): boolean {
 
 
 export function validateInterests(interests: string[]): boolean {
-	return Array.isArray(interests) && interests.every((interest) => (typeof interest === "string" && interest != ""));
+	return Array.isArray(interests) && interests.length && interests.every((interest) => (typeof interest === "string" && interest != ""));
 }
 
 export function validatePictureId(pictureId: string): boolean {

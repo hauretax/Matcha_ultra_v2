@@ -69,12 +69,12 @@ export default async function insertDataInDb() {
 			const userId = await db.get("SELECT last_insert_rowid() as id");
 			
 			if (i % 9 === 0) {
-				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[i % 2]])
+				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[i % 2]]);
 				if (i % 2 === 0) {
-					await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]])
+					await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]]);
 				}
 			} else {
-				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]])
+				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]]);
 			}
 
 			const randomInterestsCount = Math.floor(Math.random() * 5) + 1; // Nombre aléatoire d'intérêts (entre 1 et 5)
