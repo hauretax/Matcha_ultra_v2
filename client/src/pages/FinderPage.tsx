@@ -49,7 +49,7 @@ export default function FinderPage() {
 				index={index}
 			/>
 
-			<BrowsingResult users={profiles} handleLike={() => console.log("lol")}/>
+			<BrowsingResult users={profiles} handleLike={() => alert("lol")}/>
 			{
 				(!end && !loading && profiles.length) &&
                 <Button onClick={showMore} variant="contained">show More</Button>

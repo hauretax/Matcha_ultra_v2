@@ -36,7 +36,7 @@ export async function validsecurRequest(
 		next();
 
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 		res.status(500).json({ error: "server error" });
 		return;
 	}

@@ -9,7 +9,7 @@ class MyDB {
 			if (err) {
 				console.error(err.message);
 			} else {
-				console.log("Connected to the SQLite database.");
+				console.warn("Connected to the SQLite database.");
 			}
 		});
 	}

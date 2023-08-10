@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext } from "react";
 import socketIOClient from "socket.io-client";
 
 import { useAuth } from "./AuthProvider";
-import { notification } from "../../../comon_src/type/utils.type";
+// import { notification } from "../../../comon_src/type/utils.type";
 
 interface SocketContextType {
   connectedUsers: number[];
@@ -39,19 +39,19 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 		};
 
 		// Handle authentication failure
-		const handleUnauthorized = (error: { message: string; }) => {
-			console.log("Socket authentication failed:", error.message);
-			// Perform appropriate actions for unauthorized access
-		};
+		// const handleUnauthorized = (error: { message: string; }) => {
+		// 	// console.log("Socket authentication failed:", error.message);
+		// 	// Perform appropriate actions for unauthorized access
+		// };
 
 		const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
-			console.log("new message");
+			// console.log("new message");
 			setMessage({ userFrom: senderId, message });
 		};
 
-		const handleNotification = (notification:notification)=> {
-			console.log(notification);
-		};
+		// const handleNotification = (notification:notification)=> {
+		// 	// console.log(notification);
+		// };
 
 		// Socket connection and authentication
 		authenticateSocket();
@@ -62,15 +62,15 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 		socket.on("newNotification", handleNotification);
 		socket.on("newMessage", handleMessage);
 		// Error handling
-		socket.on("connect_error", (error) => {
-			console.log("Socket connection error:", error.message);
-			// Perform appropriate actions for connection error
-		});
+		// socket.on("connect_error", (error) => {
+		// 	// console.log("Socket connection error:", error.message);
+		// 	// Perform appropriate actions for connection error
+		// });
 
-		socket.on("error", (error: Error) => {
-			console.log("Socket error:", error.message);
-			// Perform appropriate actions for socket error
-		});
+		// socket.on("error", (error: Error) => {
+		// 	// console.error("Socket error:", error.message);
+		// 	// Perform appropriate actions for socket error
+		// });
 
 		// Clean up the socket connection
 		return () => {

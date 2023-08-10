@@ -65,13 +65,11 @@ export default function Chat() {
 
 	// un nouveaux message arrive
 	useEffect(() => {
-		console.log(message, user?.id, user?.id, message.userFrom);
 		if (userIdOpenConv === message.userFrom) {
 			setMessages([...messages, { msg: message.message, displayName: "none", sendDate: "now" }]);
 		}
 
 		else if (user?.id === message.userFrom) {
-			console.log("test");
 			setMessages([...messages, { msg: message.message, displayName: "none", sendDate: "now" }]);
 		}
 
@@ -116,7 +114,6 @@ export default function Chat() {
 					<Box onScroll={checkIsScrolledToBottom} ref={messageListRef} sx={{ height: "300px", overflow: "auto" }}>
 						{
 							messages.map((message, key) => {
-								console.log(message);
 								return <MessageLeft
 									key={key}
 									message={message.msg}
