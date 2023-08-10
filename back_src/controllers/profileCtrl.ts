@@ -424,19 +424,19 @@ export async function like(req: Request, res: Response) {
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
 		// If user is already liked, an error will be thrown and next line we not be executed
-		newNotification("like", res.locals.fulluser.id, likeeId);
+		await newNotification("like", res.locals.fulluser.id, likeeId);
 		await UpdateDb.incrementLikes(likeeId);
 		//If user is liked, his profile is set as visited
 		const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
 		if (!hasBeenVisited) {
-			newNotification("visit", res.locals.fulluser.id, likeeId);
+			await newNotification("visit", res.locals.fulluser.id, likeeId);
 			await UpdateDb.incrementViews(likeeId);
 		}
 		res.status(200).json({ message: "liked" });
 	} else {
 		const result = await DeletDb.dislike(res.locals.fulluser.id, likeeId);
 		if (result) {
-			newNotification("unlike", res.locals.fulluser.id, likeeId);
+			await newNotification("unlike", res.locals.fulluser.id, likeeId);
 			await UpdateDb.decrementLikes(likeeId);
 			res.status(200).json({ message: "disliked" });
 		} else {
@@ -457,7 +457,7 @@ export async function viewProfile(req: Request, res: Response) {
 	if (hasBeenVisited) {
 		res.status(200).json({ message: "already visited" });
 	} else {
-		await InsertDb.notification(res.locals.fulluser.id, viewedId, "visit");
+		await newNotification("visit", res.locals.fulluser.id, viewedId);
 		await UpdateDb.incrementViews(viewedId);
 		res.status(200).json({ message: "added to the visit history" });
 	}
