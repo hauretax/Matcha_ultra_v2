@@ -15,7 +15,6 @@ const GetDb = {
 		const sql = "SELECT accessCode FROM users WHERE email = ?";
 		return db.get(sql, [email]);
 	},
-	// TODO #2
 
 	async allInterests(): Promise<string[]> {
 		const sql = "SELECT interest FROM interests";

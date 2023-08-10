@@ -202,7 +202,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
-	// TODO #4
+	// TODO #4 : handle remember me
 	const signout = async (): Promise<void> => {
 		try {
 			localStorage.removeItem("jwtToken");

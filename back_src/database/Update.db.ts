@@ -1,7 +1,6 @@
 import db from "./db";
 
 const UpdateDb = {
-	// TODO #2
 
 	noteUserTo(userFrom: string, userTo: string, note: number) {
 		const sql = `
