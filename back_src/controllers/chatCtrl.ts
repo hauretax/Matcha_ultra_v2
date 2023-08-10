@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import GetDb from "../database/Get.db";
 import InsertDb from "../database/Insert.db";
 import { sendMessage } from "./socketCtrl";
+import { validateBody } from "../utils/validateDataHelper";
 
 export async function getActualConversations(_: Request, res: Response) {
 	const { id } = res.locals.fulluser;
@@ -25,26 +26,28 @@ export async function getChat(req: Request, res: Response) {
 }
 
 export async function newMessage(req: Request, res: Response) {
+	if (!validateBody(req, ["message", "idTo"], ["string", "number"])) {
+		res.status(400).json({ error: "Bad Request" });
+		return;
+	}
 
-	const { message, idFrom, idTo } = req.body;
-	if (!message || !idFrom || !idTo) {
+	const { message, idTo } = req.body;
+	
+	if (message.length > 5000) {
+		res.status(400).json({ error: "message too long" });
+		return;
+	}
+	
+	//TODO: create middleware to check if users are connected to each other
+	if (idTo < 1) {
 		res.status(400).json({ error: "Bad Request" });
 		return;
 	}
-	if (typeof message !== "string" || message.length > 5000) {
-		res.status(400).json({ error: "Bad Request" });
-		return;
-	}
-	const parsedIdFrom = parseInt(idFrom);
-	const parsedIdTo = parseInt(idTo);
-	if (isNaN(parsedIdFrom) || parsedIdFrom < 1 || isNaN(parsedIdTo) || parsedIdTo < 1) {
-		res.status(400).json({ error: "Bad Request" });
-		return;
-	}
-	await InsertDb.message(message, parsedIdFrom, parsedIdTo);
 
-	sendMessage(message, parsedIdFrom, parsedIdTo);
+	//TODO: add message to notification table
+	await InsertDb.message(message, res.locals.fulluser.id, idTo);
+
+	sendMessage(message, res.locals.fulluser.id, idTo);
 
 	res.status(201).json({ message: "OK" });
-
 }
