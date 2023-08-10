@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import InsertDb from "../database/Insert.db";
 import { notification, notificationType } from "../../comon_src/type/utils.type";
 import { sendNotification } from "./socketCtrl";
