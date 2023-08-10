@@ -57,9 +57,9 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 		authenticateSocket();
 
 		socket.on("connectedUsers", handleAuthenticated);
-		socket.on("unauthorized", handleUnauthorized);
+		// socket.on("unauthorized", handleUnauthorized);
 
-		socket.on("newNotification", handleNotification);
+		// socket.on("newNotification", handleNotification);
 		socket.on("newMessage", handleMessage);
 		// Error handling
 		// socket.on("connect_error", (error) => {
