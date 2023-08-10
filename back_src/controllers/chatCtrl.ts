@@ -38,13 +38,13 @@ export async function newMessage(req: Request, res: Response) {
 		return;
 	}
 	
-	//TODO: create middleware to check if users are connected to each other
+	//TODO #8: create middleware to check if users are connected to each other
 	if (idTo < 1) {
 		res.status(400).json({ error: "Bad Request" });
 		return;
 	}
 
-	//TODO: add message to notification table
+	//TODO #9: add message to notification table
 	await InsertDb.message(message, res.locals.fulluser.id, idTo);
 
 	sendMessage(message, res.locals.fulluser.id, idTo);

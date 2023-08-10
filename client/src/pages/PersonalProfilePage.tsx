@@ -10,7 +10,7 @@ import { useSnackbar } from "../context/SnackBar";
 import { useAuth } from "../context/AuthProvider";
 import { PersonalProfile } from "../../../comon_src/type/user.type";
 
-//TODO: best way to do it would be to stop fetching all info into context and just use context to store wether user is connected or not / profile is complete or not
+//TODO #14: best way to do it would be to stop fetching all info into context and just use context to store wether user is connected or not / profile is complete or not
 function PersonalProfilePage() {
 	const auth = useAuth();
 	let user: PersonalProfile;

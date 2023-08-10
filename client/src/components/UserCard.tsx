@@ -11,7 +11,7 @@ interface UserCardProps {
   handleLike: (userId: number, liked: boolean) => void;
 }
 
-//TODO: improve image fitting proportion
+//TODO #12: improve image fitting proportion
 const UserCard: React.FC<UserCardProps> = ({ user, handleLike }) => {
 	const navigate = useNavigate();
 

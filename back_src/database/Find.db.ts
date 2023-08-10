@@ -85,7 +85,7 @@ const FindDb = {
 			params.index
 		];
 		
-		//TODO: prevent homosexual men to be queried by heterosexual women
+		//TODO #10: prevent homosexual men to be queried by heterosexual women
 		const sql = `
 		SELECT
 			u.id,
