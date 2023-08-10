@@ -17,7 +17,7 @@ export async function getChat(req: Request, res: Response) {
 		return;
 	}
 	const idTo = parseInt(req.params.id);
-	if (idTo < 0) {
+	if (idTo < 0 || isNaN(idTo)) {
 		res.status(400).json({ error: "Bad Request" });
 		return;
 	}
