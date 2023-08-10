@@ -25,7 +25,6 @@ interface AuthContextType {
   updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
   signout: () => Promise<void>;
-  handleError: (error: ErrorResponse, defaultMessage: string) => void
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -225,7 +224,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 		}
 	};
 
-	const value = { user, signin, signup, resetPasswordRequest, resetPassword, getProfile, updateProfile, updateBio, updateInterests, insertPicture, updatePicture, deletePicture, signout, valideByMail,  handleError };
+	const value = { user, signin, signup, resetPasswordRequest, resetPassword, getProfile, updateProfile, updateBio, updateInterests, insertPicture, updatePicture, deletePicture, signout, valideByMail };
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
