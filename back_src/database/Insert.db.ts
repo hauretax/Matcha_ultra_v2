@@ -92,7 +92,6 @@ const InsertDb = {
     `;
 		await db.run(sql, [fromId, toId, type]);
 		return await db.get("SELECT * FROM notifications WHERE id = last_insert_rowid()");
-
 	}
 
 };

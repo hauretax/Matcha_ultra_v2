@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import apiProvider from "../../services/apiProvider";
 import { useAuth } from "../../context/AuthProvider";
+import { ErrorResponse } from "../../../../comon_src/type/error.type";
 
 
 export const TextInput = (props: { userTo: number, userFrom: number }) => {
@@ -15,7 +16,7 @@ export const TextInput = (props: { userTo: number, userFrom: number }) => {
 			await apiProvider.insertMessage({ message: message, idFrom: props.userFrom, idTo: props.userTo });
 		} catch (error) {
 			console.log("test");
-			auth.handleError(error, "Message not send");
+			auth.handleError(error as ErrorResponse, "Message not send");
 		}
 	}
 
