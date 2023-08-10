@@ -1,22 +1,22 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import apiProvider from "../../services/apiProvider";
-import { useAuth } from "../../context/AuthProvider";
 import { ErrorResponse } from "../../../../comon_src/type/error.type";
+import { buildErrorString } from "../../utils";
+import { useSnackbar } from "../../context/SnackBar";
 
 
 export const TextInput = (props: { userTo: number, userFrom: number }) => {
 	const [message, setMessage] = useState("");
 
-	const auth = useAuth();
+	const snackbar = useSnackbar();
 	async function handleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 		event.preventDefault();
 		try {
-			console.log("helo");
 			await apiProvider.insertMessage({ message: message, idFrom: props.userFrom, idTo: props.userTo });
 		} catch (error) {
-			console.log("test");
-			auth.handleError(error as ErrorResponse, "Message not send");
+			snackbar(buildErrorString(error as ErrorResponse, "Message not send"), "error");
+		
 		}
 	}
 
