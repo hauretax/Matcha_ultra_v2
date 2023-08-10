@@ -37,7 +37,6 @@ const InitializeDb = {
 				PRIMARY KEY(user_id, name),
 				FOREIGN KEY(user_id) REFERENCES users(id)
 			)`;
-		console.log('user preferences')
 		return db.run(sql);
 	},
 
@@ -84,7 +83,6 @@ const InitializeDb = {
                 FOREIGN KEY(user_id) REFERENCES users(id),
                 FOREIGN KEY(interest_id) REFERENCES interests(id)
             )`;
-						console.log('user interests table')
 		return db.run(sql);
 	},
 
@@ -112,7 +110,6 @@ const InitializeDb = {
         FOREIGN KEY (toId) REFERENCES users(id),
         FOREIGN KEY (fromId) REFERENCES users(id)
       )`;
-			console.log('notification table')
 		await db.run(sql);
 
 		const indexSql = `
@@ -120,7 +117,6 @@ const InitializeDb = {
 			ON notifications(fromId, toId, type) 
 			WHERE type = 'visit';
 			`;
-		console.log('notification index')
 		return db.run(indexSql);
 	}
 
