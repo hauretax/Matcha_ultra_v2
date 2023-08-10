@@ -45,6 +45,8 @@ export default function Chat() {
 
 	// changement de conversation
 	useEffect(() => {
+		if(userIdOpenConv < 1)
+			return ;
 		setMessages([]);
 		const Change = profiles.map(profile => {
 			if (profile.id === userIdOpenConv)

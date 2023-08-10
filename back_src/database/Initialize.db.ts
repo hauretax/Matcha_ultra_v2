@@ -37,7 +37,10 @@ const InitializeDb = {
             userIdFrom INTEGER,
             userIdTo INTEGER,
             msg TEXT,
-            sendDate DATE
+            sendDate DATE,
+            UNIQUE(userIdFrom, userIdTo),
+            FOREIGN KEY(userIdFrom) REFERENCES users(id),
+            FOREIGN KEY(userIdTo) REFERENCES users(id)
         )`;
 		return db.run(sql);
 	},

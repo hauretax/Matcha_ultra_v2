@@ -440,6 +440,7 @@ export async function like(req: Request, res: Response) {
 	
 		if(userBothLike){
 			await newNotification("match", res.locals.fulluser.id, likeeId);
+			await newNotification("match", likeeId, res.locals.fulluser.id);
 		}
 		if (!hasBeenVisited) {
 			await UpdateDb.incrementViews(likeeId);

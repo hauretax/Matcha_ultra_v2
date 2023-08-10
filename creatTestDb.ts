@@ -47,11 +47,13 @@ export default async function insertDataInDb() {
 
 	const initFunctions = [
 		InitializeDb.userTable,
+		InitializeDb.chatsTable,
 		InitializeDb.pictureTable,
 		InitializeDb.interestsTable,
 		InitializeDb.userInterestsTable,
-		InitializeDb.userNoteTable
-	// ... add any additional table initializers here
+		InitializeDb.userLikesTable,
+		InitializeDb.notification
+		// ... add any additional table initializers here
 	];
 	await Promise.all(initFunctions.map(initFunc => initFunc()));
 
@@ -100,7 +102,7 @@ export default async function insertDataInDb() {
 	, "48.259207", "3.174191", "1", "1",?)
 	`;
 
-	const link1=`
+	const link1 = `
 	INSERT OR IGNORE  INTO user_likes (
 		fromId,
 		toId
@@ -108,7 +110,7 @@ export default async function insertDataInDb() {
 	VALUES ("1","2")
 	`;
 
-	const link2=`
+	const link2 = `
 	INSERT OR IGNORE  INTO user_likes (
 		fromId,
 		toId
@@ -129,6 +131,15 @@ export default async function insertDataInDb() {
 	INSERT OR IGNORE INTO pictures (user_id, src)
 	VALUES ("1", "profileMan2.jpg")
 	 `);
+	await db.run(`
+	 INSERT OR IGNORE INTO  user_interests (user_id, interest_id)
+	 VALUES ("2","1")
+	 `);
+	await db.run(`
+	 INSERT OR IGNORE INTO pictures (user_id, src)
+	 VALUES ("2", "profileMan2.jpg")
+	  `);
+
 
 	for (let i = 1; i < 500; i++) {
 
