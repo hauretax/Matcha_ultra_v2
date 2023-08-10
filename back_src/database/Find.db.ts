@@ -24,7 +24,6 @@ const FindDb = {
 	async user(username: string): Promise<FullUser | null> {
 		const sql = "SELECT * FROM users WHERE username = ?";
 		const user = await db.get(sql, [username]);
-		user.customLocation = Boolean(user.customLocation);
 		if (user) {
 			return Promise.all([
 				this.picturesByUserId(user.id),
@@ -32,6 +31,7 @@ const FindDb = {
 			]).then(([pictures, interests]) => {
 				user.pictures = pictures;
 				user.interests = interests;
+				user.customLocation = Boolean(user.customLocation);
 				return user;
 			});
 		} else {
