@@ -4,6 +4,7 @@ import InsertDb from "../database/Insert.db";
 import { sendMessage } from "./socketCtrl";
 import { validateBody } from "../utils/validateDataHelper";
 import { isConnectedTo } from "../middlewares/protectRequest.mid";
+import { newNotification } from "./notificationCtrl";
 
 export async function getActualConversations(_: Request, res: Response) {
 	const { id } = res.locals.fulluser;
@@ -49,7 +50,7 @@ export async function newMessage(req: Request, res: Response) {
 	}
 
 	await InsertDb.message(message, res.locals.fulluser.id, idTo);
-
+	await newNotification("message", res.locals.fulluser.id, idTo);
 	sendMessage(message, res.locals.fulluser.id, idTo);
 
 	res.status(201).json({ message: "OK" });
