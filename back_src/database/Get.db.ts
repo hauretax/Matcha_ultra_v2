@@ -83,6 +83,25 @@ const GetDb = {
 		ORDER BY sendDate
 		`;
 		return db.all(sql, [idFrom, idTo]);
+	},
+
+	async checkUserLikesSymmetry(idFrom: number, idTo: number) {
+		const query = `
+			SELECT
+			CASE
+				WHEN EXISTS (
+					SELECT 1
+					FROM user_likes
+					WHERE (fromId = ? AND toId = ?)
+				) AND EXISTS (
+					SELECT 1
+					FROM user_likes
+					WHERE (fromId = ? AND toId = ?)
+				) THEN 1
+				ELSE 0
+			END AS result;
+		`;
+		return db.get(query, [idFrom, idTo, idTo, idFrom]);
 	}
 
 };
