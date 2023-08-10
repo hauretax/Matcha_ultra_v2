@@ -57,7 +57,7 @@ export interface Profile {
     profilePicture: string
 }
 
-export type notificationType = "like" | "message" | "visite" | "match" | "unlike"
+export type notificationType = "like" | "message" | "visit" | "match" | "unlike"
 
 export interface notification{
     id: number,

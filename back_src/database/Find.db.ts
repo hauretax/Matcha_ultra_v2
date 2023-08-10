@@ -1,5 +1,5 @@
 import db from "./db";
-import { FullUser, userInDb } from "../../comon_src/type/user.type";
+import { FullUser, userInDb1, userInDb2 } from "../../comon_src/type/user.type";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 const FindDb = {
 
@@ -39,7 +39,7 @@ const FindDb = {
 		}
 	},
 
-	async userById(id: number): Promise<FullUser> {
+	async userById(id: number): Promise<userInDb1> {
 		const sql = "SELECT * FROM users WHERE id = ?";
 		const user = await db.get(sql, [id]);
 		if (user) {
@@ -67,7 +67,7 @@ const FindDb = {
 				.then((result) => result.lastID);
 		}
 	},
-	async tenUsers(params: findTenUsersParams): Promise<userInDb[]> {
+	async tenUsers(params: findTenUsersParams): Promise<userInDb2[]> {
 
 
 		const interestConditions = generateInterestConditions(params.interestWanted);
@@ -157,10 +157,16 @@ const FindDb = {
 	},
 
 	async isLikedBy(likerId: number, likeeId: number): Promise<boolean> {
-		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'like'";
+		const sql = "SELECT COUNT(*) AS count FROM user_likes WHERE fromId = ? AND toId = ?";
 		const result = await db.get(sql, [likerId, likeeId]);
 		return result.count > 0;
 	},
+
+	async hasBeenVisitedBy(visitorId: number, visiteeId: number): Promise<boolean> {
+		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'visit'";
+		const result = await db.get(sql, [visitorId, visiteeId]);
+		return result.count > 0;
+	}
 };
 
 function generateInterestConditions(interestWanted: string[]): string {
@@ -174,7 +180,7 @@ function generateOrderByClause(orderBy: OrderBy): string {
 	case "age":
 		return "u.age ASC";
 	case "popularity":
-		return "u.popularity DESC";
+		return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
 	case "tag":
 		return "interestCount DESC";
 	default:

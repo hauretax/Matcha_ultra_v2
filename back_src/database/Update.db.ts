@@ -28,7 +28,22 @@ const UpdateDb = {
 			}
 		}
 		return db.run(sql, [...values, ...whereValues]);
-	}
+	},
+
+	incrementViews(id: number) {
+		const sql = "UPDATE users SET views = views + 1 WHERE id = ?";
+		return db.run(sql, [id]);
+	},
+
+	incrementLikes(id: number) {
+		const sql = "UPDATE users SET likes = likes + 1 WHERE id = ?";
+		return db.run(sql, [id]);
+	},
+
+	decrementLikes(id: number) {
+		const sql = "UPDATE users SET likes = likes - 1 WHERE id = ?";
+		return db.run(sql, [id]);
+	},
 
 };
 

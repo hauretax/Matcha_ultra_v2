@@ -68,22 +68,22 @@ const GetDb = {
 	LEFT JOIN pictures p ON p.id = first_pictures.minId
 	WHERE EXISTS (
 		SELECT 1
-		FROM notifications n1
-		JOIN notifications n2 ON n1.toId = n2.fromId AND n2.toId = n1.fromId AND n1.type = 'like'
-		WHERE n1.fromId = ? AND n1.toId = u.id AND n2.fromId = u.id AND n2.toId = ? AND n2.type = 'like'
-	);
+		FROM user_likes  n1
+        JOIN user_likes n2 ON n1.toId = n2.fromId AND n2.toId = n1.fromId
+        WHERE n1.fromId = ? AND n1.toId = u.id
+		);
 		`;
-		return db.all(sql, [ userId, userId]);
+		return db.all(sql, [userId]);
 	},
 
-	async chat(idFrom: number, idTo:number): Promise<Profile[]> {
+	async chat(idFrom: number, idTo: number): Promise<Profile[]> {
 		const sql = `
 		SELECT *
 		FROM chats
 		WHERE userIdFrom = ? AND userIdTo = ?
 		ORDER BY sendDate
 		`;
-		return db.all(sql, [ idFrom, idTo]);
+		return db.all(sql, [idFrom, idTo]);
 	}
 
 };

@@ -79,8 +79,8 @@ const InsertDb = {
 
 	async like(likerId: number, likeeId: number): Promise<void> {
 		const sql = `
-      INSERT INTO notifications(fromId, toId, type)
-      VALUES (?, ?, 'like')
+      INSERT INTO user_likes(fromId, toId)
+      VALUES (?, ?)
     `;
 		await db.run(sql, [likerId, likeeId]);
 	},
