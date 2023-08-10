@@ -429,7 +429,7 @@ export async function like(req: Request, res: Response) {
 		//If user is liked, his profile is set as visited
 		const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
 		if (!hasBeenVisited) {
-			await InsertDb.notification(res.locals.fulluser.id, likeeId, "visit");
+			newNotification("visit", res.locals.fulluser.id, likeeId);
 			await UpdateDb.incrementViews(likeeId);
 		}
 		res.status(200).json({ message: "liked" });
