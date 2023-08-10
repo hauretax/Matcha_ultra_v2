@@ -22,7 +22,7 @@ import InsertDb from "../database/Insert.db";
 import DeletDb from "../database/Delet.db";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
 import { setUserPosition } from "./localisationCtrl";
-
+import { newNotification } from "./notificationCtrl";
 
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
@@ -215,8 +215,8 @@ export async function updateProfile(req: Request, res: Response) {
 
 	await UpdateDb.update(
 		"users",
-		["firstName", "lastName", "birthDate", "gender", "orientation", "email", "emailVerified", "customLocation"],
-		[firstName, lastName, birthDate, gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
+		["firstName", "lastName", "birthDate","age", "gender", "orientation", "email", "emailVerified", "customLocation"],
+		[firstName, lastName, birthDate, getAge(birthDate), gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
 		["id"],
 		[res.locals.fulluser.id]
 	);

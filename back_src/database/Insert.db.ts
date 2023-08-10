@@ -87,11 +87,13 @@ const InsertDb = {
 
 	async notification(fromId: number, toId: number, type: string): Promise<void> {
 		const sql = `
-			INSERT INTO notifications(fromId, toId, type)
-			VALUES (?, ?, ?)
-		`;
+      INSERT INTO notifications(fromId, toId, type)
+      VALUES (?, ?, ?)
+    `;
 		await db.run(sql, [fromId, toId, type]);
-	},
+		return await db.get("SELECT * FROM notifications WHERE id = last_insert_rowid()");
+	}
+
 };
 
 export default InsertDb;

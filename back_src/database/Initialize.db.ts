@@ -93,6 +93,7 @@ const InitializeDb = {
         fromId INT,
         toId INT,
         type TEXT,
+        seen BIT DEFAULT 0,
         date DATE DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (toId) REFERENCES users(user_id),
         FOREIGN KEY (fromId) REFERENCES users(user_id)
