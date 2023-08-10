@@ -15,7 +15,6 @@ const InitializeDb = {
         biography TEXT,
         birthDate DATE,
         age INTEGER,
-        orientation TEXT,
         emailVerified INTEGER,
         accessCode TEXT,
         resetPasswordCode TEXT,
@@ -29,6 +28,19 @@ const InitializeDb = {
       )`;
 		return db.run(sql);
 	},
+
+	userPreferenceTable() {
+		const sql = `
+			CREATE TABLE IF NOT EXISTS user_preferences (
+				user_id INTEGER,
+				name TEXT,
+				PRIMARY KEY(user_id, name),
+				FOREIGN KEY(user_id) REFERENCES users(id)
+			)`;
+		console.log('user preferences')
+		return db.run(sql);
+	},
+
 
 	chatsTable() {
 		const sql = `
@@ -50,6 +62,7 @@ const InitializeDb = {
             src TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )`;
+				console.log('picture table')
 		return db.run(sql);
 	},
 
@@ -71,6 +84,7 @@ const InitializeDb = {
                 FOREIGN KEY(user_id) REFERENCES users(id),
                 FOREIGN KEY(interest_id) REFERENCES interests(id)
             )`;
+						console.log('user interests table')
 		return db.run(sql);
 	},
 
@@ -95,9 +109,10 @@ const InitializeDb = {
         type TEXT,
         seen BIT DEFAULT 0,
         date DATE DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (toId) REFERENCES users(user_id),
-        FOREIGN KEY (fromId) REFERENCES users(user_id)
+        FOREIGN KEY (toId) REFERENCES users(id),
+        FOREIGN KEY (fromId) REFERENCES users(id)
       )`;
+			console.log('notification table')
 		await db.run(sql);
 
 		const indexSql = `
@@ -105,6 +120,7 @@ const InitializeDb = {
 			ON notifications(fromId, toId, type) 
 			WHERE type = 'visit';
 			`;
+		console.log('notification index')
 		return db.run(indexSql);
 	}
 

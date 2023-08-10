@@ -35,7 +35,7 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
 const isProfileInfoMissing = (user: PersonalProfile) => {
 	return (
 		!user.gender ||
-    !user.orientation ||
+    // !user.orientation || TODO: fix orientation
     !user.biography ||
     !user.birthDate ||
     !user.pictures.length ||

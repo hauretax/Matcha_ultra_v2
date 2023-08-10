@@ -44,7 +44,7 @@ export function sanitizeUser(user: userInDb2) {
 		interests: user.interests ? user.interests.split(",") : [],
 		username: user.username,
 		gender: user.gender,
-		orientation: user.orientation,
+		// orientation: user.orientation, TODO: fix orientation
 		age: user.age,
 		biography: user.biography,
 		id: user.id

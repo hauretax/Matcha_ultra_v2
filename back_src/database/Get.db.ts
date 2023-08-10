@@ -83,7 +83,16 @@ const GetDb = {
 		ORDER BY sendDate
 		`;
 		return db.all(sql, [idFrom, idTo]);
-	}
+	},
+
+	async getUserPreferences(userId: number): Promise<{user_id: number; name: string}[]> {
+		const sql = `
+			SELECT user_id, name
+			FROM user_preferences
+			WHERE user_id = ?
+		`;
+		return db.all(sql, [userId]);
+	},
 
 };
 

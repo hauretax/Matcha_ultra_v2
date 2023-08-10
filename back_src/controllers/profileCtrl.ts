@@ -26,6 +26,8 @@ import { newNotification } from "./notificationCtrl";
 
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
+import { getUserPreferences } from "../service/userPreferences";
+
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -76,18 +78,23 @@ export async function login(req: Request, res: Response) {
 	const { username, password } = req.body;
 
 	const user = await FindDb.user(username);
+
 	if (!user) {
 		res.status(404).json({ error: "account not found" });
 		return;
 	}
 
 	const checkPassword = await bcrypt.compare(password, user.password);
+
 	if (!checkPassword) {
 		res.status(401).json({ error: "username and/or password incorrect" });
 		return;
 	}
 
-	const { id, email, firstName, lastName, biography, gender, birthDate, orientation, emailVerified, pictures, interests, customLocation, latitude, longitude } = user;
+	const { id, email, firstName, lastName, biography, gender, birthDate, emailVerified, pictures, interests, customLocation, latitude, longitude } = user;
+
+	const preferences = await getUserPreferences(id);
+
 	const payload: UserPayload = {
 		jwt: {
 			accessToken: generateJwt(id),
@@ -102,7 +109,7 @@ export async function login(req: Request, res: Response) {
 			biography,
 			gender,
 			birthDate,
-			orientation,
+			preferences,
 			emailVerified,
 			pictures,
 			interests,
@@ -140,7 +147,7 @@ export async function getProfileById(req: Request, res: Response) {
 		biography: user.biography,
 		gender: user.gender,
 		birthDate: user.birthDate,
-		orientation: user.orientation,
+		preferences: user.preferences,
 		pictures: user.pictures,
 		interests: user.interests,
 		latitude: user.latitude,
