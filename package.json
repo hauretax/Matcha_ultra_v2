@@ -8,7 +8,8 @@
     "track": "tsc --watch && node dist/back_src/app.js",
     "lint": "eslint . --ext .ts,.tsx",
     "lf": "eslint . --ext .ts,.tsx --fix",
-    "test": "jest --testPathPatten=back_test"
+    "test": "jest --testPathPatten=back_test",
+    "populate": "ts-node creatTestDb.ts"
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.10.0",
-    "typescript": "^5.0.4"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }
