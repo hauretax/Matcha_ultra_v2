@@ -215,7 +215,7 @@ export async function updateProfile(req: Request, res: Response) {
 
 	await UpdateDb.update(
 		"users",
-		["firstName", "lastName", "birthDate","age", "gender", "orientation", "email", "emailVerified", "customLocation"],
+		["firstName", "lastName", "birthDate", "age", "gender", "orientation", "email", "emailVerified", "customLocation"],
 		[firstName, lastName, birthDate, getAge(birthDate), gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
 		["id"],
 		[res.locals.fulluser.id]
@@ -424,7 +424,7 @@ export async function like(req: Request, res: Response) {
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
 		// If user is already liked, an error will be thrown and next line we not be executed
-		await InsertDb.notification(res.locals.fulluser.id, likeeId, "like");
+		newNotification("like", res.locals.fulluser.id, likeeId);
 		await UpdateDb.incrementLikes(likeeId);
 		//If user is liked, his profile is set as visited
 		const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
@@ -436,7 +436,7 @@ export async function like(req: Request, res: Response) {
 	} else {
 		const result = await DeletDb.dislike(res.locals.fulluser.id, likeeId);
 		if (result) {
-			await InsertDb.notification(res.locals.fulluser.id, likeeId, "dislike");
+			newNotification("unlike", res.locals.fulluser.id, likeeId);
 			await UpdateDb.decrementLikes(likeeId);
 			res.status(200).json({ message: "disliked" });
 		} else {
