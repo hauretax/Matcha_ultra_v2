@@ -25,7 +25,7 @@ interface AuthContextType {
   updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
   deletePicture: (pictureId: number) => Promise<void>;
   signout: () => Promise<void>;
-  handleError: (error: any, defaultMessage: string) => void
+  handleError: (error: ErrorResponse, defaultMessage: string) => void
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
