@@ -1,5 +1,5 @@
-import { Divider, Drawer, Fab, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
-import { ArrowRight, Bolt, ForkLeft, ForkRight, Inbox, Mail } from "@mui/icons-material";
+import { Divider, Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
+import { ArrowRight, Inbox, Mail } from "@mui/icons-material";
 
 export default function Notification({ closeNotification, NotificationIsopen }: { closeNotification: () => void, NotificationIsopen: boolean | undefined }) {
 	return (
@@ -20,7 +20,6 @@ export default function Notification({ closeNotification, NotificationIsopen }: 
 					display="flex"
 					justifyContent="center"
 					alignItems="center"
-				
 				>
 					<IconButton onClick={closeNotification}>
 						{<ArrowRight />}
