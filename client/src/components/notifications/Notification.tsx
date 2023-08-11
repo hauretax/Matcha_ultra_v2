@@ -1,4 +1,4 @@
-import { Divider, Drawer, Fab, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from "@mui/material";
+import { Divider, Drawer, Fab, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
 import { ArrowRight, Bolt, ForkLeft, ForkRight, Inbox, Mail } from "@mui/icons-material";
 
 export default function Notification({ closeNotification, NotificationIsopen }: { closeNotification: () => void, NotificationIsopen: boolean | undefined }) {
@@ -16,9 +16,16 @@ export default function Notification({ closeNotification, NotificationIsopen }: 
 				anchor="right"
 				open={NotificationIsopen}
 			>
-				<IconButton onClick={closeNotification}>
-					{ <ArrowRight />}
-				</IconButton>
+				<Box
+					display="flex"
+					justifyContent="center"
+					alignItems="center"
+				
+				>
+					<IconButton onClick={closeNotification}>
+						{<ArrowRight />}
+					</IconButton>
+				</Box>
 				<Divider />
 				<List>
 					{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
