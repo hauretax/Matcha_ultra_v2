@@ -1,17 +1,34 @@
-import { Bolt } from "@mui/icons-material";
+import { HeartBroken } from "@mui/icons-material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import NotificationContext from "../../context/NotificationProvider";
 
 export default function NotificationOpener({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
+	const [unread, setunread] = useState<boolean>(false);
+
+	const { haveUnread,setRead } = useContext(NotificationContext);
+
+	function handleRead() {
+		setRead();
+		openNotification();
+	}
+
+	useEffect(() => {
+		setunread(haveUnread);
+	}
+	, [haveUnread]);
+
 	return (
 		<>
 			<IconButton
 				color="inherit"
 				aria-label="open drawer"
 				edge="end"
-				onClick={openNotification}
+				onClick={handleRead}
 				sx={{ ...(NotificationIsopen && { display: "none" }) }}
 			>
-				<Bolt className="Bolt" sx={{ color: "var(--bolt-color)" }} />
+				{unread ? <HeartBroken className="Bolt" sx={{ color: "var(--bolt-color)" }} /> : <FavoriteIcon sx={{ color: "var(--bolt-color)" }} />}
 			</IconButton>
 			<style>
 				{`
@@ -25,15 +42,14 @@ export default function NotificationOpener({ openNotification, NotificationIsope
 							color: var(--background-color); /* Couleur initiale */
 						  }
 						  100% { 
-							transform: scale(2);
-							color: yellow;
+							transform: scale(1.5);
+							color: red;
 						  }
 					  }
 					  
 					  .Bolt {
 						animation: colorChange 1s infinite alternate;
 					  }
-
 				`}
 			</style>
 		</>

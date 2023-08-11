@@ -29,6 +29,7 @@ import PersonalProfilePage from "./pages/PersonalProfilePage";
 
 import { useState } from "react";
 import Notification from "./components/notifications/Notification";
+import { NotificationtProvider } from "./context/NotificationProvider";
 
 const theme = createTheme(themeOptions);
 
@@ -49,26 +50,28 @@ function App() {
 			<AuthProvider>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
-					<SocketProvider>
-						<Routes>
-							<Route element={<Layout openNotification = {handleDrawerOpen} NotificationIsopen = {open} />}>
-								<Route path="/" element={<PublicPage />} />
-								<Route path="/login" element={<LoginPage />} />
-								<Route path="/register" element={<RegisterPage />} />
-								<Route path="/valide_mail" element={<ValideMailPage />} />
-								<Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
-								<Route path="/reset_password" element={<ResetPasswordPage />} />
-								<Route path='/404' element={<div>404</div>} />
-								<Route element={<RequireAuth />} >
-									<Route path='/home' element={<BrowsePage />} />
-									<Route path='/profile' element={<PersonalProfilePage />} />
-									<Route path='/profile/:id' element={<ProfilePage />} />
-									<Route path='/chat' element={<Chat />} />
+					<NotificationtProvider>
+						<SocketProvider>
+							<Routes>
+								<Route element={<Layout openNotification={handleDrawerOpen} NotificationIsopen={open} />}>
+									<Route path="/" element={<PublicPage />} />
+									<Route path="/login" element={<LoginPage />} />
+									<Route path="/register" element={<RegisterPage />} />
+									<Route path="/valide_mail" element={<ValideMailPage />} />
+									<Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
+									<Route path="/reset_password" element={<ResetPasswordPage />} />
+									<Route path='/404' element={<div>404</div>} />
+									<Route element={<RequireAuth />} >
+										<Route path='/home' element={<BrowsePage />} />
+										<Route path='/profile' element={<PersonalProfilePage />} />
+										<Route path='/profile/:id' element={<ProfilePage />} />
+										<Route path='/chat' element={<Chat />} />
+									</Route>
 								</Route>
-							</Route>
-						</Routes>
-						<Notification closeNotification = {handleDrawerClose} NotificationIsopen = {open} />
-					</SocketProvider>
+							</Routes>
+							<Notification closeNotification={handleDrawerClose} NotificationIsopen={open} />
+						</SocketProvider>
+					</NotificationtProvider>
 				</ThemeProvider>
 			</AuthProvider >
 		</SnackBarProvider >

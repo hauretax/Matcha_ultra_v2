@@ -64,5 +64,6 @@ export interface notification{
     type: notificationType,
     fromId: number,
     toId: number,
-    date: Date
+    date: Date,
+    read:boolean
 }
