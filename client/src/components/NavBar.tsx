@@ -14,6 +14,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { prefixBackendUrl } from "../utils";
+import { ArrowLeft, Bolt } from "@mui/icons-material";
+import NotificationOpener from "./notifications/NotificationOpener";
 
 const pages = [
 	{
@@ -30,7 +32,7 @@ const pages = [
 	}
 ];
 
-function NavBar() {
+function NavBar({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -88,7 +90,7 @@ function NavBar() {
 							textDecoration: "none",
 						}}
 					>
-            MATCHA
+						MATCHA
 					</Typography>
 
 					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -144,7 +146,7 @@ function NavBar() {
 							textDecoration: "none",
 						}}
 					>
-            MATCHA
+						MATCHA
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 						{pages.map((page) => (
@@ -189,6 +191,7 @@ function NavBar() {
 									<Typography textAlign="center">Logout</Typography>
 								</MenuItem>
 							</Menu>
+							<NotificationOpener openNotification={openNotification} NotificationIsopen={NotificationIsopen} />
 						</Box> :
 						<Button sx={{ my: 2, color: "inherit", display: "block", lineHeight: "32px" }} onClick={() => navigate("/login")} variant='outlined'>LOGIN</Button>
 					}

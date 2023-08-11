@@ -27,11 +27,22 @@ import { SocketProvider } from "./context/SocketProvider";
 
 import PersonalProfilePage from "./pages/PersonalProfilePage";
 
+import { useState } from "react";
+import Notification from "./components/notifications/Notification";
+
 const theme = createTheme(themeOptions);
 
 
 function App() {
+	const [open, setOpen] = useState<boolean>(true);
 
+	const handleDrawerClose = () => {
+		setOpen(false);
+	};
+
+	const handleDrawerOpen = () => {
+		setOpen(true);
+	};
 
 	return (
 		<SnackBarProvider>
@@ -40,7 +51,7 @@ function App() {
 					<CssBaseline />
 					<SocketProvider>
 						<Routes>
-							<Route element={<Layout />}>
+							<Route element={<Layout openNotification = {handleDrawerOpen} NotificationIsopen = {open} />}>
 								<Route path="/" element={<PublicPage />} />
 								<Route path="/login" element={<LoginPage />} />
 								<Route path="/register" element={<RegisterPage />} />
@@ -56,6 +67,7 @@ function App() {
 								</Route>
 							</Route>
 						</Routes>
+						<Notification closeNotification = {handleDrawerClose} NotificationIsopen = {open} />
 					</SocketProvider>
 				</ThemeProvider>
 			</AuthProvider >

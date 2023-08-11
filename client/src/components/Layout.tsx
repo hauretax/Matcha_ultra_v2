@@ -4,7 +4,7 @@ import NavBar from "./NavBar";
 import { Outlet } from "react-router-dom";
 import Copyright from "./Copywright";
 
-function Layout() {
+function Layout({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
 	return (
 		<Box
 			sx={{
@@ -13,7 +13,7 @@ function Layout() {
 				minHeight: "100vh",
 			}}
 		>
-			<NavBar />
+			<NavBar openNotification={openNotification} NotificationIsopen={NotificationIsopen}/>
 			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
 				<Container maxWidth="lg">
 					<Outlet />
