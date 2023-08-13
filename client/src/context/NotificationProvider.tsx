@@ -12,7 +12,8 @@ function getNotificationsTest(): Promise<{ data: { notifications: notification[]
 			fromId: 123,
 			toId: 456,
 			date: new Date(),
-			read: true
+			read: true,
+			fromUsername:"lux"
 		},
 		{
 			id: 2,
@@ -20,7 +21,8 @@ function getNotificationsTest(): Promise<{ data: { notifications: notification[]
 			fromId: 789,
 			toId: 456,
 			date: new Date(),
-			read: true
+			read: true,
+			fromUsername:"lux"
 		},
 		{
 			id: 3,
@@ -28,7 +30,8 @@ function getNotificationsTest(): Promise<{ data: { notifications: notification[]
 			fromId: 987,
 			toId: 123,
 			date: new Date(),
-			read: false
+			read: false,
+			fromUsername:"lux"
 		},
 	];
 

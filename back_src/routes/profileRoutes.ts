@@ -9,6 +9,7 @@ import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
 import { setUserPosition, setUserPositionByIP } from "../controllers/localisationCtrl";
 import upload from "../config/multer.config";
+import { seeNotification } from "../controllers/notificationCtrl";
 
 const router = express.Router();
 const publicGroup = [];
@@ -33,6 +34,7 @@ router.patch("/profileBio", privateGroup, asyncHandler(updateBio));
 router.patch("/profileInterests", privateGroup, asyncHandler(updateInterests));
 router.post("/picture/new", privateGroup, upload.single("file"), asyncHandler(insertPicture));
 router.post("/view", privateGroup, asyncHandler(viewProfile));
+router.post("/seeNotification", privateGroup, asyncHandler(seeNotification));
 
 router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"), asyncHandler(updatePicture));
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));
