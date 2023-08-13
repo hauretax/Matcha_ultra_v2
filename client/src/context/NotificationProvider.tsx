@@ -42,7 +42,6 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 	}, [auth.user]);
 
 	useEffect(() => {
-		console.log("HELOOOO", notification);
 		if (!notification)
 			return;
 		setNotifications([notification, ...notifications]);

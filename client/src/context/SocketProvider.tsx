@@ -53,7 +53,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
 		const handleNotification = (notification:notification)=> {
 			setNotification(notification);
-			console.log(notification);
+			// console.log(notification);
 		};
 
 		// Socket connection and authentication

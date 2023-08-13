@@ -14,7 +14,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { prefixBackendUrl } from "../utils";
-import { ArrowLeft, Bolt } from "@mui/icons-material";
 import NotificationOpener from "./notifications/NotificationOpener";
 
 const pages = [
