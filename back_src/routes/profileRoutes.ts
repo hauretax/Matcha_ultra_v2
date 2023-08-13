@@ -9,7 +9,7 @@ import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
 import { setUserPosition, setUserPositionByIP } from "../controllers/localisationCtrl";
 import upload from "../config/multer.config";
-import { seeNotification } from "../controllers/notificationCtrl";
+import { getNotification, seeNotification } from "../controllers/notificationCtrl";
 
 const router = express.Router();
 const publicGroup = [];
@@ -41,7 +41,8 @@ router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePictu
 
 router.get("/users", validsecurRequest, profileCompletedGroup, asyncHandler(getProfiles));
 router.post("/like", profileCompletedGroup, asyncHandler(like));
-router.get("/profile/:id", privateGroup, asyncHandler(getProfileById));
+router.get("/getnotification", privateGroup, asyncHandler(getNotification));
+router.get("/profile/:id", profileCompletedGroup, asyncHandler(getProfileById));
 router.get("/chat/getConv", profileCompletedGroup, asyncHandler(getActualConversations));
 router.get("/chat/getChat/:id", profileCompletedGroup, asyncHandler(getChat));
 

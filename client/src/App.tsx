@@ -35,7 +35,8 @@ const theme = createTheme(themeOptions);
 
 
 function App() {
-	const [open, setOpen] = useState<boolean>(true);
+	// TODO #15 moov this in notificationProvider
+	const [open, setOpen] = useState<boolean>(false);
 
 	const handleDrawerClose = () => {
 		setOpen(false);
@@ -50,8 +51,8 @@ function App() {
 			<AuthProvider>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
-					<NotificationtProvider>
-						<SocketProvider>
+					<SocketProvider>
+						<NotificationtProvider>
 							<Routes>
 								<Route element={<Layout openNotification={handleDrawerOpen} NotificationIsopen={open} />}>
 									<Route path="/" element={<PublicPage />} />
@@ -70,8 +71,8 @@ function App() {
 								</Route>
 							</Routes>
 							<Notification closeNotification={handleDrawerClose} NotificationIsopen={open} />
-						</SocketProvider>
-					</NotificationtProvider>
+						</NotificationtProvider>
+					</SocketProvider>
 				</ThemeProvider>
 			</AuthProvider >
 		</SnackBarProvider >

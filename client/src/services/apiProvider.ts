@@ -6,13 +6,16 @@ const apiProvider = {
 		return axiosPrivate.get("/profile/" + id);
 	},
 
-
 	getConversations() {
 		return axiosPrivate.get("/chat/getConv");
 	},
 
+	getNotifications() {
+		return axiosPrivate.get("/getnotification");
+	},
+
 	getChat(id: number) {
-		return axiosPrivate.get("/chat/getChat/"+id);
+		return axiosPrivate.get("/chat/getChat/" + id);
 	},
 
 
@@ -20,6 +23,10 @@ const apiProvider = {
 		return axiosPrivate.get("/options");
 	},
 
+	setNotificationRead() {
+		return axiosPrivate.post("/seeNotification");
+	},
+	
 	updatePositionByIp() {
 		return axiosPrivate.post("/setLocationByIP");
 	},

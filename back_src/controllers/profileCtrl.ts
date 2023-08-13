@@ -422,7 +422,7 @@ export async function like(req: Request, res: Response) {
 	const { likeeId, status } = req.body;
 
 	if (status) {
-		const likePromise =  InsertDb.like(res.locals.fulluser.id, likeeId);
+		await InsertDb.like(res.locals.fulluser.id, likeeId);
 		// If user is already liked, an error will be thrown and next line we not be executed
 		const notificationPromise =  newNotification("like", res.locals.fulluser.id, likeeId);
 		const incrementLikesPromise =  UpdateDb.incrementLikes(likeeId);
@@ -433,11 +433,9 @@ export async function like(req: Request, res: Response) {
 		const [hasBeenVisited,userBothLike] = await Promise.all([
 			hasBeenVisitedPromise,
 			userBothLikePromise,
-			likePromise,
 			notificationPromise,
 			incrementLikesPromise
 		]);
-	
 		if(userBothLike){
 			await newNotification("match", res.locals.fulluser.id, likeeId);
 			await newNotification("match", likeeId, res.locals.fulluser.id);

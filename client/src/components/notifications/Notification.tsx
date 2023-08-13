@@ -22,19 +22,20 @@ function selectIcon(type: notificationType) {
 }
 
 function createNotification(notifications: notification[]): JSX.Element {
+	if (!notifications) {
+		return <></>;
+	}
 	const notificationListe = notifications.map((notification) => {
 		// const blinkStyle = !notification.read ? { animation: "blink 1s infinite alternate" } : {};
 
 		return (
-			<>
-				<ListItem key={notification.id} disablePadding sx={{ my: 1 }}  className={!notification.read ? "unread" : ""}>
-					<ListItemButton>
-						<ListItemIcon>
-							{selectIcon(notification.type)}
-						</ListItemIcon>
-						<ListItemText primary={`u get ${notification.type} by ${notification.fromUsername}`} />
-					</ListItemButton>
-				</ListItem>
+			<ListItem key={notification.id} disablePadding sx={{ my: 1 }} className={!notification.read ? "unread" : ""}>
+				<ListItemButton>
+					<ListItemIcon>
+						{selectIcon(notification.type)}
+					</ListItemIcon>
+					<ListItemText primary={`u get ${notification.type} by ${notification.fromUsername}`} />
+				</ListItemButton>
 				<style>
 					{`
 						@keyframes blink {
@@ -50,10 +51,9 @@ function createNotification(notifications: notification[]): JSX.Element {
 						}
         			`}
 				</style>
-			</>
+			</ListItem>
 		);
 	});
-	console.log(notificationListe);
 	return <>{notificationListe}</>;
 }
 

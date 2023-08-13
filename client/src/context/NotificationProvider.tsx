@@ -1,53 +1,14 @@
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { notification } from "../../../comon_src/type/utils.type";
 import { useAuth } from "./AuthProvider";
-
-function getNotificationsTest(): Promise<{ data: { notifications: notification[] } }> {
-	// Simuler la récupération de 3 notifications avec des données fictives
-	const notifications: notification[] = [
-		{
-			id: 1,
-			type: "like",
-			fromId: 123,
-			toId: 456,
-			date: new Date(),
-			read: true,
-			fromUsername:"lux"
-		},
-		{
-			id: 2,
-			type: "like",
-			fromId: 789,
-			toId: 456,
-			date: new Date(),
-			read: true,
-			fromUsername:"lux"
-		},
-		{
-			id: 3,
-			type: "like",
-			fromId: 987,
-			toId: 123,
-			date: new Date(),
-			read: false,
-			fromUsername:"bobboboboboobbobboboboboobbobboboboboobbobboboboboob"
-		},
-	];
-
-	return new Promise((resolve) => {
-		// Simuler un délai de récupération
-		setTimeout(() => {
-			resolve({ data: { notifications } });
-		}, 1000); // Résolution de la promesse après 1 seconde (simulation de récupération asynchrone)
-	});
-}
-
+import apiProvider from "../services/apiProvider";
+import SocketContext from "./SocketProvider";
 
 interface NotificationProvider {
-    notifications: Array<notification>;
-    haveUnread: boolean;
-    setRead: () => void;
+	notifications: Array<notification>;
+	haveUnread: boolean;
+	setRead: () => void;
 }
 
 const NotificationContext = createContext<NotificationProvider>({
@@ -62,29 +23,48 @@ export default NotificationContext;
 export function NotificationtProvider({ children }: { children: React.ReactNode }) {
 	const [notifications, setNotifications] = useState<notification[]>([]);
 	const [haveUnread, sethaveUnread] = useState<boolean>(false);
-
+	const { notification } = useContext(SocketContext);
 	const auth = useAuth();
 
 	useEffect(() => {
 		async function getNotifications() {
-			const { data: { notifications: fetchedNotifications } } = await getNotificationsTest();
-			const haveUnread = fetchedNotifications.some(notification => !notification.read);
-			setNotifications(fetchedNotifications);
-			sethaveUnread(haveUnread);
+			try {
+				const data = await apiProvider.getNotifications();
+				const fetchedNotifications = data.data;
+				setNotifications(fetchedNotifications);
+				const haveUnread = fetchedNotifications.some((notification: notification) => !notification.read);
+				sethaveUnread(haveUnread);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des notifications:", error);
+			}
 		}
 		getNotifications();
 	}, [auth.user]);
 
+	useEffect(() => {
+		console.log("HELOOOO", notification);
+		if (!notification)
+			return;
+		setNotifications([notification, ...notifications]);
 
-	function setRead() {
+	}, [notification]);
+
+
+	async function setRead() {
+		if (!notifications)
+			return;
 		const updatedNotifications = notifications.map(notification => ({
 			...notification,
 			read: true,
 		}));
 		sethaveUnread(false);
 		setNotifications(updatedNotifications);
+		try {
+			await apiProvider.setNotificationRead();
+		} catch (error) {
+			console.error("Erreur lors de la lecture des notifications", error);
+		}
 	}
-
 
 	const contextValue = {
 		notifications,
