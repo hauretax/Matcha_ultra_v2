@@ -20,7 +20,7 @@ export default SocketContext;
 export function SocketProvider({ children }: { children: React.ReactNode }) {
 	const [connectedUsers, setConnectedUsers] = useState<number[]>([]);
 	const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: "default" });
-	const [notification, setNotification] = useState<notification>({ date:new Date(),fromId:-1, id:-1,toId:-1,type:"like", read:true});
+	const [notification, setNotification] = useState<notification>({ date:new Date(),fromId:-1, id:-1,toId:-1,type:"like", read:true, fromUsername:"lux"});
 	const auth = useAuth();
 	// to usr correct function on socket i need to give context 
 
