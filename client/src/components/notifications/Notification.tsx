@@ -1,7 +1,7 @@
 import { Divider, Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
-import { ArrowRight, Favorite, Inbox, Mail, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
+import { ArrowRight, Favorite, Mail, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { notification, notificationType } from "../../../../comon_src/type/utils.type";
 
 function selectIcon(type: notificationType) {
@@ -22,17 +22,36 @@ function selectIcon(type: notificationType) {
 }
 
 function createNotification(notifications: notification[]): JSX.Element {
-	console.log("not:", notifications);
 	const notificationListe = notifications.map((notification) => {
-		return <ListItem key={notification.id} disablePadding>
+		// const blinkStyle = !notification.read ? { animation: "blink 1s infinite alternate" } : {};
 
-			<ListItemButton>
-				<ListItemIcon>
-					{selectIcon(notification.type)}
-				</ListItemIcon>
-				<ListItemText primary={`u get ${notification.type} by ${notification.fromUsername}`} />
-			</ListItemButton>
-		</ListItem>;
+		return (
+			<>
+				<ListItem key={notification.id} disablePadding sx={{ my: 1 }}  className={!notification.read ? "unread" : ""}>
+					<ListItemButton>
+						<ListItemIcon>
+							{selectIcon(notification.type)}
+						</ListItemIcon>
+						<ListItemText primary={`u get ${notification.type} by ${notification.fromUsername}`} />
+					</ListItemButton>
+				</ListItem>
+				<style>
+					{`
+						@keyframes blink {
+							0% {
+								background-color: pink;
+							}
+							100% {
+								background-color: red;
+							}
+						}
+						.unread {
+							animation: blink 1s infinite alternate;
+						}
+        			`}
+				</style>
+			</>
+		);
 	});
 	console.log(notificationListe);
 	return <>{notificationListe}</>;
@@ -40,9 +59,6 @@ function createNotification(notifications: notification[]): JSX.Element {
 
 export default function Notification({ closeNotification, NotificationIsopen }: { closeNotification: () => void, NotificationIsopen: boolean | undefined }) {
 	const { notifications } = useContext(NotificationContext);
-	useEffect(() => {
-		console.log("je sait pas ? ", notifications);
-	}, [notifications]);
 
 	return (
 		<>

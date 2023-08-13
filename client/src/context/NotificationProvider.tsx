@@ -31,7 +31,7 @@ function getNotificationsTest(): Promise<{ data: { notifications: notification[]
 			toId: 123,
 			date: new Date(),
 			read: false,
-			fromUsername:"lux"
+			fromUsername:"bobboboboboobbobboboboboobbobboboboboobbobboboboboob"
 		},
 	];
 
