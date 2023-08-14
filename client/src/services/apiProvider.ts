@@ -104,6 +104,10 @@ const apiProvider = {
 		return axiosPrivate.post("/block", { toId, status });
 	},
 
+	report(toId: number) {
+		return axiosPrivate.post("/report", { toId });
+	},
+
 	visit(viewedId: number) {
 		return axiosPrivate.post("/view", { viewedId });
 	}

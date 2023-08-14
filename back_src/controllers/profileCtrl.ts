@@ -488,6 +488,27 @@ export async function block(req: Request, res: Response) {
 	res.status(200).json({ message: status ? "blocked": "unblocked" });
 }
 
+export async function report(req: Request, res: Response) {
+	if (!validateBody(req, ["toId"], ["number"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { toId } = req.body;
+
+	const user = await FindDb.userById(toId);
+
+	if (!user) {
+		res.status(400).json({ error: "user not found" });
+		return;
+	}
+
+	await sendEmail('antoine.auth@gmail.com', `User ${res.locals.fulluser.id} reported user ${toId}`, 'Report');
+
+	res.json({ message: "reported" });
+}
+
+
 export async function viewProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["viewedId"], ["number"])) {
 		res.status(400).json({ error: "missing parameters" });

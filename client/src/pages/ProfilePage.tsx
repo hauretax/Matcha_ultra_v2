@@ -70,8 +70,13 @@ const ProfilePage: React.FC = () => {
 		}
 	};
 
-	const report = () => {
-		setProfile({ ...profile, reported: !profile.reported });
+	const report = async () => {
+		try {
+			await apiProvider.report(profile.id);
+			snackbar("Profile successfully reported", "success");
+		} catch (err) {
+			snackbar(buildErrorString(err as ErrorResponse, "Failed to report profile"), "error");
+		}		
 	};
 
 	return (
