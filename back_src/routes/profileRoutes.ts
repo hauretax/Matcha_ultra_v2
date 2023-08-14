@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile } from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile, getUsrwithtoken } from "../controllers/profileCtrl";
 import { getActualConversations, getChat, newMessage } from "../controllers/chatCtrl";
 
 import asyncHandler from "express-async-handler";
@@ -19,6 +19,7 @@ const profileCompletedGroup = [validsecurRequest, isProfileCompleted];
 
 router.post("/register", publicGroup, asyncHandler(createProfile));
 router.post("/login", publicGroup, asyncHandler(login));
+router.get("/getUsrByToken",privateGroup, getUsrwithtoken);
 router.get("/verify_email", publicGroup, asyncHandler(validByEmail));
 router.post("/request_password_reset", publicGroup, asyncHandler(RequestpasswordReset));
 router.post("/reset_password", publicGroup, asyncHandler(passwordReset));

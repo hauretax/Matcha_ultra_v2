@@ -8,7 +8,7 @@ import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
 import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateQueryParams } from "../utils/validateDataHelper";
 
-import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
+import { FullUser, PersonalProfile, UserPayload, UserProfile } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
 
@@ -68,6 +68,28 @@ export async function createProfile(req: Request, res: Response) {
 			throw error;  // propagate the error
 		}
 	}
+}
+
+export async function getUsrwithtoken(_: Request, res: Response) {
+	const fullUser: FullUser = res.locals.fulluser;
+	const profile: PersonalProfile = {
+		id: fullUser.id,
+		emailVerified: fullUser.emailVerified,
+		email: fullUser.email,
+		customLocation: fullUser.customLocation,
+		username: fullUser.username,
+		lastName: fullUser.lastName,
+		firstName: fullUser.firstName,
+		biography: fullUser.biography,
+		gender: fullUser.gender,
+		birthDate: fullUser.birthDate,
+		preferences: fullUser.preferences,
+		pictures: fullUser.pictures,
+		interests: fullUser.interests,
+		latitude: fullUser.latitude,
+		longitude: fullUser.longitude
+	};
+	res.status(200).json({ profile });
 }
 
 export async function login(req: Request, res: Response) {
@@ -437,19 +459,19 @@ export async function like(req: Request, res: Response) {
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
 		// If user is already liked, an error will be thrown and next line we not be executed
-		const notificationPromise =  newNotification("like", res.locals.fulluser.id, likeeId);
-		const incrementLikesPromise =  UpdateDb.incrementLikes(likeeId);
+		const notificationPromise = newNotification("like", res.locals.fulluser.id, likeeId);
+		const incrementLikesPromise = UpdateDb.incrementLikes(likeeId);
 		//If user is liked, his profile is set as visited
 		const hasBeenVisitedPromise = FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
 		const userBothLikePromise = GetDb.checkUserLikesSymmetry(res.locals.fulluser.id, likeeId);
 
-		const [hasBeenVisited,userBothLike] = await Promise.all([
+		const [hasBeenVisited, userBothLike] = await Promise.all([
 			hasBeenVisitedPromise,
 			userBothLikePromise,
 			notificationPromise,
 			incrementLikesPromise
 		]);
-		if(userBothLike){
+		if (userBothLike) {
 			await newNotification("match", res.locals.fulluser.id, likeeId);
 			await newNotification("match", likeeId, res.locals.fulluser.id);
 		}

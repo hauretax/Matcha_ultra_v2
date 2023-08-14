@@ -1,6 +1,7 @@
 import db from "./db";
 import { FullUser, userInDb1, userInDb2 } from "../../comon_src/type/user.type";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
+import GetDb from "./Get.db";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -45,10 +46,12 @@ const FindDb = {
 		if (user) {
 			return Promise.all([
 				this.picturesByUserId(user.id),
-				this.interestsByUserId(user.id)
-			]).then(([pictures, interests]) => {
+				this.interestsByUserId(user.id),
+				GetDb.getUserPreferences(user.id)
+			]).then(([pictures, interests, preferences]) => {
 				user.pictures = pictures;
 				user.interests = interests;
+				user.preferences = preferences;
 				return user;
 			});
 		} else {

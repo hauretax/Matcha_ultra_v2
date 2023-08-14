@@ -28,6 +28,7 @@ function RequireAuth() {
 	}
 
 	if (location.pathname !== "/profile") {
+		console.log("profile:",auth.user); 
 		if (isProfileIncomplete(auth.user)) {
 			return <Navigate to="/profile" state={{ profileIncomplete: true }} />;
 		}

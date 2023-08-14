@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AxiosResponse } from "axios";
 
 import { PersonalProfile } from "../../../comon_src/type/user.type";
@@ -10,20 +10,20 @@ import apiProvider from "../services/apiProvider";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
 
 interface AuthContextType {
-  user: PersonalProfile | null;
-  signin: (username: string, password: string) => Promise<void>;
-  signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
-  valideByMail: (mail: string, code: string) => Promise<void>,
-  resetPasswordRequest: (email: string) => Promise<void>;
-  resetPassword: (email: string, code: string, password: string) => Promise<void>;
-  getProfile: (id: string) => Promise<void>;
-  updateBio: (biography: string) => Promise<void>;
-  updateInterests: (interests: string[]) => Promise<void>;
-  updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
-  insertPicture: (formdata: FormData) => Promise<void>;
-  updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
-  deletePicture: (pictureId: number) => Promise<void>;
-  signout: () => Promise<void>;
+	user: PersonalProfile | null;
+	signin: (username: string, password: string) => Promise<void>;
+	signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
+	valideByMail: (mail: string, code: string) => Promise<void>,
+	resetPasswordRequest: (email: string) => Promise<void>;
+	resetPassword: (email: string, code: string, password: string) => Promise<void>;
+	getProfile: (id: string) => Promise<void>;
+	updateBio: (biography: string) => Promise<void>;
+	updateInterests: (interests: string[]) => Promise<void>;
+	updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
+	insertPicture: (formdata: FormData) => Promise<void>;
+	updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
+	deletePicture: (pictureId: number) => Promise<void>;
+	signout: () => Promise<void>;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +31,22 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = React.useState<PersonalProfile | null>(null);
 	const snackBar = useSnackbar();
+
+	useEffect(() => {
+		async function fetchProfiles() {
+			try {
+				if (!localStorage.getItem("accessToken")) {
+					return;
+				}
+				const fetchData = await apiProvider.getUsrByToken();
+				if (fetchData.data.profile)
+					setUser(fetchData.data.profile);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des profils:", error);
+			}
+		}
+		fetchProfiles();
+	}, []);
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
 		let errorMessage = null;
@@ -205,7 +221,10 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 	// TODO #4 : handle remember me
 	const signout = async (): Promise<void> => {
 		try {
-			localStorage.removeItem("jwtToken");
+			localStorage.removeItem("accessToken");
+			localStorage.removeItem("scores");
+			localStorage.removeItem("refreshToken");
+
 			setUser(null);
 			snackBar("Logout successfull", "success");
 		} catch (error) {
