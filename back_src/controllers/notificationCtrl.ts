@@ -14,8 +14,8 @@ export async function newNotification(type: notificationType, fromId: number, to
 	const dbNotification = await InsertDb.notification(fromId, toId, type) as unknown;
 	const notification  = dbNotification as notification;
 	const user = await FindDb.userById(notification.fromId);
-	(notification as notification).fromUsername = user.username;
-	sendNotification(notification as notification);
+	notification.fromUsername = user.username;
+	sendNotification(notification);
 }
 
 export async function getNotification(_: Request, res: Response){
