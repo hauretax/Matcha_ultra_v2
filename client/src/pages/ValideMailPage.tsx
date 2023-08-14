@@ -24,7 +24,7 @@ export default function ValideMailPage() {
 		};
 
 		start();
-	}, [auth , navigate]);
+	}, [auth, navigate]);
 
 	return (
 		<Container component="main" maxWidth="xs">

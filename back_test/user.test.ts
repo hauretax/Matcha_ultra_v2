@@ -44,7 +44,7 @@ describe("user create Profile", () => {
 
 		expect(FE.res.status).toHaveBeenCalledWith(201);
 		usrId = FE.responseData?.usrId;
-	},60000);
+	}, 60000);
 
 	it("should return 405 if data is missing", async () => {
 		const wrongUser = goodReq.body;

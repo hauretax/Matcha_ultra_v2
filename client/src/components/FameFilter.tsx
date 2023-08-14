@@ -79,7 +79,7 @@ const FameFilter: React.FC<Props> = ({ fameRange, setFameRange }) => {
 						disableSwap
 						min={0}
 						max={100}
-						sx={{ width: "100%", marginTop: 2}}
+						sx={{ width: "100%", marginTop: 2 }}
 					/>
 				</Box>
 			</Popover>

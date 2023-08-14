@@ -443,7 +443,7 @@ export async function like(req: Request, res: Response) {
 		const hasBeenVisitedPromise = FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
 		const userBothLikePromise = GetDb.checkUserLikesSymmetry(res.locals.fulluser.id, likeeId);
 
-		const [hasBeenVisited,userBothLike] = await Promise.all([
+		const [hasBeenVisited, userBothLike] = await Promise.all([
 			hasBeenVisitedPromise,
 			userBothLikePromise,
 			notificationPromise,

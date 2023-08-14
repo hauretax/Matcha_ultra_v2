@@ -9,7 +9,7 @@ interface MySelectFieldProps {
   options: string[];
 }
 
-const MySelectField: React.FC<MySelectFieldProps> = ({ label, value, setState, isEditing , options}) => {
+const MySelectField: React.FC<MySelectFieldProps> = ({ label, value, setState, isEditing, options }) => {
 	const handleChange = (e: SelectChangeEvent<string>) => {
 		setState(e.target.value);
 	};
