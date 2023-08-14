@@ -27,6 +27,7 @@ import { newNotification } from "./notificationCtrl";
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
 import { getUserPreferences, updateUserPreferences } from "../service/userPreferences";
+import { blockUser, isUserBlocked, unblockUser } from "../service/userBlocks";
 
 
 export async function createProfile(req: Request, res: Response) {
@@ -136,7 +137,7 @@ export async function getProfileById(req: Request, res: Response) {
 		return;
 	}
 
-
+	const blocked = await isUserBlocked(res.locals.fulluser.id, user.id);
 	const liked = await FindDb.isLikedBy(res.locals.fulluser.id, user.id);
 
 	res.json({
@@ -154,6 +155,7 @@ export async function getProfileById(req: Request, res: Response) {
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
 		liked: liked,
+		blocked: blocked,
 		fameRating: user.likes / user.views,
 		preferences: await getUserPreferences(user.id),
 	});
@@ -467,6 +469,23 @@ export async function like(req: Request, res: Response) {
 			res.status(400).json({ message: "already disliked" });
 		}
 	}
+}
+
+export async function block(req: Request, res: Response) {
+	if (!validateBody(req, ["toId", "status"], ["number", "boolean"])) {
+		res.status(400).json({ error: "missing parameters" });
+		return;
+	}
+
+	const { toId, status } = req.body;
+
+	if (status) {
+		await blockUser(res.locals.fulluser.id, toId);
+	} else {
+		await unblockUser(res.locals.fulluser.id, toId);
+	}
+
+	res.status(200).json({ message: status ? "blocked": "unblocked" });
 }
 
 export async function viewProfile(req: Request, res: Response) {

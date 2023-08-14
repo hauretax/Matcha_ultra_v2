@@ -100,6 +100,10 @@ const apiProvider = {
 		return axiosPrivate.post("/like", { likeeId, status });
 	},
 
+	block(toId: number, status: boolean) {
+		return axiosPrivate.post("/block", { toId, status });
+	},
+
 	visit(viewedId: number) {
 		return axiosPrivate.post("/view", { viewedId });
 	}

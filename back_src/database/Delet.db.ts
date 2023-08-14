@@ -26,6 +26,15 @@ const DeletDb = {
 		return res.changes;
 	},
 
+	async unblock(fromId: number, toId: number): Promise<number> {
+		const sql = `
+      DELETE FROM user_blocks
+      WHERE fromId = ? AND toId = ?;
+    `;
+		const res = await db.run(sql, [fromId, toId]);
+		return res.changes;
+	},
+
 	async removePreferences(userId: number): Promise<void> {
 		const sql = `
 			DELETE FROM user_preferences

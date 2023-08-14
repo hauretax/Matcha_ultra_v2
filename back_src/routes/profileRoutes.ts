@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile } from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile, block } from "../controllers/profileCtrl";
 import { getActualConversations, getChat, newMessage } from "../controllers/chatCtrl";
 
 import asyncHandler from "express-async-handler";
@@ -35,6 +35,7 @@ router.patch("/profileInterests", privateGroup, asyncHandler(updateInterests));
 router.post("/picture/new", privateGroup, upload.single("file"), asyncHandler(insertPicture));
 router.post("/view", privateGroup, asyncHandler(viewProfile));
 router.post("/seeNotification", privateGroup, asyncHandler(seeNotification));
+router.post("/block", privateGroup, asyncHandler(block));
 
 router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"), asyncHandler(updatePicture));
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));

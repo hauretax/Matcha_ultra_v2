@@ -1,6 +1,7 @@
 import db from "./db";
 import { FullUser, userInDb1, userInDb2 } from "../../comon_src/type/user.type";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
+import { RunResult } from "sqlite3";
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -76,6 +77,7 @@ const FindDb = {
 		const completTab = [
 			...params.interestWanted,
 			params.latitude, params.longitude, params.latitude,
+			params.userId,
 			params.distanceMax,
 			params.ageMax,
 			params.ageMin,
@@ -110,6 +112,7 @@ const FindDb = {
 		FROM
 			users AS u
 			INNER JOIN user_preferences AS u_p ON u.id = u_p.user_id
+			LEFT JOIN user_blocks AS ub ON u.id = ub.toId
 			LEFT JOIN (
 				SELECT
 					user_id,
@@ -142,7 +145,8 @@ const FindDb = {
 					users
 			) AS d ON u.id = d.id
 		WHERE
-			d.distance < ?
+			(ub.fromId IS NULL OR ub.fromId <> ?)
+			AND d.distance < ?
 			AND u.age <= ?
 			AND u.age >= ?
 			AND u.gender IN (${params.preferences.map(() => "?").join(",")})
@@ -166,6 +170,12 @@ const FindDb = {
 		const result = await db.get(sql, [likerId, likeeId]);
 		return result.count > 0;
 	},
+
+	isBlockedBy(fromId: number, toId: number){
+		const sql = "SELECT COUNT(*) AS count FROM user_blocks WHERE fromId = ? AND toId = ?";
+		return db.get(sql, [fromId, toId]);
+	},
+
 
 	async hasBeenVisitedBy(visitorId: number, visiteeId: number): Promise<boolean> {
 		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'visit'";
