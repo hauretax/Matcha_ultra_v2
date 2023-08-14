@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PersonalProfile, UserProfile } from "../../comon_src/type/user.type";
+import { getUserPreferences } from "../service/userPreferences";
 
 export async function isPictureOwner(req: Request, res: Response, next: NextFunction) {
 	const user: UserProfile = res.locals.fulluser; // from validsecurRequest
@@ -25,17 +26,18 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
 		return;
 	}
 
-	if (isProfileInfoMissing(user)) {
+	if (await isProfileInfoMissing(user)) {
 		res.status(400).json({ error: "profile information missing" });
 		return;
 	}
+
 	next();
 }
 
-const isProfileInfoMissing = (user: PersonalProfile) => {
+const isProfileInfoMissing = async (user: PersonalProfile) => {
 	return (
 		!user.gender ||
-    // !user.orientation || TODO: fix orientation
+		!(await getUserPreferences(user.id)).length ||
     !user.biography ||
     !user.birthDate ||
     !user.pictures.length ||
