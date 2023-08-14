@@ -67,6 +67,7 @@ function App() {
 										<Route path='/profile' element={<PersonalProfilePage />} />
 										<Route path='/profile/:id' element={<ProfilePage />} />
 										<Route path='/chat' element={<Chat />} />
+										<Route path='/chat/:idParam' element={<Chat />} />
 									</Route>
 								</Route>
 							</Routes>
