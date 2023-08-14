@@ -43,7 +43,7 @@ const Profile: React.FC<Props> = (props) => {
 					</Typography>
 				</Box>
 				<Box sx={{ mb: 2 }}>
-					<Box sx={{ borderRadius: 1, border: "2px solid purple", display: "inline-flex", alignItems: "center" }}>
+					<Box sx={{ borderRadius: 1, border: "2px solid purple", display: "inline-flex", alignItems: "center", pl: 1 }}>
 						<EmojiEvents sx={{ fontSize: "1rem", mr: 1, mb: "2px", fontVariant: "body2", color: "purple" }} />
 						<Typography mr={1} variant="body2" color="purple">{props.fameRating}</Typography>
 					</Box>
