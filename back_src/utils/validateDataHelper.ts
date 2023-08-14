@@ -18,7 +18,7 @@ export function validateDate(birthDate: string): boolean {
 
 
 export function validateInterests(interests: string[]): boolean {
-	return Array.isArray(interests) && interests.every((interest) => (typeof interest === "string" && interest != ""));
+	return Array.isArray(interests) && interests.length && interests.every((interest) => (typeof interest === "string" && interest != ""));
 }
 
 export function validatePictureId(pictureId: string): boolean {
@@ -46,7 +46,7 @@ export function validateCoordinates(latitude: string, longitude: string): boolea
 }
 
 export function validateQueryParams(req: Request): string[] {
-	const requiredParams = ["ageMin", "ageMax", "orientation", "index", "distanceMax", "orderBy"];
+	const requiredParams = ["ageMin", "ageMax", "fameMin", "fameMax", "index", "distanceMax", "orderBy"];
 	const missingParams = requiredParams.filter(param => !req.query[param]);
 
 	return missingParams;

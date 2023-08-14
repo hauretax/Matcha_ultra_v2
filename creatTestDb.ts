@@ -6,7 +6,6 @@ import bcrypt from "bcrypt";
 // Plage de latitudes et de longitudes
 const latitudeRange = { minLatitude: 47.99959319232476, maxLatitude: 49.58583960767524 };
 const longitudeRange = { minLongitude: 0.1447927459551262, maxLongitude: 6.395843454044868 };
-const orientationTab = ["Heterosexual", "Bisexual", "Homosexual"];
 const genderTab = ["Male", "Female"];
 const randomInterest = ["video-game", "outfit", "sex", "netflix", "sport", "bonbon", "chiffre", "money", "aaaaaa", "bbbbbb"];
 const randomPictureMale = ["profileMan1.webp", "profileMan2.jpg", "profileMan3.webp", "profileMan4.jpeg"];
@@ -144,33 +143,36 @@ export default async function insertDataInDb() {
 	for (let i = 1; i < 500; i++) {
 
 		const sql = `
-        INSERT OR IGNORE INTO users (
-			email,
-        	username,
-			firstName,
-			gender,
-			orientation,
-			birthDate,
-			age,
-			latitude,
-			longitude
-		)
-        VALUES (?, ?, ?, ?, ?, ?,
-		STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?))
-		, ?, ?)
-      `;
+      INSERT INTO users (
+				email,
+        username,
+				firstName,
+				gender,
+				birthDate,
+				age,
+				latitude,
+				longitude
+			)
+      VALUES 
+			(?, ?, ?, ?, ?, STRFTIME('%Y', 'now') - STRFTIME('%Y', ?) - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', ?)), ?, ?)
+    `;
 		const name = (Math.random() * 65536).toString();
 		const gender = genderTab[i % 2];
-		const orientation = orientationTab[i % 3];
 		const birthDate = generateRandomDateOfBirth();
 		const { latitude, longitude } = generateRandomPoint(latitudeRange, longitudeRange);
 
 		try {
-			await db.run(sql, [
-				name, i, "1", gender, orientation, birthDate, birthDate, birthDate, latitude, longitude
-			]);
+			await db.run(sql, [name, i, "1", gender, birthDate, birthDate, birthDate, latitude, longitude]);
 			const userId = await db.get("SELECT last_insert_rowid() as id");
-			// console.log(userId)
+			
+			if (i % 9 === 0) {
+				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[i % 2]]);
+				if (i % 2 === 0) {
+					await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]]);
+				}
+			} else {
+				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[(i + 1) % 2]]);
+			}
 
 			const randomInterestsCount = Math.floor(Math.random() * 5) + 1; // Nombre aléatoire d'intérêts (entre 1 et 5)
 			const interests = await db.all("SELECT id FROM interests ORDER BY RANDOM() LIMIT ?", [randomInterestsCount]);
@@ -201,19 +203,3 @@ export default async function insertDataInDb() {
 		console.warn(i, ", added");
 	}
 }
-
-
-
-
-insertDataInDb();
-
-// SELECT id, username, biography, gender, birthDate, orientation, latitude, longitude,
-// (6371 * acos(cos(radians(${latitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(${longitude})) + sin(radians(${latitude})) * sin(radians(latitude)))) AS distance,
-// strftime('%Y', 'now') - strftime('%Y', birthdate) AS age
-// FROM users
-// AND age >= ${ageMin}
-// AND age <= ${ageMax}	
-// AND distance < ${distanceMax}
-// AND gender IN (${interest.map(() => "?").join(",")})
-// ORDER BY distance ASC
-// LIMIT 10 OFFSET 0;

@@ -1,3 +1,4 @@
+import { RunResult } from "sqlite3";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 import FindDb from "./Find.db";
 import db from "./db";
@@ -90,9 +91,26 @@ const InsertDb = {
       INSERT INTO notifications(fromId, toId, type)
       VALUES (?, ?, ?)
     `;
-		await db.run(sql, [fromId, toId, type]);
-		return await db.get("SELECT * FROM notifications WHERE id = last_insert_rowid()");
-	}
+		try {
+			await db.run(sql, [fromId, toId, type]);
+			return await db.get("SELECT * FROM notifications WHERE id = last_insert_rowid()");
+		} catch (err) {
+			if (err.message.includes("UNIQUE constraint failed")) {
+				throw new UniqueConstraintError(err.message);
+			}
+			throw err;
+		}
+		
+	},
+
+	async addUserPreferences(userId: number, preferences: string[]): Promise<RunResult[]> {
+		const sql = `
+			INSERT INTO user_preferences(user_id, name)
+			VALUES (?, ?);
+		`;
+		const insertPromises = preferences.map((preference) => db.run(sql, [userId, preference]));
+		return Promise.all(insertPromises);
+	},
 
 };
 

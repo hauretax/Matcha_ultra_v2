@@ -24,7 +24,6 @@ const FindDb = {
 	async user(username: string): Promise<FullUser | null> {
 		const sql = "SELECT * FROM users WHERE username = ?";
 		const user = await db.get(sql, [username]);
-		user.customLocation = Boolean(user.customLocation);
 		if (user) {
 			return Promise.all([
 				this.picturesByUserId(user.id),
@@ -32,6 +31,7 @@ const FindDb = {
 			]).then(([pictures, interests]) => {
 				user.pictures = pictures;
 				user.interests = interests;
+				user.customLocation = Boolean(user.customLocation);
 				return user;
 			});
 		} else {
@@ -79,13 +79,14 @@ const FindDb = {
 			params.distanceMax,
 			params.ageMax,
 			params.ageMin,
-			...params.orientation,
+			...params.preferences,
 			...params.interestWanted.map(interest => `%${interest}%`),
 			params.userId,
+			params.gender,
+			params.fameMin, params.fameMin, params.fameMax,
 			params.index
 		];
-		
-		//TODO #10: prevent homosexual men to be queried by heterosexual women
+
 		const sql = `
 		SELECT
 			u.id,
@@ -93,10 +94,11 @@ const FindDb = {
 			u.biography,
 			u.gender,
 			u.birthDate,
-			u.orientation,
 			u.latitude,
 			u.longitude,
 			u.age,
+			u.views,
+			u.likes,
 			d.distance,
 			(
 				SELECT COUNT(*) FROM user_interests ui
@@ -107,6 +109,7 @@ const FindDb = {
 			image_srcs
 		FROM
 			users AS u
+			INNER JOIN user_preferences AS u_p ON u.id = u_p.user_id
 			LEFT JOIN (
 				SELECT
 					user_id,
@@ -142,9 +145,11 @@ const FindDb = {
 			d.distance < ?
 			AND u.age <= ?
 			AND u.age >= ?
-			AND u.gender IN (${params.orientation.map(() => "?").join(",")})
+			AND u.gender IN (${params.preferences.map(() => "?").join(",")})
 			AND ${interestConditions}
 			AND u.id <> ?
+			AND u_p.name = ?
+			AND (? = 0 OR (u.views > 0 AND u.likes / u.views >= ? AND u.likes / u.views <= ?))
 		ORDER BY
 			${orderByClause}
 		LIMIT

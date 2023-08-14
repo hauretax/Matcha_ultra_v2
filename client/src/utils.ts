@@ -12,7 +12,7 @@ export const isProfileIncomplete = (user: PersonalProfile) => {
     user.lastName === "" ||
     user.gender === "" ||
     user.birthDate === "" ||
-    user.orientation === "" ||
+    user.preferences.length === 0 ||
     user.interests.length === 0 ||
     user.biography === "" ||
     user.pictures.length === 0;

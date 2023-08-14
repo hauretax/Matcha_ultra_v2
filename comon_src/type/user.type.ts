@@ -6,7 +6,7 @@ export interface BaseProfile {
 	biography: string;
 	gender: string;
 	birthDate: string;
-	orientation: string;
+	preferences: string[];
 	pictures: { id: number; src: string }[];
 	interests: string[];
 	latitude: string;

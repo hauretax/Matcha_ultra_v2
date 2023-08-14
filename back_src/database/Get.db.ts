@@ -84,6 +84,15 @@ const GetDb = {
 		return db.all(sql, [idFrom, idTo, idTo, idFrom]);
 	},
 
+	async getUserPreferences(userId: number): Promise<{user_id: number; name: string}[]> {
+		const sql = `
+			SELECT user_id, name
+			FROM user_preferences
+			WHERE user_id = ?
+		`;
+		return db.all(sql, [userId]);
+	},
+
 	async checkUserLikesSymmetry(idFrom: number, idTo: number) {
 		const query = `
 			SELECT

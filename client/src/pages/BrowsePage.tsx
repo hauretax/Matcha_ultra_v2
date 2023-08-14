@@ -16,7 +16,7 @@ const BrowsePage: React.FC = () => {
 	const [filters, setFilters] = useState<filtersList>({
 		ageRange: [18, 25],
 		distance: 100,
-		orientation: ["Female"],
+		fameRange: [0, 100],
 		interests: [],
 		orderBy: "distance"
 	});
@@ -33,7 +33,8 @@ const BrowsePage: React.FC = () => {
 				distanceMax: filters.distance,
 				ageMin: filters.ageRange[0],
 				ageMax: filters.ageRange[1],
-				orientation: filters.orientation,
+				fameMin: filters.fameRange[0] / 100,
+				fameMax: filters.fameRange[1] / 100,
 				interestWanted: filters.interests,
 				index: index,
 				orderBy: filters.orderBy

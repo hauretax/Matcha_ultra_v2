@@ -1,4 +1,4 @@
-import { findTenUsersParams } from "../../../comon_src/type/utils.type";
+import { userParams } from "../../../comon_src/type/utils.type";
 import axiosPrivate from "./axiosPrivate";
 
 const apiProvider = {
@@ -41,8 +41,8 @@ const apiProvider = {
 		});
 	},
 
-	updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, orientation: string, email: string, customLocation: boolean, latitude: string, longitude: string) {
-		return axiosPrivate.patch("/profile", { firstName, lastName, birthDate, gender, orientation, email, customLocation, latitude, longitude });
+	updateProfile(firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) {
+		return axiosPrivate.patch("/profile", { firstName, lastName, birthDate, gender, preferences, email, customLocation, latitude, longitude });
 	},
 
 	updateBio(biography: string) {
@@ -82,19 +82,14 @@ const apiProvider = {
 		return axiosPrivate.post("/note/userTo", { note, userTo });
 	},
 
-	/*
-  *age|birthdate
-  *localisation : latitude, longitude
-  * interests array
-  * genderFind array
-  */
-	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams) {
+	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, fameMin, fameMax, interestWanted, index, orderBy }: userParams) {
 		return axiosPrivate.get(`/users?latitude=${latitude}
     &longitude=${longitude}
     &distanceMax=${distanceMax}
     &ageMin=${ageMin}
     &ageMax=${ageMax}
-    &orientation=${encodeURIComponent(orientation.toString())}
+    &fameMin=${fameMin}
+    &fameMax=${fameMax}
     &interestWanted=${encodeURIComponent(interestWanted.toString())}
     &index=${index}
     &orderBy=${orderBy}`);

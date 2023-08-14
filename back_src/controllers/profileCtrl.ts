@@ -26,6 +26,8 @@ import { newNotification } from "./notificationCtrl";
 
 import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
+import { getUserPreferences, updateUserPreferences } from "../service/userPreferences";
+
 
 export async function createProfile(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "email", "firstName", "lastName", "password"], ["string", "string", "string", "string", "string"])) {
@@ -76,18 +78,23 @@ export async function login(req: Request, res: Response) {
 	const { username, password } = req.body;
 
 	const user = await FindDb.user(username);
+
 	if (!user) {
 		res.status(404).json({ error: "account not found" });
 		return;
 	}
 
 	const checkPassword = await bcrypt.compare(password, user.password);
+
 	if (!checkPassword) {
 		res.status(401).json({ error: "username and/or password incorrect" });
 		return;
 	}
 
-	const { id, email, firstName, lastName, biography, gender, birthDate, orientation, emailVerified, pictures, interests, customLocation, latitude, longitude } = user;
+	const { id, email, firstName, lastName, biography, gender, birthDate, emailVerified, pictures, interests, customLocation, latitude, longitude } = user;
+
+	const preferences = await getUserPreferences(id);
+
 	const payload: UserPayload = {
 		jwt: {
 			accessToken: generateJwt(id),
@@ -102,7 +109,7 @@ export async function login(req: Request, res: Response) {
 			biography,
 			gender,
 			birthDate,
-			orientation,
+			preferences,
 			emailVerified,
 			pictures,
 			interests,
@@ -140,7 +147,6 @@ export async function getProfileById(req: Request, res: Response) {
 		biography: user.biography,
 		gender: user.gender,
 		birthDate: user.birthDate,
-		orientation: user.orientation,
 		pictures: user.pictures,
 		interests: user.interests,
 		latitude: user.latitude,
@@ -148,7 +154,8 @@ export async function getProfileById(req: Request, res: Response) {
 		distance: getDistanceInKm(res.locals.fulluser.latitude, res.locals.fulluser.longitude, user.latitude, user.longitude),
 		age: getAge(user.birthDate),
 		liked: liked,
-		fameRating: user.likes / user.views
+		fameRating: user.likes / user.views,
+		preferences: await getUserPreferences(user.id),
 	});
 }
 
@@ -181,11 +188,11 @@ export async function validByEmail(req: Request, res: Response) {
 }
 
 export async function updateProfile(req: Request, res: Response) {
-	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "orientation", "email", "customLocation"], ["string", "string", "string", "string", "string", "string", "boolean"])) {
+	if (!validateBody(req, ["firstName", "lastName", "birthDate", "gender", "preferences", "email", "customLocation"], ["string", "string", "string", "string", "object", "string", "boolean"])) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-	const { firstName, lastName, birthDate, gender, orientation, email, customLocation } = req.body;
+	const { firstName, lastName, birthDate, gender, preferences, email, customLocation } = req.body;
 
 	// Age validation
 	if (!validateDate(birthDate)) {
@@ -194,14 +201,14 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// Gender validation
-	if (!["Male", "Female", "Other"].includes(gender)) {
+	if (!["Male", "Female"].includes(gender)) {
 		res.status(400).json({ error: "invalid gender" });
 		return;
 	}
 
-	// Orientation validation
-	if (!["Homosexual", "Heterosexual", "Bisexual"].includes(orientation)) {
-		res.status(400).json({ error: "invalid orientation" });
+	// Preferences validation
+	if (!validateInterests(preferences)) {
+		res.status(400).json({ error: "invalid preferences" });
 		return;
 	}
 
@@ -215,11 +222,13 @@ export async function updateProfile(req: Request, res: Response) {
 
 	await UpdateDb.update(
 		"users",
-		["firstName", "lastName", "birthDate", "age", "gender", "orientation", "email", "emailVerified", "customLocation"],
-		[firstName, lastName, birthDate, getAge(birthDate), gender, orientation, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
+		["firstName", "lastName", "birthDate", "age", "gender", "email", "emailVerified", "customLocation"],
+		[firstName, lastName, birthDate, getAge(birthDate), gender, email, Number(email === res.locals.fulluser.email), customLocation === true ? 1 : 0],
 		["id"],
 		[res.locals.fulluser.id]
 	);
+
+	await updateUserPreferences(res.locals.fulluser.id, preferences);
 
 	if (customLocation) {
 		setUserPosition(req, res); //Why not ?
@@ -382,32 +391,36 @@ export async function getProfiles(req: Request, res: Response) {
 		return;
 	}
 
-	const { distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy } = req.query;
+	const { distanceMax, ageMin, ageMax, interestWanted, fameMin, fameMax, index, orderBy } = req.query;
 
+
+	const preferences = await getUserPreferences(res.locals.fulluser.id);
 
 	const paramsForSearch: findTenUsersParams = {
 		latitude: parseFloat(res.locals.fulluser.latitude),
 		longitude: parseFloat(res.locals.fulluser.longitude),
 		distanceMax: parseFloat(distanceMax as string),
-		ageMin: parseInt(ageMin as string, 10),
-		ageMax: parseInt(ageMax as string, 10),
-		orientation: (orientation as string).split(",").map((value) => value.trim()),
+		ageMin: parseInt(ageMin as string),
+		ageMax: parseInt(ageMax as string),
+		fameMin: parseFloat(fameMin as string),
+		fameMax: parseFloat(fameMax as string),
+		preferences: preferences,
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
 		index: parseInt(index as string),
 		orderBy: orderBy as OrderBy,
+		gender: res.locals.fulluser.gender,
 		userId: res.locals.fulluser.id,
 	};
 
-
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
+		const fameRating = user.views ? user.likes / user.views : 0;
 		const sanitizedUser = {
 			...sanitizeUser(user),
 			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id),
-			fameRating: user.likes / user.views
+			fameRating: fameRating,
 		};
 		return sanitizedUser;
 	}));
-
 
 	res.status(200).json(profiles);
 	return;
@@ -464,12 +477,15 @@ export async function viewProfile(req: Request, res: Response) {
 
 	const { viewedId } = req.body;
 
-	const hasBeenVisited = await FindDb.hasBeenVisitedBy(res.locals.fulluser.id, viewedId);
-	if (hasBeenVisited) {
-		res.status(200).json({ message: "already visited" });
-	} else {
+	try {
 		await newNotification("visit", res.locals.fulluser.id, viewedId);
 		await UpdateDb.incrementViews(viewedId);
 		res.status(200).json({ message: "added to the visit history" });
+	} catch (error) {
+		if (error instanceof UniqueConstraintError) {
+			res.status(200).json({ message: "already visited" });
+		} else {
+			throw error;
+		}
 	}
 }
