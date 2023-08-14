@@ -58,7 +58,7 @@ const InsertDb = {
 	},
 
 	async message(message: string, idFrom: number, idTo: number) {
-		const sql = "INSERT INTO chats(userIdFrom, userIdTo, msg, sendDate) VALUES(?, ?, ?, datetime('now'))";
+		const sql = "INSERT INTO chats(userIdFrom, userIdTo, msg) VALUES(?, ?, ?)";
 		const result = await db.run(sql, [idFrom, idTo, message]);
 		return result.lastID;
 	},

@@ -27,11 +27,24 @@ import { SocketProvider } from "./context/SocketProvider";
 
 import PersonalProfilePage from "./pages/PersonalProfilePage";
 
+import { useState } from "react";
+import Notification from "./components/notifications/Notification";
+import { NotificationtProvider } from "./context/NotificationProvider";
+
 const theme = createTheme(themeOptions);
 
 
 function App() {
+	// TODO #15 moov this in notificationProvider
+	const [open, setOpen] = useState<boolean>(false);
 
+	const handleDrawerClose = () => {
+		setOpen(false);
+	};
+
+	const handleDrawerOpen = () => {
+		setOpen(true);
+	};
 
 	return (
 		<SnackBarProvider>
@@ -39,23 +52,26 @@ function App() {
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
 					<SocketProvider>
-						<Routes>
-							<Route element={<Layout />}>
-								<Route path="/" element={<PublicPage />} />
-								<Route path="/login" element={<LoginPage />} />
-								<Route path="/register" element={<RegisterPage />} />
-								<Route path="/valide_mail" element={<ValideMailPage />} />
-								<Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
-								<Route path="/reset_password" element={<ResetPasswordPage />} />
-								<Route path='/404' element={<div>404</div>} />
-								<Route element={<RequireAuth />} >
-									<Route path='/home' element={<BrowsePage />} />
-									<Route path='/profile' element={<PersonalProfilePage />} />
-									<Route path='/profile/:id' element={<ProfilePage />} />
-									<Route path='/chat' element={<Chat />} />
+						<NotificationtProvider>
+							<Routes>
+								<Route element={<Layout openNotification={handleDrawerOpen} NotificationIsopen={open} />}>
+									<Route path="/" element={<PublicPage />} />
+									<Route path="/login" element={<LoginPage />} />
+									<Route path="/register" element={<RegisterPage />} />
+									<Route path="/valide_mail" element={<ValideMailPage />} />
+									<Route path="/reset_password_request" element={<ResetPasswordRequestPage />} />
+									<Route path="/reset_password" element={<ResetPasswordPage />} />
+									<Route path='/404' element={<div>404</div>} />
+									<Route element={<RequireAuth />} >
+										<Route path='/home' element={<BrowsePage />} />
+										<Route path='/profile' element={<PersonalProfilePage />} />
+										<Route path='/profile/:id' element={<ProfilePage />} />
+										<Route path='/chat' element={<Chat />} />
+									</Route>
 								</Route>
-							</Route>
-						</Routes>
+							</Routes>
+							<Notification closeNotification={handleDrawerClose} NotificationIsopen={open} />
+						</NotificationtProvider>
 					</SocketProvider>
 				</ThemeProvider>
 			</AuthProvider >

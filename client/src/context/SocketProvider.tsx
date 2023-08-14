@@ -2,16 +2,18 @@ import React, { useEffect, useState, createContext } from "react";
 import socketIOClient from "socket.io-client";
 
 import { useAuth } from "./AuthProvider";
-// import { notification } from "../../../comon_src/type/utils.type";
+import { notification } from "../../../comon_src/type/utils.type";
 
 interface SocketContextType {
   connectedUsers: number[];
   message: { userFrom: number, message: string };
+  notification:notification | undefined;
 }
 
 const SocketContext = createContext<SocketContextType>({
 	connectedUsers: [],
-	message: { userFrom: -1, message: "default" }
+	message: { userFrom: -1, message: "default" },
+	notification: undefined
 });
 
 export default SocketContext;
@@ -19,7 +21,7 @@ export default SocketContext;
 export function SocketProvider({ children }: { children: React.ReactNode }) {
 	const [connectedUsers, setConnectedUsers] = useState<number[]>([]);
 	const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: "default" });
-
+	const [notification, setNotification] = useState<notification>();
 	const auth = useAuth();
 	// to usr correct function on socket i need to give context 
 
@@ -49,9 +51,10 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 			setMessage({ userFrom: senderId, message });
 		};
 
-		// const handleNotification = (notification:notification)=> {
-		// 	// console.log(notification);
-		// };
+		const handleNotification = (notification:notification)=> {
+			setNotification(notification);
+			// console.log(notification);
+		};
 
 		// Socket connection and authentication
 		authenticateSocket();
@@ -59,7 +62,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 		socket.on("connectedUsers", handleAuthenticated);
 		// socket.on("unauthorized", handleUnauthorized);
 
-		// socket.on("newNotification", handleNotification);
+		socket.on("newNotification", handleNotification);
 		socket.on("newMessage", handleMessage);
 		// Error handling
 		// socket.on("connect_error", (error) => {
@@ -81,7 +84,8 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
 	const contextValue = {
 		connectedUsers,
-		message
+		message,
+		notification
 	};
 
 

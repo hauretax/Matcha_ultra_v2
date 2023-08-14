@@ -44,6 +44,11 @@ const UpdateDb = {
 		return db.run(sql, [id]);
 	},
 
+	notificationToRead(id:number) {
+		const sql = "UPDATE notifications SET seen = 1 WHERE toId = ?";
+		return db.run(sql, [id]);
+	}
+
 };
 
 export default UpdateDb;
