@@ -6,10 +6,6 @@ const apiProvider = {
 		return axiosPrivate.get("/profile/" + id);
 	},
 
-	getUsrByToken(){
-		return axiosPrivate.get("/getUsrByToken");
-	},
-
 	getConversations() {
 		return axiosPrivate.get("/chat/getConv");
 	},

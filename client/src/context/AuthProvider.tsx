@@ -28,25 +28,18 @@ interface AuthContextType {
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = React.useState<PersonalProfile | null>(null);
-	const snackBar = useSnackbar();
+function localProfile(): PersonalProfile| null {
+	const userDataString = localStorage.getItem("user");
+	if (!userDataString) {
+		return null;
+	}
+	const profile = JSON.parse(userDataString);
+	return profile;
+}
 
-	useEffect(() => {
-		async function fetchProfiles() {
-			try {
-				if (!localStorage.getItem("accessToken")) {
-					return;
-				}
-				const fetchData = await apiProvider.getUsrByToken();
-				if (fetchData.data.profile)
-					setUser(fetchData.data.profile);
-			} catch (error) {
-				console.error("Erreur lors de la récupération des profils:", error);
-			}
-		}
-		fetchProfiles();
-	}, []);
+function AuthProvider({ children }: { children: React.ReactNode }) {
+	const [user, setUser] = React.useState<PersonalProfile | null>(localProfile());
+	const snackBar = useSnackbar();
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
 		let errorMessage = null;
@@ -65,7 +58,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 			// Store the JWT token in local storage
 			localStorage.setItem("accessToken", accessToken);
 			localStorage.setItem("refreshToken", refreshToken);
-
+			localStorage.setItem("user", JSON.stringify(profile));
 			// Update the user state
 			setUser(profile);
 
@@ -222,8 +215,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 	const signout = async (): Promise<void> => {
 		try {
 			localStorage.removeItem("accessToken");
-			localStorage.removeItem("scores");
 			localStorage.removeItem("refreshToken");
+			localStorage.removeItem("user");
 
 			setUser(null);
 			snackBar("Logout successfull", "success");

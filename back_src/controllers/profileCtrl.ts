@@ -70,28 +70,6 @@ export async function createProfile(req: Request, res: Response) {
 	}
 }
 
-export async function getUsrwithtoken(_: Request, res: Response) {
-	const fullUser: FullUser = res.locals.fulluser;
-	const profile: PersonalProfile = {
-		id: fullUser.id,
-		emailVerified: fullUser.emailVerified,
-		email: fullUser.email,
-		customLocation: fullUser.customLocation,
-		username: fullUser.username,
-		lastName: fullUser.lastName,
-		firstName: fullUser.firstName,
-		biography: fullUser.biography,
-		gender: fullUser.gender,
-		birthDate: fullUser.birthDate,
-		preferences: fullUser.preferences,
-		pictures: fullUser.pictures,
-		interests: fullUser.interests,
-		latitude: fullUser.latitude,
-		longitude: fullUser.longitude
-	};
-	res.status(200).json({ profile });
-}
-
 export async function login(req: Request, res: Response) {
 	if (!validateBody(req, ["username", "password"], ["string", "string"])) {
 		res.status(422).json({ error: "username and/or password missing" });
