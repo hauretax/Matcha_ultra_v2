@@ -54,7 +54,6 @@ const GetDb = {
 			userIdFrom,
 			userIdTo
 		FROM chats
-		GROUP BY userIdFrom, userIdTo
 	) latest_chats ON (u.id = latest_chats.userIdFrom OR u.id = latest_chats.userIdTo)
 	LEFT JOIN chats c ON (c.id = latest_chats.maxId)
 	LEFT JOIN (
@@ -79,10 +78,40 @@ const GetDb = {
 		const sql = `
 		SELECT *
 		FROM chats
-		WHERE userIdFrom = ? AND userIdTo = ?
+		WHERE userIdFrom = ? AND userIdTo = ? OR userIdFrom = ? AND userIdTo = ?
 		ORDER BY sendDate
 		`;
-		return db.all(sql, [idFrom, idTo]);
+		return db.all(sql, [idFrom, idTo, idTo, idFrom]);
+	},
+
+	async checkUserLikesSymmetry(idFrom: number, idTo: number) {
+		const query = `
+			SELECT
+			CASE
+				WHEN EXISTS (
+					SELECT 1
+					FROM user_likes
+					WHERE (fromId = ? AND toId = ?)
+				) AND EXISTS (
+					SELECT 1
+					FROM user_likes
+					WHERE (fromId = ? AND toId = ?)
+				) THEN 1
+				ELSE 0
+			END AS result;
+		`;
+		return db.get(query, [idFrom, idTo, idTo, idFrom]);
+	},
+
+	notification(id: number) {
+		const query = `
+		SELECT n.id, n.fromId, n.toId, n.type, n.seen as read, n.date,u.username as fromUsername
+		FROM notifications n
+		LEFT JOIN users u ON n.toId = u.id
+		WHERE toId = ?
+		ORDER BY n.date DESC
+		`;
+		return db.all(query, [id]);
 	}
 
 };

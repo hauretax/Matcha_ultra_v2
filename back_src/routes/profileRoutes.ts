@@ -9,6 +9,7 @@ import { validsecurRequest } from "../middlewares/secureRequest.mid";
 import { isProfileCompleted, isPictureOwner } from "../middlewares/protectRequest.mid";
 import { setUserPosition, setUserPositionByIP } from "../controllers/localisationCtrl";
 import upload from "../config/multer.config";
+import { getNotification, seeNotification } from "../controllers/notificationCtrl";
 
 const router = express.Router();
 const publicGroup = [];
@@ -33,13 +34,15 @@ router.patch("/profileBio", privateGroup, asyncHandler(updateBio));
 router.patch("/profileInterests", privateGroup, asyncHandler(updateInterests));
 router.post("/picture/new", privateGroup, upload.single("file"), asyncHandler(insertPicture));
 router.post("/view", privateGroup, asyncHandler(viewProfile));
+router.post("/seeNotification", privateGroup, asyncHandler(seeNotification));
 
 router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"), asyncHandler(updatePicture));
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));
 
 router.get("/users", validsecurRequest, profileCompletedGroup, asyncHandler(getProfiles));
 router.post("/like", profileCompletedGroup, asyncHandler(like));
-router.get("/profile/:id", privateGroup, asyncHandler(getProfileById));
+router.get("/getnotification", privateGroup, asyncHandler(getNotification));
+router.get("/profile/:id", profileCompletedGroup, asyncHandler(getProfileById));
 router.get("/chat/getConv", profileCompletedGroup, asyncHandler(getActualConversations));
 router.get("/chat/getChat/:id", profileCompletedGroup, asyncHandler(getChat));
 

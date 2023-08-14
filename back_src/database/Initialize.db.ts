@@ -37,7 +37,7 @@ const InitializeDb = {
             userIdFrom INTEGER,
             userIdTo INTEGER,
             msg TEXT,
-            sendDate DATE
+            sendDate DEFAULT CURRENT_TIMESTAMP
         )`;
 		return db.run(sql);
 	},

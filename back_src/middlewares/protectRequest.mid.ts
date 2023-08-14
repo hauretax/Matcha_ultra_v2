@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PersonalProfile, UserProfile } from "../../comon_src/type/user.type";
+import GetDb from "../database/Get.db";
 
 export async function isPictureOwner(req: Request, res: Response, next: NextFunction) {
 	const user: UserProfile = res.locals.fulluser; // from validsecurRequest
@@ -35,10 +36,16 @@ export async function isProfileCompleted(req: Request, res: Response, next: Next
 const isProfileInfoMissing = (user: PersonalProfile) => {
 	return (
 		!user.gender ||
-    !user.orientation ||
-    !user.biography ||
-    !user.birthDate ||
-    !user.pictures.length ||
-    !user.interests.length
+		!user.orientation ||
+		!user.biography ||
+		!user.birthDate ||
+		!user.pictures.length ||
+		!user.interests.length
 	);
 };
+
+export async function isConnectedTo(idFrom: number, idTo: number): Promise<boolean> {
+	
+	const isConnectedTo = await GetDb.checkUserLikesSymmetry(idFrom, idTo);
+	return (!!isConnectedTo.result);
+}

@@ -3,6 +3,8 @@ import GetDb from "../database/Get.db";
 import InsertDb from "../database/Insert.db";
 import { sendMessage } from "./socketCtrl";
 import { validateBody } from "../utils/validateDataHelper";
+import { isConnectedTo } from "../middlewares/protectRequest.mid";
+import { newNotification } from "./notificationCtrl";
 
 export async function getActualConversations(_: Request, res: Response) {
 	const { id } = res.locals.fulluser;
@@ -12,7 +14,7 @@ export async function getActualConversations(_: Request, res: Response) {
 
 export async function getChat(req: Request, res: Response) {
 	const idFrom = res.locals.fulluser.id;
-	if (!req.params.id){
+	if (!req.params.id) {
 		res.status(400).json({ error: "Bad Request" });
 		return;
 	}
@@ -32,21 +34,23 @@ export async function newMessage(req: Request, res: Response) {
 	}
 
 	const { message, idTo } = req.body;
-	
+
 	if (message.length > 5000) {
 		res.status(400).json({ error: "message too long" });
 		return;
 	}
-	
-	//TODO #8: create middleware to check if users are connected to each other
+
 	if (idTo < 1) {
 		res.status(400).json({ error: "Bad Request" });
 		return;
 	}
+	if (!await isConnectedTo(res.locals.fulluser.id, idTo)) {
+		res.status(400).json({ error: "Bad Request" });
+		return;
+	}
 
-	//TODO #9: add message to notification table
 	await InsertDb.message(message, res.locals.fulluser.id, idTo);
-
+	await newNotification("message", res.locals.fulluser.id, idTo);
 	sendMessage(message, res.locals.fulluser.id, idTo);
 
 	res.status(201).json({ message: "OK" });
