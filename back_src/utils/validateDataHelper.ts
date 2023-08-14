@@ -46,7 +46,7 @@ export function validateCoordinates(latitude: string, longitude: string): boolea
 }
 
 export function validateQueryParams(req: Request): string[] {
-	const requiredParams = ["ageMin", "ageMax", "orientation", "index", "distanceMax", "orderBy"];
+	const requiredParams = ["ageMin", "ageMax", "fameMin", "fameMax", "index", "distanceMax", "orderBy"];
 	const missingParams = requiredParams.filter(param => !req.query[param]);
 
 	return missingParams;

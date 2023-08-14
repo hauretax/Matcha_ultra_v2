@@ -83,10 +83,10 @@ const FindDb = {
 			...params.interestWanted.map(interest => `%${interest}%`),
 			params.userId,
 			params.gender,
+			params.fameMin, params.fameMin, params.fameMax,
 			params.index
 		];
-		
-		//TODO #10: prevent homosexual men to be queried by heterosexual women
+
 		const sql = `
 		SELECT
 			u.id,
@@ -97,6 +97,8 @@ const FindDb = {
 			u.latitude,
 			u.longitude,
 			u.age,
+			u.views,
+			u.likes,
 			d.distance,
 			(
 				SELECT COUNT(*) FROM user_interests ui
@@ -147,6 +149,7 @@ const FindDb = {
 			AND ${interestConditions}
 			AND u.id <> ?
 			AND u_p.name = ?
+			AND (? = 0 OR (u.views > 0 AND u.likes / u.views >= ? AND u.likes / u.views <= ?))
 		ORDER BY
 			${orderByClause}
 		LIMIT

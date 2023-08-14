@@ -4,7 +4,7 @@ import { Box, Button, Grid } from "@mui/material";
 
 import AgeFilter from "./AgeFilter";
 import DistanceFilter from "./DistanceFilter";
-import OrientationFilter from "./OrientationFilter";
+import FameFilter from "./FameFilter";
 import InterestsFilter from "./InterestsFilter";
 import OrderByFilter from "./OrderByFilter";
 
@@ -23,7 +23,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
 	const [tmpFilters, setTmpFilters] = useState<filtersList>({
 		ageRange: [18, 25],
 		distance: 100,
-		orientation: ["Female"],
+		fameRange: [0, 100],
 		interests: [],
 		orderBy: "distance"
 	});
@@ -48,8 +48,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
 		setTmpFilters((prev) => ({ ...prev, distance: distance }));
 	}, []);
 
-	const setOrientation = useCallback((orientation: ("Female" | "Male" | "Other")[]) => {
-		setTmpFilters((prev) => ({ ...prev, orientation: orientation }));
+	const setFameRange = useCallback((fameRange: number[]) => {
+		setTmpFilters((prev) => ({ ...prev, fameRange: fameRange }));
 	}, []);
 
 	const setInterests = useCallback((interests: string[]) => {
@@ -70,7 +70,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
 					<DistanceFilter distance={tmpFilters.distance} setDistance={setDistance} />
 				</Grid>
 				<Grid item xs={12} sm={6} md={4} lg={2}>
-					<OrientationFilter orientation={tmpFilters.orientation} setOrientation={setOrientation} />
+					<FameFilter fameRange={tmpFilters.fameRange} setFameRange={setFameRange} />
 				</Grid>
 				<Grid item xs={12} sm={6} md={4} lg={2}>
 					<InterestsFilter options={options} interests={tmpFilters.interests} setInterests={setInterests} />

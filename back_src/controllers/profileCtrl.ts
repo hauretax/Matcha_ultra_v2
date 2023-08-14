@@ -391,7 +391,8 @@ export async function getProfiles(req: Request, res: Response) {
 		return;
 	}
 
-	const { distanceMax, ageMin, ageMax, interestWanted, index, orderBy } = req.query;
+	const { distanceMax, ageMin, ageMax, interestWanted, fameMin, fameMax, index, orderBy } = req.query;
+
 
 	const preferences = await getUserPreferences(res.locals.fulluser.id);
 
@@ -399,8 +400,10 @@ export async function getProfiles(req: Request, res: Response) {
 		latitude: parseFloat(res.locals.fulluser.latitude),
 		longitude: parseFloat(res.locals.fulluser.longitude),
 		distanceMax: parseFloat(distanceMax as string),
-		ageMin: parseInt(ageMin as string, 10),
-		ageMax: parseInt(ageMax as string, 10),
+		ageMin: parseInt(ageMin as string),
+		ageMax: parseInt(ageMax as string),
+		fameMin: parseFloat(fameMin as string),
+		fameMax: parseFloat(fameMax as string),
 		preferences: preferences,
 		interestWanted: (interestWanted as string).split(",").map((value) => value.trim()),
 		index: parseInt(index as string),
@@ -409,17 +412,15 @@ export async function getProfiles(req: Request, res: Response) {
 		userId: res.locals.fulluser.id,
 	};
 
-
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {
+		const fameRating = user.views ? user.likes / user.views : 0;
 		const sanitizedUser = {
 			...sanitizeUser(user),
 			liked: await FindDb.isLikedBy(res.locals.fulluser.id, user.id),
-			fameRating: user.likes / user.views
+			fameRating: fameRating,
 		};
-		console.log(sanitizedUser)
 		return sanitizedUser;
 	}));
-
 
 	res.status(200).json(profiles);
 	return;

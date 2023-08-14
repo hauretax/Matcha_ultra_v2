@@ -1,4 +1,4 @@
-import { findTenUsersParams } from "../../../comon_src/type/utils.type";
+import { userParams } from "../../../comon_src/type/utils.type";
 import axiosPrivate from "./axiosPrivate";
 
 const apiProvider = {
@@ -75,19 +75,14 @@ const apiProvider = {
 		return axiosPrivate.post("/note/userTo", { note, userTo });
 	},
 
-	/*
-  *age|birthdate
-  *localisation : latitude, longitude
-  * interests array
-  * genderFind array
-  */
-	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, orientation, interestWanted, index, orderBy }: findTenUsersParams) {
+	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, fameMin, fameMax, interestWanted, index, orderBy }: userParams) {
 		return axiosPrivate.get(`/users?latitude=${latitude}
     &longitude=${longitude}
     &distanceMax=${distanceMax}
     &ageMin=${ageMin}
     &ageMax=${ageMax}
-    &orientation=${encodeURIComponent(orientation.toString())}
+    &fameMin=${fameMin}
+    &fameMax=${fameMax}
     &interestWanted=${encodeURIComponent(interestWanted.toString())}
     &index=${index}
     &orderBy=${orderBy}`);
