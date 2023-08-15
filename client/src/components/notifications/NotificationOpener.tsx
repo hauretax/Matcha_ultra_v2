@@ -5,20 +5,19 @@ import { useContext, useEffect, useState } from "react";
 import NotificationContext from "../../context/NotificationProvider";
 
 export default function NotificationOpener({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
-	const [unread, setunread] = useState<boolean>(false);
+	const [unread, setunread] = useState<number>(0);
 
-	const { haveUnread, setRead } = useContext(NotificationContext);
+	const { unreadCount, setRead } = useContext(NotificationContext);
 
 	function handleRead() {
-		if(haveUnread)
+		if (unreadCount)
 			setRead();
 		openNotification();
 	}
 
 	useEffect(() => {
-		setunread(haveUnread);
-	}
-	, [haveUnread]);
+		setunread(unreadCount);
+	}, [unreadCount]);
 
 	return (
 		<>

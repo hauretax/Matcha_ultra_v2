@@ -85,3 +85,8 @@ export interface notification{
     date: Date,
     read:boolean
 }
+
+export interface EnrichedNotification extends notification {
+	username: string;
+	profilePicture: string;
+}

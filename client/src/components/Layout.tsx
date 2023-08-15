@@ -3,8 +3,21 @@ import Container from "@mui/material/Container";
 import NavBar from "./NavBar";
 import { Outlet } from "react-router-dom";
 import Copyright from "./Copywright";
+import { useContext, useState } from "react";
+import Notification from "./notifications/Notification";
+import NotificationContext from "../context/NotificationProvider";
 
-function Layout({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
+
+function Layout() {
+	const [open, setOpen] = useState<boolean>(false);
+	const notification = useContext(NotificationContext);
+
+	const toggleNotification = () => {
+		if (!open)
+			setTimeout(() => { notification.setRead(); }, 5000);
+		setOpen(!open);
+	};
+
 	return (
 		<Box
 			sx={{
@@ -13,7 +26,7 @@ function Layout({ openNotification, NotificationIsopen }: { openNotification: ()
 				minHeight: "100vh",
 			}}
 		>
-			<NavBar openNotification={openNotification} NotificationIsopen={NotificationIsopen}/>
+			<NavBar toggleNotification={toggleNotification} count={notification.unreadCount} />
 			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
 				<Container maxWidth="lg">
 					<Outlet />
@@ -24,6 +37,7 @@ function Layout({ openNotification, NotificationIsopen }: { openNotification: ()
 					<Copyright />
 				</Container>
 			</Box>
+			<Notification toggleNotification={toggleNotification} open={open} />
 		</Box>
 	);
 }
