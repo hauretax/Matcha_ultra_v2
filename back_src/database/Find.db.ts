@@ -1,7 +1,7 @@
 import db from "./db";
 import { FullUser, userInDb1, userInDb2 } from "../../comon_src/type/user.type";
 import { OrderBy, findTenUsersParams } from "../../comon_src/type/utils.type";
-import { RunResult } from "sqlite3";
+
 const FindDb = {
 
 	async picturesByUserId(userId: number): Promise<{ id: number; src: string }[]> {
@@ -183,7 +183,7 @@ const FindDb = {
 		return result.count > 0;
 	},
 
-	async getProfileLikes(userId: number): Promise<any> {
+	async getProfileLikes(userId: number) {
 		const sql = `
 			SELECT
 				users.id,
@@ -223,7 +223,7 @@ const FindDb = {
 		return db.all(sql, [userId]);
 	},
 
-	async getProfileVisits(userId: number): Promise<any> {
+	async getProfileVisits(userId: number) {
 		const sql = `
 			SELECT
 				users.id,
@@ -271,16 +271,16 @@ function generateInterestConditions(interestWanted: string[]): string {
 
 function generateOrderByClause(orderBy: OrderBy): string {
 	switch (orderBy) {
-		case "distance":
-			return "d.distance ASC";
-		case "age":
-			return "u.age ASC";
-		case "popularity":
-			return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
-		case "tag":
-			return "interestCount DESC";
-		default:
-			throw new Error("Invalid order by");
+	case "distance":
+		return "d.distance ASC";
+	case "age":
+		return "u.age ASC";
+	case "popularity":
+		return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
+	case "tag":
+		return "interestCount DESC";
+	default:
+		throw new Error("Invalid order by");
 	}
 }
 
