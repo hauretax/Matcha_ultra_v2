@@ -119,7 +119,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 					gender,
 					preferences,
 					email,
-					emailVerified: Number(user.email === email),
 					customLocation
 				};
 				if (customLocation) {

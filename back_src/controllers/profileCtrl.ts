@@ -239,6 +239,19 @@ export async function updateProfile(req: Request, res: Response) {
 	}
 
 	// TODO #5: if email is updated, send a new validation email
+	if (res.locals.fulluser.email !== email && !res.locals.fulluser.emailVerified) {
+		const accessCode = Math.floor(Math.random() * 90000 + 10000);
+		await sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email);
+		await UpdateDb.update(
+			"users",
+			["accessCode"],
+			[accessCode],
+			["id"],
+			[res.locals.fulluser.id]
+		);
+
+	}
+
 
 	await UpdateDb.update(
 		"users",
@@ -247,6 +260,7 @@ export async function updateProfile(req: Request, res: Response) {
 		["id"],
 		[res.locals.fulluser.id]
 	);
+
 
 	await updateUserPreferences(res.locals.fulluser.id, preferences);
 
@@ -503,7 +517,7 @@ export async function block(req: Request, res: Response) {
 		await unblockUser(res.locals.fulluser.id, toId);
 	}
 
-	res.status(200).json({ message: status ? "blocked": "unblocked" });
+	res.status(200).json({ message: status ? "blocked" : "unblocked" });
 }
 
 export async function report(req: Request, res: Response) {
