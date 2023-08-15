@@ -38,7 +38,7 @@ router.post("/picture/new", privateGroup, upload.single("file"), asyncHandler(in
 router.post("/view", privateGroup, asyncHandler(viewProfile));
 router.post("/seeNotification", privateGroup, asyncHandler(seeNotification));
 router.post("/block", privateGroup, asyncHandler(block));
-router.post('/report', privateGroup, asyncHandler(report));
+router.post("/report", privateGroup, asyncHandler(report));
 
 router.put("/picture/:pictureId/edit", pictureOwnerGroup, upload.single("file"), asyncHandler(updatePicture));
 router.delete("/picture/:pictureId", pictureOwnerGroup, asyncHandler(deletePicture));

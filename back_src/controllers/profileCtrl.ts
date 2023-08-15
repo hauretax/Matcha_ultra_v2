@@ -521,7 +521,7 @@ export async function report(req: Request, res: Response) {
 		return;
 	}
 
-	await sendEmail('antoine.auth@gmail.com', `User ${res.locals.fulluser.id} reported user ${toId}`, 'Report');
+	await sendEmail("antoine.auth@gmail.com", `User ${res.locals.fulluser.id} reported user ${toId}`, "Report");
 
 	res.json({ message: "reported" });
 }

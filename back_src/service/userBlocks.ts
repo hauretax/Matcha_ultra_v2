@@ -23,7 +23,6 @@ export async function isUserBlocked(fromId: number, toId: number): Promise<boole
 	// ORM call
 	const res = await FindDb.isBlockedBy(fromId, toId);
 
-	console.log(res)
 	// data processing
 	return res.count > 0;
 }
