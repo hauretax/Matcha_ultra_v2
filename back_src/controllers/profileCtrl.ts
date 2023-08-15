@@ -81,8 +81,6 @@ export async function login(req: Request, res: Response) {
 	const { username, password } = req.body;
 
 	const user = await FindDb.user(username);
-	console.log("helo");
-	console.log(user);
 	if (!user) {
 		res.status(404).json({ error: "account not found" });
 		return;
