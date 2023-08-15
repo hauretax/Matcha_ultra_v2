@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AxiosResponse } from "axios";
 
 import { PersonalProfile } from "../../../comon_src/type/user.type";
