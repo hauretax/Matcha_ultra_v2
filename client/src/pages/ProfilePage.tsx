@@ -33,6 +33,7 @@ const ProfilePage: React.FC = () => {
 		blocked: false,
 		reported: false,
 	});
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const { id } = useParams<{ id: string }>();
 	const snackbar = useSnackbar();
@@ -44,9 +45,6 @@ const ProfilePage: React.FC = () => {
 			return;
 
 		setIsConnected(connectedUsers.includes(parseInt(id)));
-		console.log(connectedUsers);
-
-		console.log(id, " ", connectedUsers.includes(parseInt(id)), " ", isConnected);
 	}, [connectedUsers]);
 
 	useEffect(() => {

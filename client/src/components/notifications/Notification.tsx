@@ -1,7 +1,7 @@
 import { Divider, Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
 import { ArrowRight, Favorite, Mail, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
-import { useCallback, useContext } from "react";
+import { useContext } from "react";
 import { notification, notificationType } from "../../../../comon_src/type/utils.type";
 import { useNavigate } from "react-router-dom";
 
