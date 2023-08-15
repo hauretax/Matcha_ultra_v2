@@ -27,7 +27,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, handleLike }) => {
 		<Card>
 			<CardMedia
 				sx={{ height: 240 }}
-				image={prefixBackendUrl(user.pictures[0].src)}
+				image={user.pictures && user.pictures.length ? prefixBackendUrl(user.pictures[0].src) : undefined}
 				title="Profile Picture"
 			/>
 			<CardContent>

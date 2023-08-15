@@ -2,6 +2,14 @@ import { userParams } from "../../../comon_src/type/utils.type";
 import axiosPrivate from "./axiosPrivate";
 
 const apiProvider = {
+	getProfileLikes() {
+		return axiosPrivate.get("/profile/likes");
+	},
+
+	getProfileVisits() {
+		return axiosPrivate.get("/profile/visits");
+	},
+
 	getProfile(id: string) {
 		return axiosPrivate.get("/profile/" + id);
 	},

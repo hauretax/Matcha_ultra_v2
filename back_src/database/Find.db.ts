@@ -171,7 +171,7 @@ const FindDb = {
 		return result.count > 0;
 	},
 
-	isBlockedBy(fromId: number, toId: number){
+	isBlockedBy(fromId: number, toId: number) {
 		const sql = "SELECT COUNT(*) AS count FROM user_blocks WHERE fromId = ? AND toId = ?";
 		return db.get(sql, [fromId, toId]);
 	},
@@ -181,7 +181,88 @@ const FindDb = {
 		const sql = "SELECT COUNT(*) AS count FROM notifications WHERE fromId = ? AND toId = ? AND type = 'visit'";
 		const result = await db.get(sql, [visitorId, visiteeId]);
 		return result.count > 0;
-	}
+	},
+
+	async getProfileLikes(userId: number): Promise<any> {
+		const sql = `
+			SELECT
+				users.id,
+				users.username,
+				users.birthdate,
+				users.firstname,
+				users.lastname,
+				picture_ids,
+				picture_srcs,
+				interest_list,
+				users.longitude,
+				users.latitude
+			FROM users 
+			JOIN user_likes ON users.id = user_likes.fromId
+			LEFT JOIN (
+				SELECT
+					user_id,
+					GROUP_CONCAT(id, ',') AS picture_ids,
+					GROUP_CONCAT(src, ',') AS picture_srcs
+				FROM
+					pictures
+				GROUP BY
+					user_id
+			) AS p ON users.id = p.user_id
+			LEFT JOIN (
+				SELECT
+					user_id,
+					GROUP_CONCAT(interest, ',') AS interest_list
+				FROM
+					user_interests
+					JOIN interests ON user_interests.interest_id = interests.id
+				GROUP BY
+					user_id
+			) AS u_i ON users.id = u_i.user_id
+			WHERE user_likes.toId = ?
+		`;
+		return db.all(sql, [userId]);
+	},
+
+	async getProfileVisits(userId: number): Promise<any> {
+		const sql = `
+			SELECT
+				users.id,
+				users.username,
+				users.birthdate,
+				users.firstname,
+				users.lastname,
+				picture_ids,
+				picture_srcs,
+				interest_list,
+				users.longitude,
+				users.latitude
+			FROM users 
+			JOIN notifications ON users.id = notifications.fromId
+			LEFT JOIN (
+				SELECT
+					user_id,
+					GROUP_CONCAT(id, ',') AS picture_ids,
+					GROUP_CONCAT(src, ',') AS picture_srcs
+				FROM
+					pictures
+				GROUP BY
+					user_id
+			) AS p ON users.id = p.user_id
+			LEFT JOIN (
+				SELECT
+					user_id,
+					GROUP_CONCAT(interest, ',') AS interest_list
+				FROM
+					user_interests
+					JOIN interests ON user_interests.interest_id = interests.id
+				GROUP BY
+					user_id
+			) AS u_i ON users.id = u_i.user_id
+			WHERE notifications.toId = ? AND notifications.type = 'visit'
+		`;
+		return db.all(sql, [userId]);
+	},
+
 };
 
 function generateInterestConditions(interestWanted: string[]): string {
@@ -190,16 +271,16 @@ function generateInterestConditions(interestWanted: string[]): string {
 
 function generateOrderByClause(orderBy: OrderBy): string {
 	switch (orderBy) {
-	case "distance":
-		return "d.distance ASC";
-	case "age":
-		return "u.age ASC";
-	case "popularity":
-		return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
-	case "tag":
-		return "interestCount DESC";
-	default:
-		throw new Error("Invalid order by");
+		case "distance":
+			return "d.distance ASC";
+		case "age":
+			return "u.age ASC";
+		case "popularity":
+			return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
+		case "tag":
+			return "interestCount DESC";
+		default:
+			throw new Error("Invalid order by");
 	}
 }
 

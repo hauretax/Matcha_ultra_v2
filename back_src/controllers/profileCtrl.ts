@@ -28,6 +28,8 @@ import { getDistanceInKm, getAge, sanitizeUser } from "../utils/misc";
 
 import { getUserPreferences, updateUserPreferences } from "../service/userPreferences";
 import { blockUser, isUserBlocked, unblockUser } from "../service/userBlocks";
+import { getProfileLikes } from "../service/userLikes";
+import { getProfileVisits } from "../service/userNotification";
 
 
 export async function createProfile(req: Request, res: Response) {
@@ -125,6 +127,22 @@ export async function login(req: Request, res: Response) {
 export function getProfile(req: Request, res: Response) {
 	const user: UserProfile = res.locals.fulluser;
 	res.json(user);
+}
+
+export async function getProfileLikesCtrl(req: Request, res: Response) {
+	const { id, longitude, latitude } = res.locals.fulluser;
+
+	const profileLikes = await getProfileLikes(id, longitude, latitude);
+
+	res.json(profileLikes);
+}
+
+export async function getProfileVisitsCtrl(req: Request, res: Response) {
+	const { id, longitude, latitude } = res.locals.fulluser;
+
+	const profileLikes = await getProfileVisits(id, longitude, latitude);
+
+	res.json(profileLikes);
 }
 
 export async function getProfileById(req: Request, res: Response) {
