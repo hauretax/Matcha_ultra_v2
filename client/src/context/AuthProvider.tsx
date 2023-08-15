@@ -29,7 +29,7 @@ interface AuthContextType {
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 function localProfile(): PersonalProfile| null {
-	const userDataString = localStorage.getItem("user");
+	const userDataString = localStorage.getItem("matcha_user");
 	if (!userDataString) {
 		return null;
 	}
@@ -58,7 +58,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 			// Store the JWT token in local storage
 			localStorage.setItem("accessToken", accessToken);
 			localStorage.setItem("refreshToken", refreshToken);
-			localStorage.setItem("user", JSON.stringify(profile));
+			localStorage.setItem("matcha_user", JSON.stringify(profile));
 			// Update the user state
 			setUser(profile);
 
@@ -216,7 +216,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 		try {
 			localStorage.removeItem("accessToken");
 			localStorage.removeItem("refreshToken");
-			localStorage.removeItem("user");
+			localStorage.removeItem("matcha_user");
 
 			setUser(null);
 			snackBar("Logout successfull", "success");
