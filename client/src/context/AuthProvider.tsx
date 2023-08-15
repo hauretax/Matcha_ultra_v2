@@ -10,26 +10,35 @@ import apiProvider from "../services/apiProvider";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
 
 interface AuthContextType {
-  user: PersonalProfile | null;
-  signin: (username: string, password: string) => Promise<void>;
-  signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
-  valideByMail: (mail: string, code: string) => Promise<void>,
-  resetPasswordRequest: (email: string) => Promise<void>;
-  resetPassword: (email: string, code: string, password: string) => Promise<void>;
-  getProfile: (id: string) => Promise<void>;
-  updateBio: (biography: string) => Promise<void>;
-  updateInterests: (interests: string[]) => Promise<void>;
-  updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
-  insertPicture: (formdata: FormData) => Promise<void>;
-  updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
-  deletePicture: (pictureId: number) => Promise<void>;
-  signout: () => Promise<void>;
+	user: PersonalProfile | null;
+	signin: (username: string, password: string) => Promise<void>;
+	signup: (email: string, username: string, firstName: string, lastName: string, password: string) => Promise<void>;
+	valideByMail: (mail: string, code: string) => Promise<void>,
+	resetPasswordRequest: (email: string) => Promise<void>;
+	resetPassword: (email: string, code: string, password: string) => Promise<void>;
+	getProfile: (id: string) => Promise<void>;
+	updateBio: (biography: string) => Promise<void>;
+	updateInterests: (interests: string[]) => Promise<void>;
+	updateProfile: (firstName: string, lastName: string, birthDate: string, gender: string, preferences: string[], email: string, customLocation: boolean, latitude: string, longitude: string) => Promise<void>;
+	insertPicture: (formdata: FormData) => Promise<void>;
+	updatePicture: (formdata: FormData, pictureId: number) => Promise<void>;
+	deletePicture: (pictureId: number) => Promise<void>;
+	signout: () => Promise<void>;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
+function localProfile(): PersonalProfile| null {
+	const userDataString = localStorage.getItem("user");
+	if (!userDataString) {
+		return null;
+	}
+	const profile = JSON.parse(userDataString);
+	return profile;
+}
+
 function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = React.useState<PersonalProfile | null>(null);
+	const [user, setUser] = React.useState<PersonalProfile | null>(localProfile());
 	const snackBar = useSnackbar();
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
@@ -49,7 +58,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 			// Store the JWT token in local storage
 			localStorage.setItem("accessToken", accessToken);
 			localStorage.setItem("refreshToken", refreshToken);
-
+			localStorage.setItem("user", JSON.stringify(profile));
 			// Update the user state
 			setUser(profile);
 
@@ -205,7 +214,10 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 	// TODO #4 : handle remember me
 	const signout = async (): Promise<void> => {
 		try {
-			localStorage.removeItem("jwtToken");
+			localStorage.removeItem("accessToken");
+			localStorage.removeItem("refreshToken");
+			localStorage.removeItem("user");
+
 			setUser(null);
 			snackBar("Logout successfull", "success");
 		} catch (error) {

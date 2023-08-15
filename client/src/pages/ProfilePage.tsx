@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Box } from "@mui/material";
 import Profile from "../components/Profile";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import { buildErrorString } from "../utils";
 import { useSnackbar } from "../context/SnackBar";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
 import { UserProfile } from "../../../comon_src/type/user.type";
+import SocketContext from "../context/SocketProvider";
 
 const ProfilePage: React.FC = () => {
 	const [profile, setProfile] = useState<UserProfile>({
@@ -32,8 +33,19 @@ const ProfilePage: React.FC = () => {
 		blocked: false,
 		reported: false,
 	});
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const { id } = useParams<{ id: string }>();
 	const snackbar = useSnackbar();
+	const { connectedUsers } = useContext(SocketContext);
+
+
+	useEffect(() => {
+		if (!id)
+			return;
+
+		setIsConnected(connectedUsers.includes(parseInt(id)));
+	}, [connectedUsers]);
 
 	useEffect(() => {
 		const fetchProfile = async () => {

@@ -27,8 +27,6 @@ function RequireAuth() {
 		return <Navigate to="/login" state={{ from: location }} replace />;
 	}
 
-
-
 	if (location.pathname !== "/profile") {
 		if (isProfileIncomplete(auth.user)) {
 			return <Navigate to="/profile" state={{ profileIncomplete: true }} />;

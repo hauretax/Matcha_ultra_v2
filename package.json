@@ -8,7 +8,6 @@
     "track": "tsc --watch && node dist/back_src/app.js",
     "lint": "eslint . --ext .ts,.tsx",
     "lf": "eslint . --ext .ts,.tsx --fix",
-    "test": "jest --testPathPatten=back_test",
     "populate": "ts-node creatTestDb.ts"
   },
   "repository": {

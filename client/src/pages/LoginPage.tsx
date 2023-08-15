@@ -2,8 +2,6 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import MyLink from "../components/MyLink";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -93,10 +91,6 @@ function LoginPage() {
 									</IconButton>
 								</InputAdornment>
 						}}
-					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
 					/>
 					<Button
 						type="submit"

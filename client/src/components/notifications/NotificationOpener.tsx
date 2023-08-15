@@ -10,7 +10,8 @@ export default function NotificationOpener({ openNotification, NotificationIsope
 	const { haveUnread, setRead } = useContext(NotificationContext);
 
 	function handleRead() {
-		setRead();
+		if(haveUnread)
+			setRead();
 		openNotification();
 	}
 

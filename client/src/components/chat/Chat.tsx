@@ -9,17 +9,19 @@ import { useAuth } from "../../context/AuthProvider";
 
 import { Message, Profile } from "../../../../comon_src/type/utils.type";
 import apiProvider from "../../services/apiProvider";
+import { useParams } from "react-router-dom";
 
 export default function Chat() {
+	const { idParam } = useParams<{ idParam: string }>();
 	const containerStyle = {
 		display: "flex",
 		justifyContent: "space-between",
 		height: "200px"
 	};
-    
+
 	const [profiles, setProfiles] = useState<Profile[]>([]);
 	const [messages, setMessages] = useState<Message[]>([]);
-	const [userIdOpenConv, changeActualConv] = useState(-1);
+	const [userIdOpenConv, changeActualConv] = useState(parseInt(idParam || "-1"));
 	const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
 
 	const { message } = useContext(SocketContext);
@@ -45,8 +47,8 @@ export default function Chat() {
 
 	// changement de conversation
 	useEffect(() => {
-		if(userIdOpenConv < 1)
-			return ;
+		if (userIdOpenConv < 1)
+			return;
 		setMessages([]);
 		const Change = profiles.map(profile => {
 			if (profile.id === userIdOpenConv)
@@ -95,7 +97,7 @@ export default function Chat() {
 
 	}, [messages]);
 
-	
+
 
 	const checkIsScrolledToBottom = (event: React.UIEvent<HTMLDivElement>) => {
 		const div = event.currentTarget;
