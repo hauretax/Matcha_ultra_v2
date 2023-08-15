@@ -116,7 +116,7 @@ const GetDb = {
 		const query = `
 		SELECT n.id, n.fromId, n.toId, n.type, n.seen as read, n.date,u.username as fromUsername
 		FROM notifications n
-		LEFT JOIN users u ON n.toId = u.id
+		LEFT JOIN users u ON n.fromId = u.id
 		WHERE toId = ?
 		ORDER BY n.date DESC
 		`;

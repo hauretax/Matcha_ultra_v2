@@ -46,11 +46,13 @@ export default async function insertDataInDb() {
 
 	const initFunctions = [
 		InitializeDb.userTable,
+		InitializeDb.userPreferenceTable,
 		InitializeDb.chatsTable,
 		InitializeDb.pictureTable,
 		InitializeDb.interestsTable,
 		InitializeDb.userInterestsTable,
 		InitializeDb.userLikesTable,
+		InitializeDb.userBlocksTable,
 		InitializeDb.notification
 		// ... add any additional table initializers here
 	];
