@@ -5,6 +5,6 @@ import { validsecurRequest } from "../middlewares/secureRequest.mid";
 
 const router = express.Router();
 
-router.post("/note/userTo",validsecurRequest, asyncHandler(noteUserTo));
+router.post("/note/userTo", validsecurRequest, asyncHandler(noteUserTo));
 
 export default router;  

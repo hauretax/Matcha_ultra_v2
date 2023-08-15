@@ -79,7 +79,7 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ ageRange, setAgeRange }) => {
 						disableSwap
 						min={18}
 						max={99}
-						sx={{ width: "100%", marginTop: 2}}
+						sx={{ width: "100%", marginTop: 2 }}
 					/>
 				</Box>
 			</Popover>

@@ -68,7 +68,6 @@ export default async function insertDataInDb() {
 		username,
 		firstName,
 		gender,
-		orientation,
 		birthDate,
 		age,
 		latitude,
@@ -79,7 +78,7 @@ export default async function insertDataInDb() {
 
 	)
 	VALUES ("test@test.com", 
-	"test1", "oui", "Male", "Heterosexual", "1999-12-12","23"
+	"test1", "oui", "Male", "1999-12-12","23"
 	, "48.259207", "3.174191", "1", "1",?);
 	`;
 	const test2 = `
@@ -88,7 +87,6 @@ export default async function insertDataInDb() {
 		username,
 		firstName,
 		gender,
-		orientation,
 		birthDate,
 		age,
 		latitude,
@@ -97,7 +95,7 @@ export default async function insertDataInDb() {
 		biography,
 		password
 	)
-	VALUES ("test@test2.com", "test2", "oui", "Female", "Heterosexual", "1999-12-12","23"
+	VALUES ("test@test2.com", "test2", "oui", "Female", "1999-12-12","23"
 	, "48.259207", "3.174191", "1", "1",?)
 	`;
 
@@ -138,7 +136,14 @@ export default async function insertDataInDb() {
 	 INSERT OR IGNORE INTO pictures (user_id, src)
 	 VALUES ("2", "profileMan2.jpg")
 	  `);
-
+	await db.run(`
+	 INSERT OR IGNORE INTO user_preferences (user_id, name)
+	 VALUES ("1", "Female")
+	 `);
+	await db.run(`
+	 INSERT OR IGNORE INTO user_preferences (user_id, name)
+	 VALUES ("2", "Male")
+	 `);
 
 	for (let i = 1; i < 500; i++) {
 
@@ -164,7 +169,7 @@ export default async function insertDataInDb() {
 		try {
 			await db.run(sql, [name, i, "1", gender, birthDate, birthDate, birthDate, latitude, longitude]);
 			const userId = await db.get("SELECT last_insert_rowid() as id");
-			
+
 			if (i % 9 === 0) {
 				await db.run("INSERT INTO user_preferences (user_id, name) VALUES (?, ?)", [userId.id, genderTab[i % 2]]);
 				if (i % 2 === 0) {
@@ -203,3 +208,5 @@ export default async function insertDataInDb() {
 		console.warn(i, ", added");
 	}
 }
+
+insertDataInDb();

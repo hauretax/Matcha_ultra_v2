@@ -7,7 +7,7 @@ import NotificationContext from "../../context/NotificationProvider";
 export default function NotificationOpener({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
 	const [unread, setunread] = useState<boolean>(false);
 
-	const { haveUnread,setRead } = useContext(NotificationContext);
+	const { haveUnread, setRead } = useContext(NotificationContext);
 
 	function handleRead() {
 		if(haveUnread)

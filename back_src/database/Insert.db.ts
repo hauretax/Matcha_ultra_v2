@@ -86,6 +86,14 @@ const InsertDb = {
 		await db.run(sql, [likerId, likeeId]);
 	},
 
+	async block(fromId: number, toId: number): Promise<void> {
+		const sql = `
+      INSERT INTO user_blocks(fromId, toId)
+      VALUES (?, ?)
+    `;
+		await db.run(sql, [fromId, toId]);
+	},
+
 	async notification(fromId: number, toId: number, type: string): Promise<void> {
 		const sql = `
       INSERT INTO notifications(fromId, toId, type)

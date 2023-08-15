@@ -27,14 +27,14 @@ const UserCard: React.FC<UserCardProps> = ({ user, handleLike }) => {
 		<Card>
 			<CardMedia
 				sx={{ height: 240 }}
-				image={prefixBackendUrl(user.pictures[0].src)}
+				image={user.pictures && user.pictures.length ? prefixBackendUrl(user.pictures[0].src) : undefined}
 				title="Profile Picture"
 			/>
 			<CardContent>
 				<Typography gutterBottom variant="h5" component="div">
 					{user.username}, {user.age}
 				</Typography>
-				<Box sx={{ display: "flex", alignItems: "start" }}>
+				<Box sx={{ display: "flex", alignItems: "start", mb: 2 }}>
 					<LocationOn sx={{ fontSize: "1rem", mr: 1, fontVariant: "body2", color: "text.secondary" }} />
 					<Typography variant="body2" color="text.secondary">À {user.distance} km</Typography>
 				</Box>

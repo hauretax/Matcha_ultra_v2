@@ -73,12 +73,22 @@ const ProfilePage: React.FC = () => {
 		}
 	};
 
-	const block = () => {
-		setProfile({ ...profile, blocked: !profile.blocked });
+	const block = async () => {
+		try {
+			await apiProvider.block(profile.id, !profile.blocked);
+			setProfile({ ...profile, blocked: !profile.blocked });
+		} catch (err) {
+			snackbar(buildErrorString(err as ErrorResponse, "Failed to block profile"), "error");
+		}
 	};
 
-	const report = () => {
-		setProfile({ ...profile, reported: !profile.reported });
+	const report = async () => {
+		try {
+			await apiProvider.report(profile.id);
+			snackbar("Profile successfully reported", "success");
+		} catch (err) {
+			snackbar(buildErrorString(err as ErrorResponse, "Failed to report profile"), "error");
+		}		
 	};
 
 	return (

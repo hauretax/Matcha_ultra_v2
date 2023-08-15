@@ -97,6 +97,18 @@ const InitializeDb = {
 		return db.run(sql);
 	},
 
+	userBlocksTable() {
+		const sql = `
+			CREATE TABLE IF NOT EXISTS user_blocks (
+				fromId INTEGER,
+				toId INTEGER,
+				PRIMARY KEY (fromId, toId),
+				FOREIGN KEY(fromId) REFERENCES users(id),
+				FOREIGN KEY(toId) REFERENCES users(id)
+			)`;
+		return db.run(sql);
+	},
+
 	async notification() {
 		const sql = `
       CREATE TABLE IF NOT EXISTS notifications (

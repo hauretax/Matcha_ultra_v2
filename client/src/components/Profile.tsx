@@ -5,27 +5,27 @@ import { LocationOn, Circle, FavoriteBorder, EmojiEvents, Recommend, NotInterest
 import UserInterestsList from "./UserInterestList";
 
 interface Props {
-  id: number;
-  username: string;
-  lastName: string;
-  firstName: string;
-  gender: string;
-  preferences: string[];
-  pictures: { id: number; src: string }[];
-  interests: string[];
-  biography: string;
-  distance: number;
-  age: number;
-  connected: boolean;
-  lastTime: string;
-  linkStatus: string;
-  fameRating: number;
-  liked: boolean;
-  blocked: boolean;
-  reported: boolean;
-  like: () => void;
-  block: () => void;
-  report: () => void;
+	id: number;
+	username: string;
+	lastName: string;
+	firstName: string;
+	gender: string;
+	preferences: string[];
+	pictures: { id: number; src: string }[];
+	interests: string[];
+	biography: string;
+	distance: number;
+	age: number;
+	connected: boolean;
+	lastTime: string;
+	linkStatus: string;
+	fameRating: number;
+	liked: boolean;
+	blocked: boolean;
+	reported: boolean;
+	like: () => void;
+	block: () => void;
+	report: () => void;
 }
 
 const Profile: React.FC<Props> = (props) => {
@@ -43,7 +43,7 @@ const Profile: React.FC<Props> = (props) => {
 					</Typography>
 				</Box>
 				<Box sx={{ mb: 2 }}>
-					<Box sx={{ borderRadius: 1, border: "2px solid purple", display: "inline-flex", alignItems: "center" }}>
+					<Box sx={{ borderRadius: 1, border: "2px solid purple", display: "inline-flex", alignItems: "center", pl: 1 }}>
 						<EmojiEvents sx={{ fontSize: "1rem", mr: 1, mb: "2px", fontVariant: "body2", color: "purple" }} />
 						<Typography mr={1} variant="body2" color="purple">{props.fameRating}</Typography>
 					</Box>
@@ -66,7 +66,9 @@ const Profile: React.FC<Props> = (props) => {
 						<Typography variant="body2" color="text.secondary">{props.linkStatus}</Typography>
 					</Box>
 				</Box>
-				<UserInterestsList interests={props.interests} />
+				<Box sx={{ mb: 2 }}>
+					<UserInterestsList interests={props.interests} />
+				</Box>
 				<Box sx={{ mb: 2 }}>
 					<Typography
 						variant="body1"

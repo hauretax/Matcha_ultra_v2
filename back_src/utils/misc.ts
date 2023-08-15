@@ -17,9 +17,7 @@ export function getDistanceInKm(lat1, lon1, lat2, lon2) {
 }
 
 function deg2rad(deg) {
-
 	return deg * (Math.PI / 180);
-
 }
 
 export function getAge(birthdate: string) {
@@ -32,6 +30,12 @@ export function getAge(birthdate: string) {
 	}
 	return age;
 
+}
+
+export function getDistance(longitude1: number, latitude1: number, longitude2: number, latitude2: number) {
+	return Math.round(6371 * Math.acos(
+		Math.cos(deg2rad(latitude1)) * Math.cos(deg2rad(latitude2)) * Math.cos(deg2rad(longitude2) - deg2rad(longitude1)) + Math.sin(deg2rad(latitude1)) * Math.sin(deg2rad(latitude2))
+	));
 }
 
 export function sanitizeUser(user: userInDb2) {

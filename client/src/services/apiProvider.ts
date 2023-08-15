@@ -2,6 +2,14 @@ import { userParams } from "../../../comon_src/type/utils.type";
 import axiosPrivate from "./axiosPrivate";
 
 const apiProvider = {
+	getProfileLikes() {
+		return axiosPrivate.get("/profile/likes");
+	},
+
+	getProfileVisits() {
+		return axiosPrivate.get("/profile/visits");
+	},
+
 	getProfile(id: string) {
 		return axiosPrivate.get("/profile/" + id);
 	},
@@ -98,6 +106,14 @@ const apiProvider = {
 
 	like(likeeId: number, status: boolean) {
 		return axiosPrivate.post("/like", { likeeId, status });
+	},
+
+	block(toId: number, status: boolean) {
+		return axiosPrivate.post("/block", { toId, status });
+	},
+
+	report(toId: number) {
+		return axiosPrivate.post("/report", { toId });
 	},
 
 	visit(viewedId: number) {
