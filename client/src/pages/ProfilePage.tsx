@@ -33,7 +33,6 @@ const ProfilePage: React.FC = () => {
 		blocked: false,
 		reported: false,
 	});
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const { id } = useParams<{ id: string }>();
 	const snackbar = useSnackbar();
@@ -88,12 +87,12 @@ const ProfilePage: React.FC = () => {
 			snackbar("Profile successfully reported", "success");
 		} catch (err) {
 			snackbar(buildErrorString(err as ErrorResponse, "Failed to report profile"), "error");
-		}		
+		}
 	};
 
 	return (
 		<Box>
-			<Profile {...profile} like={like} block={block} report={report} />
+			<Profile {...profile} connected={isConnected} like={like} block={block} report={report} />
 		</Box>
 	);
 };

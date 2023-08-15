@@ -159,6 +159,7 @@ export async function getProfileById(req: Request, res: Response) {
 
 	res.json({
 		id: user.id,
+		lastTime: user.lastConnection,
 		username: user.username,
 		lastName: user.lastName,
 		firstName: user.firstName,
