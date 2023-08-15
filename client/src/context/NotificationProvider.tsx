@@ -29,6 +29,9 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 	useEffect(() => {
 		async function getNotifications() {
 			try {
+				if (!localStorage.getItem("accessToken")) {
+					return;
+				}
 				const data = await apiProvider.getNotifications();
 				const fetchedNotifications = data.data;
 				setNotifications(fetchedNotifications);

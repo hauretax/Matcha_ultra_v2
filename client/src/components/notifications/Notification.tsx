@@ -3,6 +3,7 @@ import { ArrowRight, Favorite, Mail, ThumbDown, ThumbUp, Visibility } from "@mui
 import NotificationContext from "../../context/NotificationProvider";
 import { useContext } from "react";
 import { notification, notificationType } from "../../../../comon_src/type/utils.type";
+import { useNavigate } from "react-router-dom";
 
 function selectIcon(type: notificationType) {
 	switch (type) {
@@ -21,15 +22,25 @@ function selectIcon(type: notificationType) {
 	}
 }
 
-function createNotification(notifications: notification[]): JSX.Element {
+function createNotifications(notifications: notification[]): JSX.Element {
+	const navigate = useNavigate();
+
+	function navTo(id: number, type: notificationType) {
+		switch (type) {
+		case "message":
+			navigate(`/chat/${id}`);
+			return;
+		default:
+			navigate(`/profile/${id}`);
+			return;
+		}
+	}
 	if (!notifications) {
 		return <></>;
 	}
 	const notificationListe = notifications.map((notification) => {
-		// const blinkStyle = !notification.read ? { animation: "blink 1s infinite alternate" } : {};
-
 		return (
-			<ListItem key={notification.id} disablePadding sx={{ my: 1 }} className={!notification.read ? "unread" : ""}>
+			<ListItem key={notification.id} onClick={() => navTo(notification.fromId, notification.type)} disablePadding sx={{ my: 1 }} className={!notification.read ? "unread" : ""}>
 				<ListItemButton>
 					<ListItemIcon>
 						{selectIcon(notification.type)}
@@ -85,7 +96,7 @@ export default function Notification({ closeNotification, NotificationIsopen }: 
 				</Box>
 				<Divider />
 				<List>
-					{createNotification(notifications)}
+					{createNotifications(notifications)}
 				</List>
 			</Drawer>
 		</>
