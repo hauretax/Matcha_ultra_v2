@@ -142,7 +142,7 @@ const GetDb = {
 		CASE
 			WHEN EXISTS (
 				SELECT 1
-					FROM user_blocks ub
+					FROM user_blocks
 					WHERE (toId = ? AND fromId = ?) 
 					OR (toId = ? AND fromId  = ?)
 				) THEN 1
