@@ -17,7 +17,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ValideMailPage from "./pages/ValideMailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import BrowsePage from "./pages/BrowsePage";
-import Chat from "./components/chat/Chat";
+import ChatPage from "./pages/ChatPage";
 
 import RequireAuth from "./components/RequireAuth";
 
@@ -53,8 +53,7 @@ function App() {
 										<Route path='/home' element={<BrowsePage />} />
 										<Route path='/profile' element={<PersonalProfilePage />} />
 										<Route path='/profile/:id' element={<ProfilePage />} />
-										<Route path='/chat' element={<Chat />} />
-										<Route path='/chat/:idParam' element={<Chat />} />
+										<Route path='/chat/:idParam?' element={<ChatPage />} />
 									</Route>
 								</Route>
 							</Routes>
