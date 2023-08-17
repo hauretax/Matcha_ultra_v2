@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AxiosResponse } from "axios";
 
 import { PersonalProfile } from "../../../comon_src/type/user.type";
@@ -40,6 +40,17 @@ function localProfile(): PersonalProfile| null {
 function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = React.useState<PersonalProfile | null>(localProfile());
 	const snackBar = useSnackbar();
+
+	useEffect(() => {
+		const fetchProfile = async () => {
+			const res = await apiProvider.getMyProfile();
+			setUser(res.data);
+		};
+
+		if (user) {
+			fetchProfile();
+		}
+	}, []);
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
 		let errorMessage = null;

@@ -124,8 +124,24 @@ export async function login(req: Request, res: Response) {
 }
 
 export function getProfile(req: Request, res: Response) {
-	const user: UserProfile = res.locals.fulluser;
-	res.json(user);
+	const { id, username, email, firstName, lastName, biography, gender, birthDate, emailVerified, pictures, interests, preferences, customLocation, latitude, longitude } = res.locals.fulluser;
+	res.json({
+		id,
+		email,
+		username,
+		lastName,
+		firstName,
+		biography,
+		gender,
+		birthDate,
+		preferences,
+		emailVerified,
+		pictures,
+		interests,
+		customLocation,
+		latitude: latitude?.toString(),
+		longitude: longitude?.toString(),
+	});
 }
 
 export async function getProfileLikesCtrl(req: Request, res: Response) {
