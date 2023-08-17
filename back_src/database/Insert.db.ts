@@ -30,7 +30,17 @@ const InsertDb = {
 		];
 
 		try {
-			await db.run(query, params);
+			const result = await db.run(query, params);
+			await db.run(`
+			INSERT INTO user_preferences (
+				user_id,
+				name
+			)
+			VALUES
+				(${result.lastID}, 'Male'),
+				(${result.lastID}, 'Female')
+				`
+			);
 			return accessCode;
 		} catch (err) {
 			if (err.message.includes("UNIQUE constraint failed")) {

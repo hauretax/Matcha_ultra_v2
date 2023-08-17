@@ -13,7 +13,7 @@ export function getDistanceInKm(lat1, lon1, lat2, lon2) {
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 	const d = R * c; // Distance in km
-	return d;
+	return (d || 1);
 }
 
 function deg2rad(deg) {
@@ -33,9 +33,9 @@ export function getAge(birthdate: string) {
 }
 
 export function getDistance(longitude1: number, latitude1: number, longitude2: number, latitude2: number) {
-	return Math.round(6371 * Math.acos(
+	return(Math.round(6371 * Math.acos(
 		Math.cos(deg2rad(latitude1)) * Math.cos(deg2rad(latitude2)) * Math.cos(deg2rad(longitude2) - deg2rad(longitude1)) + Math.sin(deg2rad(latitude1)) * Math.sin(deg2rad(latitude2))
-	));
+	) || 1));
 }
 
 export function sanitizeUser(user: userInDb2) {

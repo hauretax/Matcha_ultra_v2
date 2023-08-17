@@ -35,6 +35,11 @@ export async function newMessage(req: Request, res: Response) {
 
 	const { message, idTo } = req.body;
 
+	if(idTo === res.locals.fulluser.id){
+		res.status(405).json({ error: "Method Not Allowed" });
+		return;
+	}
+
 	if (message.length > 5000) {
 		res.status(400).json({ error: "message too long" });
 		return;
