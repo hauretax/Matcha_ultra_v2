@@ -28,7 +28,7 @@ interface AuthContextType {
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
-function localProfile(): PersonalProfile| null {
+function localProfile(): PersonalProfile | null {
 	const userDataString = localStorage.getItem("matcha_user");
 	if (!userDataString) {
 		return null;
@@ -43,14 +43,22 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		const fetchProfile = async () => {
-			const res = await apiProvider.getMyProfile();
-			setUser(res.data);
-			localStorage.setItem("matcha_user", JSON.stringify(res.data));
+			try {
+				const res = await apiProvider.getMyProfile();
+				setUser(res.data);
+				localStorage.setItem("matcha_user", JSON.stringify(res.data));
+			} catch (error) {
+				handleError(error as ErrorResponse, "Error while fetching profile");
+			}
 		};
 
 		if (user) {
 			fetchProfile();
 		}
+
+		return () => {
+			localStorage.setItem("matcha_user", JSON.stringify(user));
+		};
 	}, []);
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
