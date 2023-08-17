@@ -1,4 +1,3 @@
-
 import GetDb from "./back_src/database/Get.db";
 import InitializeDb from "./back_src/database/Initialize.db";
 import db from "./back_src/database/db";

@@ -8,6 +8,7 @@ import { useSnackbar } from "../context/SnackBar";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
 import { UserProfile } from "../../../comon_src/type/user.type";
 import SocketContext from "../context/SocketProvider";
+import { useAuth } from "../context/AuthProvider";
 
 const ProfilePage: React.FC = () => {
 	const [profile, setProfile] = useState<UserProfile>({
@@ -37,8 +38,9 @@ const ProfilePage: React.FC = () => {
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const { id } = useParams<{ id: string }>();
 	const snackbar = useSnackbar();
+	const [isSelfAccount, SetisSelfAccount] = useState<boolean>(false);
 	const { connectedUsers } = useContext(SocketContext);
-
+	const { user } = useAuth();
 
 	useEffect(() => {
 		if (!id)
@@ -48,6 +50,8 @@ const ProfilePage: React.FC = () => {
 	}, [connectedUsers]);
 
 	useEffect(() => {
+		// i use == to compare string to number don t transform to ===
+		SetisSelfAccount(user?.id == id);
 		const fetchProfile = async () => {
 			try {
 				if (id !== undefined) {
@@ -65,6 +69,10 @@ const ProfilePage: React.FC = () => {
 
 
 	const like = async () => {
+		if(isSelfAccount){
+			snackbar("you can't like yourself",  "warning");
+			return ;
+		}
 		try {
 			await apiProvider.like(profile.id, !profile.liked);
 			setProfile({ ...profile, liked: !profile.liked });
@@ -74,6 +82,10 @@ const ProfilePage: React.FC = () => {
 	};
 
 	const block = async () => {
+		if(isSelfAccount){
+			snackbar("you can't block yourself",  "warning");
+			return ;
+		}
 		try {
 			await apiProvider.block(profile.id, !profile.blocked);
 			setProfile({ ...profile, blocked: !profile.blocked });
@@ -83,6 +95,10 @@ const ProfilePage: React.FC = () => {
 	};
 
 	const report = async () => {
+		if(isSelfAccount){
+			snackbar("you can't report yourself",  "warning");
+			return ;
+		}
 		try {
 			await apiProvider.report(profile.id);
 			snackbar("Profile successfully reported", "success");
