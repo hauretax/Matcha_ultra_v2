@@ -33,9 +33,9 @@ export function getAge(birthdate: string) {
 }
 
 export function getDistance(longitude1: number, latitude1: number, longitude2: number, latitude2: number) {
-	return Math.round(6371 * Math.acos(
+	return(Math.round(6371 * Math.acos(
 		Math.cos(deg2rad(latitude1)) * Math.cos(deg2rad(latitude2)) * Math.cos(deg2rad(longitude2) - deg2rad(longitude1)) + Math.sin(deg2rad(latitude1)) * Math.sin(deg2rad(latitude2))
-	));
+	) || 1));
 }
 
 export function sanitizeUser(user: userInDb2) {

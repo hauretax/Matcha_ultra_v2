@@ -27,7 +27,7 @@ const BrowsePage: React.FC = () => {
 	const snackbar = useSnackbar();
 	const auth = useAuth() ;
 	const { user } = auth;
-	
+
 
 	const fetchProfiles = async (index: number) => {
 		try {
@@ -59,9 +59,7 @@ const BrowsePage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		console.log("asdasdad", user?.interests);
-		setFilters({ ...filters, interests: user?.interests || [] });
-		console.log(filters);
+		setFilters({ ...filters, interests: user?.interests || [] });	
 	}, []);
 
 	useEffect(() => {
