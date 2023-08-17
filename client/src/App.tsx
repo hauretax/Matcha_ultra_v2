@@ -64,12 +64,4 @@ function App() {
 	);
 }
 
-
-function PublicPage() {
-	return (<>
-
-		<p>Public page</p></>
-	);
-}
-
 export default App;

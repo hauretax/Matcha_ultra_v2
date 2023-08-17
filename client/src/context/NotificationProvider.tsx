@@ -4,6 +4,9 @@ import { notification } from "../../../comon_src/type/utils.type";
 import { useAuth } from "./AuthProvider";
 import apiProvider from "../services/apiProvider";
 import SocketContext from "./SocketProvider";
+import { useSnackbar } from "./SnackBar";
+import { buildErrorString } from "../utils";
+import { ErrorResponse } from "../../../comon_src/type/error.type";
 
 interface NotificationProvider {
 	notifications: Array<notification>;
@@ -25,6 +28,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 	const [unreadCount, setUnreadCount] = useState<number>(0);
 	const { notification } = useContext(SocketContext);
 	const auth = useAuth();
+	const snackbar = useSnackbar();
 
 	useEffect(() => {
 		async function getNotifications() {
@@ -38,7 +42,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 				const unreadCount = fetchedNotifications.filter((notification: notification) => !notification.read).length;
 				setUnreadCount(unreadCount);
 			} catch (error) {
-				console.error("Erreur lors de la récupération des notifications:", error);
+				snackbar(buildErrorString(error as ErrorResponse, "Error fetching notifications"), "error");
 			}
 		}
 		getNotifications();
@@ -64,7 +68,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 		try {
 			await apiProvider.setNotificationRead();
 		} catch (error) {
-			console.error("Erreur lors de la lecture des notifications", error);
+			snackbar(buildErrorString(error as ErrorResponse, "Error setting notifications as read"), "error");
 		}
 	}
 

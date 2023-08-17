@@ -1,11 +1,13 @@
-import { Drawer, IconButton, ListItem, ListItemButton, ListItemText, List, Box, ListItemAvatar, Avatar, Typography } from "@mui/material";
+import { Drawer, IconButton, ListItem, ListItemButton, ListItemText, List, Box, ListItemAvatar, Avatar } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
 import { useContext, useEffect, useState } from "react";
 import { EnrichedNotification } from "../../../../comon_src/type/utils.type";
 import { useNavigate } from "react-router-dom";
 import apiProvider from "../../services/apiProvider";
-import { prefixBackendUrl } from "../../utils";
+import { buildErrorString, prefixBackendUrl } from "../../utils";
+import { ErrorResponse } from "../../../../comon_src/type/error.type";
+import { useSnackbar } from "../../context/SnackBar";
 
 const notificationArray = {
 	like: ["has liked your profile", "profile"],
@@ -35,9 +37,7 @@ function createNotifications(notifications: EnrichedNotification[], toggleNotifi
 						primary={notification.username}
 						secondary={
 							<>
-								<Typography>
-									{msg}
-								</Typography>
+								{msg} <br />
 								{notification.date.toLocaleString()}
 							</>
 						}
@@ -54,6 +54,7 @@ function createNotifications(notifications: EnrichedNotification[], toggleNotifi
 export default function Notification({ toggleNotification, open }: { toggleNotification: () => void, open: boolean | undefined }) {
 	const { notifications } = useContext(NotificationContext);
 	const [enrichedNotifications, setEnrichedNotifications] = useState<EnrichedNotification[]>([]);
+	const snackbar = useSnackbar();
 
 	useEffect(() => {
 		const fetchProfiles = async () => {
@@ -68,7 +69,11 @@ export default function Notification({ toggleNotification, open }: { toggleNotif
 			setEnrichedNotifications(data);
 		};
 
-		fetchProfiles();
+		try {
+			fetchProfiles();
+		} catch (error) {
+			snackbar(buildErrorString(error as ErrorResponse, "Error fetching notifications"), "error");
+		}
 	}, [notifications]);
 
 	return (
