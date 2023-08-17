@@ -13,7 +13,6 @@ import { ErrorResponse } from "../../../comon_src/type/error.type";
 import { UserProfile } from "../../../comon_src/type/user.type";
 
 const BrowsePage: React.FC = () => {
-	//TODO #13: initialize filters based on user's profile
 	const [filters, setFilters] = useState<filtersList>({
 		ageRange: [18, 25],
 		distance: 100,

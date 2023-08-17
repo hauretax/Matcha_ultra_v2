@@ -74,7 +74,7 @@ export default function Notification({ toggleNotification, open }: { toggleNotif
 		} catch (error) {
 			snackbar(buildErrorString(error as ErrorResponse, "Error fetching notifications"), "error");
 		}
-	}, [notifications]);
+	}, [notifications, snackbar]);
 
 	return (
 		<>

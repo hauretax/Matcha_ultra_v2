@@ -10,9 +10,24 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
 	const token = localStorage.getItem("accessToken");
-	config.headers["Authorization"] =  token ? `Bearer ${token}` : "";
+	config.headers["Authorization"] = token ? `Bearer ${token}` : "";
 	return config;
 });
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token = null) => {
+	failedQueue.forEach(prom => {
+		if (error) {
+			prom.reject(error);
+		} else {
+			prom.resolve(token);
+		}
+	});
+
+	failedQueue = [];
+};
 
 axiosInstance.interceptors.response.use(
 	(response) => {
@@ -22,21 +37,42 @@ axiosInstance.interceptors.response.use(
 		const originalRequest = error.config;
 
 		if (error.response?.status === 403 && !originalRequest._retry) {
-
 			originalRequest._retry = true;
-      
-			const response = await axiosInstance.post("/newToken", {
-				"refreshToken": localStorage.getItem("refreshToken"),
-			});
 
-			//TODO #16: Handle failed refresh token
+			if (!isRefreshing) {
+				isRefreshing = true;
 
-			if (response.status === 200) {
-				localStorage.setItem("accessToken", response.data.token);
-				localStorage.setItem("refreshToken", response.data.refreshToken);
-				return axiosInstance(originalRequest);
+				try {
+					const response = await axiosInstance.post("/newToken", {
+						"refreshToken": localStorage.getItem("refreshToken"),
+					});
+
+					if (response.status === 200) {
+						localStorage.setItem("accessToken", response.data.token);
+						localStorage.setItem("refreshToken", response.data.refreshToken);
+						isRefreshing = false;
+						processQueue(null, response.data.token);
+						return axiosInstance(originalRequest);
+					}
+				} catch (err) {
+					localStorage.removeItem("accessToken");
+					localStorage.removeItem("refreshToken");
+					localStorage.removeItem("matcha_user");
+					isRefreshing = false;
+					processQueue(err, null);
+					window.location.href = "/login";
+					return Promise.reject(err);
+				}
 			}
 
+			return new Promise((resolve, reject) => {
+				failedQueue.push({ resolve, reject });
+			}).then(token => {
+				originalRequest.headers["Authorization"] = "Bearer " + token;
+				return axiosInstance(originalRequest);
+			}).catch(err => {
+				return Promise.reject(err);
+			});
 		}
 
 		return Promise.reject(error);
