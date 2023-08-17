@@ -147,17 +147,22 @@ export function getProfile(req: Request, res: Response) {
 export async function getRelation(req: Request, res: Response) {
 	const { toId } = req.body;
 	const profilesRelation = await GetDb.userRelation(toId, res.locals.fulluser.id);
-	if(profilesRelation.length === 2){
-		res.json({ relation: "match" });
+	if (profilesRelation.length === 2) {
+		res.json({ relation: "Connected" });
 		return;
 	}
 
-	if(profilesRelation[0].fromId === parseInt(toId)){
-		res.json({ relation: "liked you" });
+	if (profilesRelation.length === 0) {
+		res.json({ relation: "No relation" });
 		return;
 	}
 
-	res.json({ relation: "no relation" });
+	if (profilesRelation[0].fromId === parseInt(toId)) {
+		res.json({ relation: "Likes you" });
+		return;
+	}
+
+	res.json({ relation: "No relation" });
 }
 
 
@@ -498,7 +503,7 @@ export async function like(req: Request, res: Response) {
 		return;
 	}
 	const { likeeId, status } = req.body;
-	if (likeeId === res.locals.fulluser.id){
+	if (likeeId === res.locals.fulluser.id) {
 		res.status(405).json({ error: "Method Not Allowed" });
 		return;
 	}
@@ -546,7 +551,7 @@ export async function block(req: Request, res: Response) {
 
 	const { toId, status } = req.body;
 
-	if(toId === res.locals.fulluser.id){
+	if (toId === res.locals.fulluser.id) {
 		res.status(405).json({ error: "Method Not Allowed" });
 		return;
 	}
@@ -567,7 +572,7 @@ export async function report(req: Request, res: Response) {
 	}
 
 	const { toId } = req.body;
-	if(toId === res.locals.fulluser.id){
+	if (toId === res.locals.fulluser.id) {
 		res.status(405).json({ error: "Method Not Allowed" });
 		return;
 	}
@@ -592,7 +597,7 @@ export async function viewProfile(req: Request, res: Response) {
 	}
 
 	const { viewedId } = req.body;
-	if(res.locals.fulluser.id !== viewedId){
+	if (res.locals.fulluser.id !== viewedId) {
 		try {
 			await newNotification("visit", res.locals.fulluser.id, viewedId);
 			await UpdateDb.incrementViews(viewedId);
