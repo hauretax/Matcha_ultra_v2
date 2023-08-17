@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AxiosResponse } from "axios";
 
 import { PersonalProfile } from "../../../comon_src/type/user.type";
@@ -28,7 +28,7 @@ interface AuthContextType {
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
-function localProfile(): PersonalProfile| null {
+function localProfile(): PersonalProfile | null {
 	const userDataString = localStorage.getItem("matcha_user");
 	if (!userDataString) {
 		return null;
@@ -40,6 +40,26 @@ function localProfile(): PersonalProfile| null {
 function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = React.useState<PersonalProfile | null>(localProfile());
 	const snackBar = useSnackbar();
+
+	useEffect(() => {
+		const fetchProfile = async () => {
+			try {
+				const res = await apiProvider.getMyProfile();
+				setUser(res.data);
+				localStorage.setItem("matcha_user", JSON.stringify(res.data));
+			} catch (error) {
+				handleError(error as ErrorResponse, "Error while fetching profile");
+			}
+		};
+
+		if (user) {
+			fetchProfile();
+		}
+
+		return () => {
+			localStorage.setItem("matcha_user", JSON.stringify(user));
+		};
+	}, []);
 
 	const handleError = (error: ErrorResponse, defaultMessage: string) => {
 		let errorMessage = null;
@@ -119,7 +139,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 					gender,
 					preferences,
 					email,
-					emailVerified: Number(user.email === email),
 					customLocation
 				};
 				if (customLocation) {

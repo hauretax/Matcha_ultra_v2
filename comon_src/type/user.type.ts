@@ -67,6 +67,7 @@ export type userInDb1 = PersonalProfile & {
 	gender: Gender;
 	user_note: number;
 	views: number;
+	lastConnection:string;
 	likes: number;
 }
 

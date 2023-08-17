@@ -2,6 +2,7 @@ import { validateJwt } from "../utils/jwt";
 import FindDb from "../database/Find.db";
 import app from "../app";
 import { notification } from "../../comon_src/type/utils.type";
+import UpdateDb from "../database/Update.db";
 
 export const connectedUsers: Map<string, number> = new Map<string, number>();
 
@@ -58,7 +59,20 @@ export default function handleSocket(socket, io) {
 	});
 
 	socket.on("disconnect", () => {
+		const userId = connectedUsers.get(socket.id);
 		connectedUsers.delete(socket.id);
+		const currentDate = new Date();
+		async function updateDb() {
+			const year = currentDate.getFullYear();
+			const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+			const day = String(currentDate.getDate()).padStart(2, "0");
+			try {
+				await UpdateDb.update("users", ["lastConnection"], [`${year}-${month}-${day}`], ["id"], [userId]);
+			} catch (error) {
+				console.error("socket disconnect error :", error);
+			}
+		}
+		updateDb();
 		io.emit("connectedUsers", Array.from(connectedUsers.values()));
 	});
 }

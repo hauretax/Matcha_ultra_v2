@@ -10,6 +10,10 @@ const apiProvider = {
 		return axiosPrivate.get("/profile/visits");
 	},
 
+	getMyProfile() {
+		return axiosPrivate.get("/profile");
+	},
+
 	getProfile(id: string) {
 		return axiosPrivate.get("/profile/" + id);
 	},
