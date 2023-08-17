@@ -8,7 +8,7 @@ import sendEmail from "../utils/sendMail";
 import { generateRefreshJwt, generateJwt } from "../utils/jwt";
 import { validateBody, validateDate, validateInterests, validateMail, validatePictureId, validateQueryParams } from "../utils/validateDataHelper";
 
-import { UserPayload, UserProfile } from "../../comon_src/type/user.type";
+import { UserPayload } from "../../comon_src/type/user.type";
 import { UserReqRegister } from "../../comon_src/type/user.type";
 
 

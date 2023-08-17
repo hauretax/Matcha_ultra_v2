@@ -4,7 +4,6 @@ import fs from "fs";
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		console.log("destination")
 		const dest = path.join(__dirname, "../../../back_src", "public/images");
 
 		if (!fs.existsSync(dest)) {
@@ -14,7 +13,6 @@ const storage = multer.diskStorage({
 		cb(null, dest);
 	},
 	filename: function (req, file, cb) {
-		console.log("filename")
 		const ext = path.extname(file.originalname).toLowerCase();
 		const filename = Date.now() + ext;
 
