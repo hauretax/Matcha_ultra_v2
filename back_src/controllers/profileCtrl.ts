@@ -461,7 +461,7 @@ export async function like(req: Request, res: Response) {
 		const incrementLikesPromise = UpdateDb.incrementLikes(likeeId);
 		//If user is liked, his profile is set as visited
 		const hasBeenVisitedPromise = FindDb.hasBeenVisitedBy(res.locals.fulluser.id, likeeId);
-		const userBothLikePromise = GetDb.checkUserLikesSymmetry(res.locals.fulluser.id, likeeId);
+		const userBothLikePromise = FindDb.isLikedBy(likeeId, res.locals.fulluser.id);
 
 		const [hasBeenVisited, userBothLike] = await Promise.all([
 			hasBeenVisitedPromise,
