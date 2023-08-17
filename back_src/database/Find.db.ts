@@ -276,13 +276,13 @@ function generateInterestConditions(interestWanted: string[]): string {
 function generateOrderByClause(orderBy: OrderBy, interestCount: number): string {
 	switch (orderBy) {
 	case "distance":
-		return "(distance_value * 10 +  (interestCount / "+interestCount+") + fame_rating_value) DESC";
+		return "(distance_value * 10 +  (interestCount / " + interestCount + ") + fame_rating_value) DESC";
 	case "age":
 		return "(distance_value  + fame_rating_value + 100 - u.age ) DESC";
 	case "popularity":
-		return "(distance_value +  (interestCount / "+interestCount+") + fame_rating_value * 10) DESC";
+		return "(distance_value +  (interestCount / " + interestCount + ") + fame_rating_value * 10) DESC";
 	case "tag":
-		return "(distance_value +  (interestCount / "+interestCount+") * 10  + fame_rating_value) DESC";
+		return "(distance_value +  (interestCount / " + interestCount + ") * 10  + fame_rating_value) DESC";
 	default:
 		throw new Error("Invalid order by");
 	}

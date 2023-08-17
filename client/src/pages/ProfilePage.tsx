@@ -55,7 +55,9 @@ const ProfilePage: React.FC = () => {
 			try {
 				if (id !== undefined) {
 					const res = await apiProvider.getProfile(id);
-					setProfile(res.data);
+					const relation = await apiProvider.getRelation(parseInt(id));
+					setProfile({ ...res.data, linkStatus: relation.data.relation });
+					
 					await apiProvider.visit(parseInt(id));
 				}
 			} catch (err) {

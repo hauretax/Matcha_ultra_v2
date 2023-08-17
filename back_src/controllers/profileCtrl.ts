@@ -144,6 +144,23 @@ export function getProfile(req: Request, res: Response) {
 	});
 }
 
+export async function getRelation(req: Request, res: Response) {
+	const { toId } = req.body;
+	const profilesRelation = await GetDb.userRelation(toId, res.locals.fulluser.id);
+	if(profilesRelation.length === 2){
+		res.json({ relation: "match" });
+		return;
+	}
+
+	if(profilesRelation[0].fromId === parseInt(toId)){
+		res.json({ relation: "liked you" });
+		return;
+	}
+
+	res.json({ relation: "no relation" });
+}
+
+
 export async function getProfileLikesCtrl(req: Request, res: Response) {
 	const { id, longitude, latitude } = res.locals.fulluser;
 
