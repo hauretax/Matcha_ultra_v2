@@ -188,7 +188,6 @@ export default async function insertDataInDb() {
 			const randomInterestsCount = Math.floor(Math.random() * 5) + 1; // Nombre aléatoire d'intérêts (entre 1 et 5)
 			const interests = await db.all("SELECT id FROM interests ORDER BY RANDOM() LIMIT ?", [randomInterestsCount]);
 
-			// console.log('interests id:', interests)
 			interests.forEach((interest) => {
 				db.run(`INSERT OR IGNORE INTO  user_interests (user_id, interest_id)
 				VALUES (?,?)`, [userId.id, interest.id]);

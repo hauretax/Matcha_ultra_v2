@@ -1,8 +1,12 @@
 import React, { useEffect, useState, createContext } from "react";
-import socketIOClient from "socket.io-client";
+import socketIOClient, { Socket } from "socket.io-client";
 
 import { useAuth } from "./AuthProvider";
 import { Notification } from "../../../comon_src/type/utils.type";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { useSnackbar } from "./SnackBar";
+import { buildErrorString } from "../utils";
+import { ErrorResponse } from "../../../comon_src/type/error.type";
 
 interface SocketContextType {
 	connectedUsers: number[];
@@ -23,62 +27,79 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 	const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: "default" });
 	const [notification, setNotification] = useState<Notification>();
 	const auth = useAuth();
-	// to usr correct function on socket i need to give context 
-
+	const snackbar = useSnackbar();
 
 	useEffect(() => {
-		const socket = socketIOClient("http://localhost:8080");
 
-		// Authenticate the user using the JWT token
-		const authenticateSocket = () => {
-			const accessToken = localStorage.getItem("accessToken");
-			socket.emit("authenticate", { accessToken });
+		const connectSocket = () => {
+
+			const socket = socketIOClient("http://localhost:8080", {
+				reconnection: true,
+				reconnectionAttempts: 10,
+				reconnectionDelay: 1000,
+			});
+
+			// Authenticate the user using the JWT token
+			const authenticateSocket = () => {
+				const accessToken = localStorage.getItem("accessToken");
+				socket.emit("authenticate", { accessToken });
+			};
+
+			// Handle successful authentication
+			const handleAuthenticated = (users: number[]) => {
+				setConnectedUsers(users);
+			};
+
+			// Handle authentication failure
+			const handleUnauthorized = (error: { message: string; }) => {
+				snackbar(buildErrorString(error as ErrorResponse, "Socket authentication failed"), "error");
+			};
+
+			const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
+				setMessage({ userFrom: senderId, message });
+			};
+
+			const handleNotification = (notification: Notification) => {
+				setNotification(notification);
+			};
+
+			// Socket connection and authentication
+			authenticateSocket();
+
+			socket.on("connectedUsers", handleAuthenticated);
+			socket.on("unauthorized", handleUnauthorized);
+
+			socket.on("newNotification", handleNotification);
+			socket.on("newMessage", handleMessage);
+
+			// Error handling
+			socket.on("connect_error", (error) => {
+				snackbar(buildErrorString(error as ErrorResponse, "Socket connection failed"), "error");
+			});
+
+			socket.on("error", (error: Error) => {
+				snackbar(buildErrorString(error as ErrorResponse, "Socket error"), "error");
+			});
+
+			window.addEventListener("beforeunload", () => {
+				socket.disconnect();
+			});
+
+			return socket;
 		};
 
-		// Handle successful authentication
-		const handleAuthenticated = (users: number[]) => {
-			setConnectedUsers(users);
-		};
+		let sock: Socket<DefaultEventsMap, DefaultEventsMap> | null = null;
 
-		// Handle authentication failure
-		// const handleUnauthorized = (error: { message: string; }) => {
-		// 	// console.log("Socket authentication failed:", error.message);
-		// 	// Perform appropriate actions for unauthorized access
-		// };
-
-		const handleMessage = ({ message, senderId }: { message: string, senderId: number }) => {
-			// console.log("new message");
-			setMessage({ userFrom: senderId, message });
-		};
-
-		const handleNotification = (notification: Notification) => {
-			setNotification(notification);
-			// console.log(notification);
-		};
-
-		// Socket connection and authentication
-		authenticateSocket();
-
-		socket.on("connectedUsers", handleAuthenticated);
-		// socket.on("unauthorized", handleUnauthorized);
-
-		socket.on("newNotification", handleNotification);
-		socket.on("newMessage", handleMessage);
-		// Error handling
-		// socket.on("connect_error", (error) => {
-		// 	// console.log("Socket connection error:", error.message);
-		// 	// Perform appropriate actions for connection error
-		// });
-
-		// socket.on("error", (error: Error) => {
-		// 	// console.error("Socket error:", error.message);
-		// 	// Perform appropriate actions for socket error
-		// });
+		const connectionTimeout = setTimeout(() => {
+			sock = connectSocket();
+		}, 1000);
 
 		// Clean up the socket connection
 		return () => {
+			clearTimeout(connectionTimeout);
 			setConnectedUsers([]);
-			socket.disconnect();
+			if (sock)
+				sock.disconnect();
 		};
 	}, [auth.user]);
 
