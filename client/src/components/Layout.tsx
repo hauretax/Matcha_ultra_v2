@@ -27,8 +27,8 @@ function Layout() {
 			}}
 		>
 			<NavBar toggleNotification={toggleNotification} count={notification.unreadCount} />
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<Container maxWidth="lg">
+			<Box component="main" sx={{ flexGrow: 1, p: 3, display: "flex", flexDirection: "column" }}>
+				<Container maxWidth="lg" sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
 					<Outlet />
 				</Container>
 			</Box>

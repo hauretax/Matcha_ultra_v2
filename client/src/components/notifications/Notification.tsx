@@ -1,4 +1,4 @@
-import { Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box, ListItemAvatar, Avatar, Typography } from "@mui/material";
+import { Drawer, IconButton, ListItem, ListItemButton, ListItemText, List, Box, ListItemAvatar, Avatar, Typography } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
 import { useContext, useEffect, useState } from "react";
