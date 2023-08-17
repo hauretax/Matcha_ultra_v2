@@ -34,6 +34,11 @@ export async function newMessage(req: Request, res: Response) {
 	}
 
 	const { message, idTo } = req.body;
+	const isbloqued = await GetDb.isbloqued(res.locals.fulluser.id, idTo);
+	if (isbloqued.result){
+		res.status(405).json({ error: "Method Not Allowed" });
+		return ;
+	}
 
 	if(idTo === res.locals.fulluser.id){
 		res.status(405).json({ error: "Method Not Allowed" });

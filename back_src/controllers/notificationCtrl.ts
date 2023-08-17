@@ -11,6 +11,10 @@ export async function newNotification(type: notificationType, fromId: number, to
 	if (!type || !fromId || !toId) {
 		throw new Error("Missing required parameters");
 	}
+	const isbloqued = await GetDb.isbloqued(fromId, toId);
+	if (isbloqued.result){
+		return ;
+	}
 	const dbNotification = await InsertDb.notification(fromId, toId, type) as unknown;
 	const notification  = dbNotification as notification;
 	const user = await FindDb.userById(notification.fromId);

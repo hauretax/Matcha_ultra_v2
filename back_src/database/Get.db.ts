@@ -134,6 +134,21 @@ const GetDb = {
 		ORDER BY n.date DESC
 		`;
 		return db.all(query, [id]);
+	},
+
+	isbloqued(idFrom:number, idTo:number){
+		const query = `		
+		SELECT
+		CASE
+			WHEN EXISTS (
+				SELECT 1
+					FROM user_blocks
+					WHERE (toId = ? AND fromId = ?) 
+					OR (toId = ? AND fromId  = ?)
+				) THEN 1
+			ELSE 0
+		END AS result;`;
+		return db.get(query, [idFrom, idTo, idTo, idFrom]);
 	}
 
 };
