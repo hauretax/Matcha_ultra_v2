@@ -45,6 +45,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 		const fetchProfile = async () => {
 			const res = await apiProvider.getMyProfile();
 			setUser(res.data);
+			localStorage.setItem("matcha_user", JSON.stringify(res.data));
 		};
 
 		if (user) {
