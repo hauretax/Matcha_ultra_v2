@@ -74,7 +74,7 @@ const FindDb = {
 
 
 		const interestConditions = generateInterestConditions(params.interestWanted);
-		const orderByClause = generateOrderByClause(params.orderBy);
+		const orderByClause = generateOrderByClause(params.orderBy, params.interestWanted.length);
 
 		const completTab = [
 			...params.interestWanted,
@@ -110,7 +110,9 @@ const FindDb = {
 			) AS interestCount,
 			interests,
 			picture_ids,
-			image_srcs
+			image_srcs,
+			(1 - d.distance / 500) AS distance_value,
+			CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0) / u.views END AS fame_rating_value
 		FROM
 			users AS u
 			INNER JOIN user_preferences AS u_p ON u.id = u_p.user_id
@@ -271,16 +273,16 @@ function generateInterestConditions(interestWanted: string[]): string {
 	return interestWanted.map(() => "interests LIKE ?").join(" OR ");
 }
 
-function generateOrderByClause(orderBy: OrderBy): string {
+function generateOrderByClause(orderBy: OrderBy, interestCount: number): string {
 	switch (orderBy) {
 	case "distance":
-		return "d.distance ASC";
+		return "(distance_value * 10 +  (interestCount / "+interestCount+") + fame_rating_value) DESC";
 	case "age":
-		return "u.age ASC";
+		return "(distance_value  + fame_rating_value + 100 - u.age ) DESC";
 	case "popularity":
-		return "CASE WHEN u.views = 0 THEN 0 ELSE (u.likes * 1.0)/ u.views END DESC";
+		return "(distance_value +  (interestCount / "+interestCount+") + fame_rating_value * 10) DESC";
 	case "tag":
-		return "interestCount DESC";
+		return "(distance_value +  (interestCount / "+interestCount+") * 10  + fame_rating_value) DESC";
 	default:
 		throw new Error("Invalid order by");
 	}
