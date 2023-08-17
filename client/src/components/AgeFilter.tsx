@@ -11,7 +11,6 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ ageRange, setAgeRange }) => {
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-	//TODO #11: prevent age to go to 17 by pushing the Thumb 1
 	const handleAgeChange = (
 		event: Event,
 		newValue: number | number[],
@@ -27,7 +26,7 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ ageRange, setAgeRange }) => {
 				setAgeRange([clamped, clamped + minDistance]);
 
 			} else {
-				const clamped = Math.max(newValue[1], minDistance);
+				const clamped = Math.max(newValue[1], 18 + minDistance);
 				setAgeRange([clamped - minDistance, clamped]);
 			}
 		} else {
