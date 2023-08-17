@@ -238,7 +238,6 @@ export async function updateProfile(req: Request, res: Response) {
 		return;
 	}
 
-	// TODO #5: if email is updated, send a new validation email
 	if (res.locals.fulluser.email !== email && !res.locals.fulluser.emailVerified) {
 		const accessCode = Math.floor(Math.random() * 90000 + 10000);
 		await sendEmail(email, "click on this link to activate account :http://" + "localhost:" + "3000/valide_mail?code=" + accessCode + "&email=" + email);
