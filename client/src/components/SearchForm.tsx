@@ -12,6 +12,7 @@ import { filtersList } from "../../../comon_src/type/utils.type";
 import { useSnackbar } from "../context/SnackBar";
 import { buildErrorString } from "../utils";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
+import { useAuth } from "../context/AuthProvider";
 
 interface SearchFormProps {
   setFilters: React.Dispatch<React.SetStateAction<filtersList>>
@@ -27,8 +28,11 @@ const SearchForm: React.FC<SearchFormProps> = ({ setFilters }) => {
 		interests: [],
 		orderBy: "distance"
 	});
-
+	const auth = useAuth() ;
+	const { user } = auth;
+	
 	useEffect(() => {
+		setTmpFilters({ ...tmpFilters, interests: user?.interests || [] });
 		const fetchOptions = async () => {
 			try {
 				const res = await apiProvider.getOptions();

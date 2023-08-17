@@ -5,6 +5,7 @@ import { Box, Button } from "@mui/material";
 import SearchForm from "../components/SearchForm";
 import BrowsingResult from "../components/BrowsingResult";
 
+import { useAuth } from "../context/AuthProvider";
 import { filtersList } from "../../../comon_src/type/utils.type";
 import { useSnackbar } from "../context/SnackBar";
 import { buildErrorString } from "../utils";
@@ -24,6 +25,9 @@ const BrowsePage: React.FC = () => {
 	const [end, setEnd] = useState(true);
 	const [profiles, setProfiles] = useState<UserProfile[]>([]);
 	const snackbar = useSnackbar();
+	const auth = useAuth() ;
+	const { user } = auth;
+	
 
 	const fetchProfiles = async (index: number) => {
 		try {
@@ -53,6 +57,12 @@ const BrowsePage: React.FC = () => {
 		setIndex(index + profiles.length);
 		setEnd(newProfiles.length < 10);
 	};
+
+	useEffect(() => {
+		console.log("asdasdad", user?.interests);
+		setFilters({ ...filters, interests: user?.interests || [] });
+		console.log(filters);
+	}, []);
 
 	useEffect(() => {
 		const handleSearch = async () => {
