@@ -19,15 +19,11 @@ import { Notifications } from "@mui/icons-material";
 
 const pages = [
 	{
-		label: "Public page",
+		label: "Browse",
 		url: "/"
 	},
 	{
-		label: "Protected page",
-		url: "/home"
-	},
-	{
-		label: "chat",
+		label: "Chat",
 		url: "/chat"
 	}
 ];

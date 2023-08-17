@@ -42,7 +42,6 @@ function App() {
 						<NotificationtProvider>
 							<Routes>
 								<Route element={<Layout />}>
-									<Route path="/" element={<PublicPage />} />
 									<Route path="/login" element={<LoginPage />} />
 									<Route path="/register" element={<RegisterPage />} />
 									<Route path="/valide_mail" element={<ValideMailPage />} />
@@ -50,7 +49,7 @@ function App() {
 									<Route path="/reset_password" element={<ResetPasswordPage />} />
 									<Route path='/404' element={<div>404</div>} />
 									<Route element={<RequireAuth />} >
-										<Route path='/home' element={<BrowsePage />} />
+										<Route path='/' element={<BrowsePage />} />
 										<Route path='/profile' element={<PersonalProfilePage />} />
 										<Route path='/profile/:id' element={<ProfilePage />} />
 										<Route path='/chat/:idParam?' element={<ChatPage />} />
