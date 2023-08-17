@@ -51,6 +51,8 @@ const ChatPage: React.FC = () => {
 				const res = await apiProvider.getConversations();
 				setChats(res.data.profiles);
 				setLoadingChats(false);
+				if (res.data.profiles.length === 0)
+					return;
 				const chatIdx = idParam !== undefined ? res.data.profiles.findIndex((chat: Chat) => chat.id === parseInt(idParam)) : 0;
 				setSelectedChat(chatIdx);
 			} catch (error) {
