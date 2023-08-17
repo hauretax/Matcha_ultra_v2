@@ -23,6 +23,11 @@ const GetDb = {
 		return ret;
 	},
 
+	async userRelation(toId:number, fromId:number): Promise<{fromId:number, toId:number}[]>{
+		const sql = "SELECT * FROM user_likes WHERE fromId = ? AND toId = ? OR fromId = ? AND toId = ?";
+		return db.all(sql, [fromId, toId, toId, fromId]);	
+	},
+		
 	async userLocalisation(id: number): Promise<{ latitude: number, longitude: number }> {
 		const sql = `SELECT latitude, longitude 
 		FROM "users"

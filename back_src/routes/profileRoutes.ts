@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile, block, report, getProfileLikesCtrl, getProfileVisitsCtrl } from "../controllers/profileCtrl";
+import { createProfile, getProfile, getOptions, updateProfile, updateInterests, login, updateBio, validByEmail, insertPicture, updatePicture, deletePicture, passwordReset, RequestpasswordReset, getProfiles, getProfileById, like, viewProfile, block, report, getProfileLikesCtrl, getProfileVisitsCtrl, getRelation } from "../controllers/profileCtrl";
 import { getActualConversations, getChat, newMessage } from "../controllers/chatCtrl";
 
 import asyncHandler from "express-async-handler";
@@ -28,6 +28,7 @@ router.post("/chat/new", profileCompletedGroup, asyncHandler(newMessage));
 router.post("/setLocalisation", privateGroup, asyncHandler(setUserPosition));
 router.post("/setLocationByIP", privateGroup, asyncHandler(setUserPositionByIP));
 router.get("/profile", privateGroup, asyncHandler(getProfile));
+router.post("/user/relation", privateGroup, asyncHandler(getRelation));
 router.get("/profile/likes", privateGroup, asyncHandler(getProfileLikesCtrl));
 router.get("/profile/visits", privateGroup, asyncHandler(getProfileVisitsCtrl));
 router.get("/options", privateGroup, asyncHandler(getOptions));

@@ -1,3 +1,7 @@
+const password = "test@test.com1A";
+
+
+
 
 import GetDb from "./back_src/database/Get.db";
 import InitializeDb from "./back_src/database/Initialize.db";
@@ -61,7 +65,7 @@ export default async function insertDataInDb() {
 	if ((await GetDb.allInterests()).length === 0) {
 		insertInterests();
 	}
-	const password = "test@test.com1A";
+	
 	const encryptedPassword = await bcrypt.hash(password, 10);
 
 	const test1 = `

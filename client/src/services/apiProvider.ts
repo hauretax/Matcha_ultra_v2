@@ -22,6 +22,10 @@ const apiProvider = {
 		return axiosPrivate.get("/chat/getConv");
 	},
 
+	getRelation(toId : number) {
+		return axiosPrivate.post("/user/relation", { toId });
+	},
+
 	getNotifications() {
 		return axiosPrivate.get("/getnotification");
 	},
