@@ -7,7 +7,7 @@ import { prefixBackendUrl } from "../utils";
 import { useAuth } from "../context/AuthProvider";
 
 interface CarouselProps {
-  imgs: { id: number; src: string }[];
+	imgs: { id: number; src: string }[];
 }
 
 const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
@@ -122,7 +122,7 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 							textAlign: "center"
 						}}
 					>
-            Click here to add a picture
+						Click here to add a picture
 					</Typography>
 				</Box>
 			}
@@ -140,7 +140,7 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 					) : (
 						<KeyboardArrowLeft />
 					)}
-          Back
+					Back
 				</Button>
 				<Box sx={{ display: "flex", justifyContent: "center", margin: "10px 0" }}>
 					{imgs.map((_img, index) => (
@@ -169,7 +169,7 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 					/>
 				</Box>
 				<Button onClick={goRight}>
-          Next
+					Next
 					{theme.direction === "rtl" ? (
 						<KeyboardArrowLeft />
 					) : (
