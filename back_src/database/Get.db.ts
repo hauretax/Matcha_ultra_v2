@@ -69,14 +69,22 @@ const GetDb = {
 		GROUP BY user_id
 	) first_pictures ON u.id = first_pictures.user_id
 	LEFT JOIN pictures p ON p.id = first_pictures.minId
-	WHERE EXISTS (
+	WHERE 
+	NOT EXISTS (
+    SELECT 1
+    FROM user_blocks ub
+    WHERE (ub.toId = u.id AND ub.fromId = ?) 
+       OR (ub.fromId = u.id AND ub.toId = ?)
+)
+	 AND EXISTS (
 		SELECT 1
 		FROM user_likes  n1
         JOIN user_likes n2 ON n1.toId = n2.fromId AND n2.toId = n1.fromId
         WHERE n1.fromId = ? AND n1.toId = u.id
 		);
+
 		`;
-		return db.all(sql, [userId]);
+		return db.all(sql, [userId, userId, userId]);
 	},
 
 	async chat(idFrom: number, idTo: number): Promise<Profile[]> {
