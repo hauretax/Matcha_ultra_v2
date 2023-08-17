@@ -76,17 +76,13 @@ export interface Profile {
 
 export type notificationType = "like" | "message" | "visit" | "match" | "unlike"
 
-export interface notification{
-    id: number,
-    type: notificationType,
-    fromId: number,
-    toId: number,
-    fromUsername:string,
-    date: Date,
-    read:boolean
-}
-
-export interface EnrichedNotification extends notification {
-	username: string;
+export interface Notification {
+	id: number;
+	type: notificationType;
+	fromId: number;
+	toId: number;
+	fromUsername: string;
+	date: Date;
+	read: boolean;
 	profilePicture: string;
 }

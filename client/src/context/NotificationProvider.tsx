@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { notification } from "../../../comon_src/type/utils.type";
+import { Notification } from "../../../comon_src/type/utils.type";
 import { useAuth } from "./AuthProvider";
 import apiProvider from "../services/apiProvider";
 import SocketContext from "./SocketProvider";
@@ -9,7 +9,7 @@ import { buildErrorString } from "../utils";
 import { ErrorResponse } from "../../../comon_src/type/error.type";
 
 interface NotificationProvider {
-	notifications: Array<notification>;
+	notifications: Array<Notification>;
 	unreadCount: number;
 	setRead: () => void;
 }
@@ -24,7 +24,7 @@ const NotificationContext = createContext<NotificationProvider>({
 export default NotificationContext;
 
 export function NotificationtProvider({ children }: { children: React.ReactNode }) {
-	const [notifications, setNotifications] = useState<notification[]>([]);
+	const [notifications, setNotifications] = useState<Notification[]>([]);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
 	const { notification } = useContext(SocketContext);
 	const auth = useAuth();
@@ -39,7 +39,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 				const data = await apiProvider.getNotifications();
 				const fetchedNotifications = data.data;
 				setNotifications(fetchedNotifications);
-				const unreadCount = fetchedNotifications.filter((notification: notification) => !notification.read).length;
+				const unreadCount = fetchedNotifications.filter((notification: Notification) => !notification.read).length;
 				setUnreadCount(unreadCount);
 			} catch (error) {
 				snackbar(buildErrorString(error as ErrorResponse, "Error fetching notifications"), "error");

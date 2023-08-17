@@ -1,5 +1,5 @@
 import InsertDb from "../database/Insert.db";
-import { notification, notificationType } from "../../comon_src/type/utils.type";
+import { Notification, notificationType } from "../../comon_src/type/utils.type";
 import { sendNotification } from "./socketCtrl";
 import { Request, Response } from "express";
 import UpdateDb from "../database/Update.db";
@@ -16,7 +16,7 @@ export async function newNotification(type: notificationType, fromId: number, to
 		return ;
 	}
 	const dbNotification = await InsertDb.notification(fromId, toId, type) as unknown;
-	const notification  = dbNotification as notification;
+	const notification  = dbNotification as Notification;
 	const user = await FindDb.userById(notification.fromId);
 	notification.fromUsername = user.username;
 	sendNotification(notification);

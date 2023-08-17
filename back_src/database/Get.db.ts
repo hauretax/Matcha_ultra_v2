@@ -127,9 +127,17 @@ const GetDb = {
 
 	notification(id: number) {
 		const query = `
-		SELECT n.id, n.fromId, n.toId, n.type, n.seen as read, n.date,u.username as fromUsername
+		SELECT n.id, n.fromId, n.toId, n.type, n.seen as read, n.date, u.username as fromUsername, p.first_src as profilePicture
 		FROM notifications n
 		LEFT JOIN users u ON n.fromId = u.id
+		LEFT JOIN (
+			SELECT 
+				user_id, 
+				MIN(id) as min_id, -- This gets the ID of the first picture of each user
+				src as first_src
+			FROM pictures
+			GROUP BY user_id
+		) p ON u.id = p.user_id
 		WHERE toId = ?
 		ORDER BY n.date DESC
 		`;

@@ -2,12 +2,12 @@ import React, { useEffect, useState, createContext } from "react";
 import socketIOClient from "socket.io-client";
 
 import { useAuth } from "./AuthProvider";
-import { notification } from "../../../comon_src/type/utils.type";
+import { Notification } from "../../../comon_src/type/utils.type";
 
 interface SocketContextType {
-  connectedUsers: number[];
-  message: { userFrom: number, message: string };
-  notification:notification | undefined;
+	connectedUsers: number[];
+	message: { userFrom: number, message: string };
+	notification: Notification | undefined;
 }
 
 const SocketContext = createContext<SocketContextType>({
@@ -21,7 +21,7 @@ export default SocketContext;
 export function SocketProvider({ children }: { children: React.ReactNode }) {
 	const [connectedUsers, setConnectedUsers] = useState<number[]>([]);
 	const [message, setMessage] = useState<{ userFrom: number, message: string }>({ userFrom: -1, message: "default" });
-	const [notification, setNotification] = useState<notification>();
+	const [notification, setNotification] = useState<Notification>();
 	const auth = useAuth();
 	// to usr correct function on socket i need to give context 
 
@@ -51,7 +51,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 			setMessage({ userFrom: senderId, message });
 		};
 
-		const handleNotification = (notification:notification)=> {
+		const handleNotification = (notification: Notification) => {
 			setNotification(notification);
 			// console.log(notification);
 		};
