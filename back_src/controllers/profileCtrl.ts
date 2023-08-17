@@ -450,8 +450,11 @@ export async function like(req: Request, res: Response) {
 		res.status(400).json({ error: "missing parameters" });
 		return;
 	}
-
 	const { likeeId, status } = req.body;
+	if (likeeId === res.locals.fulluser.id){
+		res.status(405).json({ error: "Method Not Allowed" });
+		return;
+	}
 
 	if (status) {
 		await InsertDb.like(res.locals.fulluser.id, likeeId);
@@ -496,6 +499,11 @@ export async function block(req: Request, res: Response) {
 
 	const { toId, status } = req.body;
 
+	if(toId === res.locals.fulluser.id){
+		res.status(405).json({ error: "Method Not Allowed" });
+		return;
+	}
+
 	if (status) {
 		await blockUser(res.locals.fulluser.id, toId);
 	} else {
@@ -512,6 +520,10 @@ export async function report(req: Request, res: Response) {
 	}
 
 	const { toId } = req.body;
+	if(toId === res.locals.fulluser.id){
+		res.status(405).json({ error: "Method Not Allowed" });
+		return;
+	}
 
 	const user = await FindDb.userById(toId);
 
@@ -533,16 +545,17 @@ export async function viewProfile(req: Request, res: Response) {
 	}
 
 	const { viewedId } = req.body;
-
-	try {
-		await newNotification("visit", res.locals.fulluser.id, viewedId);
-		await UpdateDb.incrementViews(viewedId);
-		res.status(200).json({ message: "added to the visit history" });
-	} catch (error) {
-		if (error instanceof UniqueConstraintError) {
-			res.status(200).json({ message: "already visited" });
-		} else {
-			throw error;
+	if(res.locals.fulluser.id !== viewedId){
+		try {
+			await newNotification("visit", res.locals.fulluser.id, viewedId);
+			await UpdateDb.incrementViews(viewedId);
+			res.status(200).json({ message: "added to the visit history" });
+		} catch (error) {
+			if (error instanceof UniqueConstraintError) {
+				res.status(200).json({ message: "already visited" });
+			} else {
+				throw error;
+			}
 		}
 	}
 }
