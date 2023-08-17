@@ -1,68 +1,17 @@
 # Matcha project
 
 
-## Route 
-data Type can be found in comon_src/type
-### user register:
-creat new profile
-```mermaid
-flowchart TD
-    A[POST /api/register] 
-    A-->|Error| B(JSON error message)
-    A-->|SUCCES| C(JSON succes message)
-    D(data Type: UserReqRegister) -->A
-```
-### validate email:
-give to user a way to become validate
-```mermaid
-flowchart TD
-    A[GET /api/verify_email] 
-    A-->|Error| B(JSON error message)
-    A-->|SUCCES| C(JSON succes message)
-    D(email: string, code: string) -->A
-``` 
-*
-### user login:
-give all data needed to use website as a loged user
-```mermaid
-flowchart TD
-    D(data Type: UserReqLogin) -->A
-    A[POST /api/login] 
-    A-->|Error| B(JSON Error message)
-    A-->|SUCCES| C(data Type: UserPayload)
-``` 
+## GOAL
+This is the second web project of school 42, it’s a dating WebSite where the user can create his profile, search other users, like them and begin a conversation with a chat if the person liked him back.
 
-### ask for reset password:
-creat a token send it via mail and stor it
-```mermaid
-flowchart TD
-    D(email: string) -->A
-    A[POST /api/request-password-reset] 
-    A-->|Error| B(JSON success message)
-    A-->|SUCCES| C(JSON success message)
+## Stack
+- DB : sqlite3 / No ORM
+- Backend : express typescript
+- Frontend : React typescript / MUI v5
+
+## Screenshots
+
 ``` 
-return a JSON object with a success message
-
-### reset password:
-check if token is correct and change password
-```mermaid
-flowchart TD
-    D(token: string, newPassword: string) -->A
-    A[POST /api/reset-password] 
-    A-->|Error| B(JSON error message)
-    A-->|SUCCES| C(JSON success message)
-``` 
-
-### logout:
-unvalidate token data in server side
-```mermaid
-flowchart TD
-    D(none) -->A
-    A[POST /api/logout] 
-    A-->|Error| B(JSON error message)
-    A-->|SUCCES| C(JSON success message)
-``` 
-
-
 ## 42 project
 ### by hutricot and alabalet
+``````
