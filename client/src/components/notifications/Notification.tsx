@@ -1,4 +1,4 @@
-import { Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box, ListItemAvatar, Avatar } from "@mui/material";
+import { Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box, ListItemAvatar, Avatar, Typography } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
 import { useContext, useEffect, useState } from "react";
@@ -11,7 +11,7 @@ const notificationArray = {
 	like: ["has liked your profile", "profile"],
 	message: ["has sent you a message", "chat"],
 	visit: ["has visited your profile", "profile"],
-	match: ["It's a match!!", "profile"],
+	match: ["It's a match!!", "chat"],
 	unlike: ["has unliked your profile", "profile"]
 };
 
@@ -33,7 +33,14 @@ function createNotifications(notifications: EnrichedNotification[], toggleNotifi
 					</ListItemAvatar>
 					<ListItemText
 						primary={notification.username}
-						secondary={msg}
+						secondary={
+							<>
+								<Typography>
+									{msg}
+								</Typography>
+								{notification.date.toLocaleString()}
+							</>
+						}
 						primaryTypographyProps={{ fontWeight: !notification.read ? "bold" : "normal" }}
 						secondaryTypographyProps={{ fontWeight: !notification.read ? "bold" : "normal" }}
 					/>
