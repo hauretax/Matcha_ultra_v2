@@ -481,6 +481,7 @@ export async function getProfiles(req: Request, res: Response) {
 		orderBy: orderBy as OrderBy,
 		gender: res.locals.fulluser.gender,
 		userId: res.locals.fulluser.id,
+		interest: res.locals.fulluser.interests,
 	};
 
 	const profiles = await Promise.all((await FindDb.tenUsers(paramsForSearch)).map(async (user) => {

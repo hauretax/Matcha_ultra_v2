@@ -34,11 +34,10 @@ export type findTenUsersParams = {
 	orderBy: OrderBy;
 	gender: string;
 	userId?: number;
+	interest: string[];
 }
 
 export interface userParams {
-	latitude: number;
-	longitude: number;
 	distanceMax: number;
 	ageMin: number;
 	ageMax: number;

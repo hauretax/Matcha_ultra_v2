@@ -74,10 +74,10 @@ const FindDb = {
 
 
 		const interestConditions = generateInterestConditions(params.interestWanted);
-		const orderByClause = generateOrderByClause(params.orderBy, params.interestWanted.length);
+		const orderByClause = generateOrderByClause(params.orderBy, params.interest.length);
 
 		const completTab = [
-			...params.interestWanted,
+			...params.interest,
 			params.latitude, params.longitude, params.latitude,
 			params.userId,
 			params.distanceMax,
@@ -106,7 +106,7 @@ const FindDb = {
 			d.distance,
 			(
 				SELECT COUNT(*) FROM user_interests ui
-				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${params.interestWanted.map(() => "?").join(",")}))
+				WHERE ui.user_id = u.id AND ui.interest_id IN (SELECT id FROM interests WHERE interest IN (${params.interest.map(() => "?").join(",")}))
 			) AS interestCount,
 			interests,
 			picture_ids,
@@ -270,19 +270,19 @@ const FindDb = {
 };
 
 function generateInterestConditions(interestWanted: string[]): string {
-	return interestWanted.map(() => "interests LIKE ?").join(" OR ");
+	return interestWanted.map(() => "interests LIKE ?").join(" AND ");
 }
 
 function generateOrderByClause(orderBy: OrderBy, interestCount: number): string {
 	switch (orderBy) {
 	case "distance":
-		return "(distance_value * 10 +  (interestCount / " + interestCount + ") + fame_rating_value) DESC";
+		return "(distance_value * 1000 +  (interestCount / " + interestCount + ") + fame_rating_value) DESC";
 	case "age":
-		return "(distance_value  + fame_rating_value + 100 - u.age ) DESC";
+		return "(distance_value + (interestCount / " + interestCount + ") + fame_rating_value + 100 - u.age * 10) DESC";
 	case "popularity":
 		return "(distance_value +  (interestCount / " + interestCount + ") + fame_rating_value * 10) DESC";
 	case "tag":
-		return "(distance_value +  (interestCount / " + interestCount + ") * 10  + fame_rating_value) DESC";
+		return "interestCount DESC";
 	default:
 		throw new Error("Invalid order by");
 	}

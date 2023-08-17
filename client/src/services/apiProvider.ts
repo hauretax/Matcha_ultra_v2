@@ -22,7 +22,7 @@ const apiProvider = {
 		return axiosPrivate.get("/chat/getConv");
 	},
 
-	getRelation(toId : number) {
+	getRelation(toId: number) {
 		return axiosPrivate.post("/user/relation", { toId });
 	},
 
@@ -42,7 +42,7 @@ const apiProvider = {
 	setNotificationRead() {
 		return axiosPrivate.post("/seeNotification");
 	},
-	
+
 	updatePositionByIp() {
 		return axiosPrivate.post("/setLocationByIP");
 	},
@@ -98,17 +98,17 @@ const apiProvider = {
 		return axiosPrivate.post("/note/userTo", { note, userTo });
 	},
 
-	getUsers({ latitude, longitude, distanceMax, ageMin, ageMax, fameMin, fameMax, interestWanted, index, orderBy }: userParams) {
-		return axiosPrivate.get(`/users?latitude=${latitude}
-    &longitude=${longitude}
-    &distanceMax=${distanceMax}
-    &ageMin=${ageMin}
-    &ageMax=${ageMax}
-    &fameMin=${fameMin}
-    &fameMax=${fameMax}
-    &interestWanted=${encodeURIComponent(interestWanted.toString())}
-    &index=${index}
-    &orderBy=${orderBy}`);
+	getUsers({ distanceMax, ageMin, ageMax, fameMin, fameMax, interestWanted, index, orderBy }: userParams) {
+		return axiosPrivate.get(`/users?
+			distanceMax=${distanceMax}
+    		&ageMin=${ageMin}
+    		&ageMax=${ageMax}
+    		&fameMin=${fameMin}
+    		&fameMax=${fameMax}
+    		&interestWanted=${encodeURIComponent(interestWanted.toString())}
+    		&index=${index}
+    		&orderBy=${orderBy}`
+		);
 
 	},
 
