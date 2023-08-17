@@ -13,7 +13,7 @@ export function getDistanceInKm(lat1, lon1, lat2, lon2) {
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 	const d = R * c; // Distance in km
-	return d;
+	return (d || 1);
 }
 
 function deg2rad(deg) {
