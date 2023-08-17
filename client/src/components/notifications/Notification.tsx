@@ -1,12 +1,9 @@
 import { Drawer, IconButton, ListItem, ListItemButton, ListItemText, List, Box, ListItemAvatar, Avatar } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import apiProvider from "../../services/apiProvider";
-import { buildErrorString, prefixBackendUrl } from "../../utils";
-import { ErrorResponse } from "../../../../comon_src/type/error.type";
-import { useSnackbar } from "../../context/SnackBar";
+import { prefixBackendUrl } from "../../utils";
 import { Notification as NotifType } from "../../../../comon_src/type/utils.type";
 
 const notificationArray = {
