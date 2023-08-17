@@ -133,7 +133,7 @@ const Carousel: React.FC<CarouselProps> = ({ imgs }) => {
 				onChange={handleFileInput}
 				accept="image/*"
 			/>
-			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "white" }}>
+			<Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 				<Button onClick={goLeft}>
 					{theme.direction === "rtl" ? (
 						<KeyboardArrowRight />
