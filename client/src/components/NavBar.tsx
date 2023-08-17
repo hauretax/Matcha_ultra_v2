@@ -14,7 +14,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { prefixBackendUrl } from "../utils";
-import NotificationOpener from "./notifications/NotificationOpener";
+import { Badge } from "@mui/material";
+import { Notifications } from "@mui/icons-material";
 
 const pages = [
 	{
@@ -31,7 +32,7 @@ const pages = [
 	}
 ];
 
-function NavBar({ openNotification, NotificationIsopen }: { openNotification: () => void, NotificationIsopen: boolean | undefined }) {
+function NavBar({ toggleNotification, count }: { toggleNotification: () => void; count: number }) {
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 	const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -161,6 +162,17 @@ function NavBar({ openNotification, NotificationIsopen }: { openNotification: ()
 
 					{auth.user ?
 						<Box sx={{ flexGrow: 0 }}>
+							<IconButton
+								size="large"
+								aria-label={`show ${count} new notifications`}
+								color="inherit"
+								onClick={toggleNotification}
+								sx={{ mr: 2 }}
+							>
+								<Badge badgeContent={count} color="error">
+									<Notifications />
+								</Badge>
+							</IconButton>
 							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
 								<Avatar alt="Remy Sharp" src={prefixBackendUrl(auth.user.pictures[0]?.src)} />
 							</IconButton>
@@ -190,7 +202,6 @@ function NavBar({ openNotification, NotificationIsopen }: { openNotification: ()
 									<Typography textAlign="center">Logout</Typography>
 								</MenuItem>
 							</Menu>
-							<NotificationOpener openNotification={openNotification} NotificationIsopen={NotificationIsopen} />
 						</Box> :
 						<Button sx={{ my: 2, color: "inherit", display: "block", lineHeight: "32px" }} onClick={() => navigate("/login")} variant='outlined'>LOGIN</Button>
 					}

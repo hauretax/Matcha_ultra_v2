@@ -1,102 +1,94 @@
-import { Divider, Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from "@mui/material";
-import { ArrowRight, Favorite, Mail, ThumbDown, ThumbUp, Visibility } from "@mui/icons-material";
+import { Drawer, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box, ListItemAvatar, Avatar, Typography } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import NotificationContext from "../../context/NotificationProvider";
-import { useContext } from "react";
-import { notification, notificationType } from "../../../../comon_src/type/utils.type";
+import { useContext, useEffect, useState } from "react";
+import { EnrichedNotification } from "../../../../comon_src/type/utils.type";
 import { useNavigate } from "react-router-dom";
+import apiProvider from "../../services/apiProvider";
+import { prefixBackendUrl } from "../../utils";
 
-function selectIcon(type: notificationType) {
-	switch (type) {
-	case "like":
-		return <ThumbUp />;
-	case "message":
-		return <Mail />;
-	case "visit":
-		return <Visibility />;
-	case "match":
-		return <Favorite />;
-	case "unlike":
-		return <ThumbDown />;
-	default:
-		return <span>?</span>;
-	}
-}
+const notificationArray = {
+	like: ["has liked your profile", "profile"],
+	message: ["has sent you a message", "chat"],
+	visit: ["has visited your profile", "profile"],
+	match: ["It's a match!!", "chat"],
+	unlike: ["has unliked your profile", "profile"]
+};
 
-function createNotifications(notifications: notification[]): JSX.Element {
+function createNotifications(notifications: EnrichedNotification[], toggleNotification: () => void): JSX.Element {
 	const navigate = useNavigate();
 
-	function navTo(id: number, type: notificationType) {
-		switch (type) {
-		case "message":
-			navigate(`/chat/${id}`);
-			return;
-		default:
-			navigate(`/profile/${id}`);
-			return;
-		}
-	}
-	if (!notifications) {
-		return <></>;
-	}
-	const notificationListe = notifications.map((notification) => {
+	const navTo = (id: number, url: string) => {
+		navigate(`/${url}/${id}`);
+		toggleNotification();
+	};
+
+	const notificationList = notifications.map((notification) => {
+		const [msg, url] = notificationArray[notification.type];
 		return (
-			<ListItem key={notification.id} onClick={() => navTo(notification.fromId, notification.type)} disablePadding sx={{ my: 1 }} className={!notification.read ? "unread" : ""}>
+			<ListItem divider alignItems="flex-start" key={notification.id} onClick={() => navTo(notification.fromId, url)} disablePadding sx={{ backgroundColor: !notification.read ? "rgba(0,0,0,0.1)" : "inherit" }}>
 				<ListItemButton>
-					<ListItemIcon>
-						{selectIcon(notification.type)}
-					</ListItemIcon>
-					<ListItemText primary={`u get ${notification.type} by ${notification.fromUsername}`} />
+					<ListItemAvatar>
+						<Avatar alt={notification.username} src={prefixBackendUrl(notification.profilePicture)} />
+					</ListItemAvatar>
+					<ListItemText
+						primary={notification.username}
+						secondary={
+							<>
+								<Typography>
+									{msg}
+								</Typography>
+								{notification.date.toLocaleString()}
+							</>
+						}
+						primaryTypographyProps={{ fontWeight: !notification.read ? "bold" : "normal" }}
+						secondaryTypographyProps={{ fontWeight: !notification.read ? "bold" : "normal" }}
+					/>
 				</ListItemButton>
-				<style>
-					{`
-						@keyframes blink {
-							0% {
-								background-color: pink;
-							}
-							100% {
-								background-color: red;
-							}
-						}
-						.unread {
-							animation: blink 1s infinite alternate;
-						}
-        			`}
-				</style>
 			</ListItem>
 		);
 	});
-	return <>{notificationListe}</>;
+	return <>{notificationList}</>;
 }
 
-export default function Notification({ closeNotification, NotificationIsopen }: { closeNotification: () => void, NotificationIsopen: boolean | undefined }) {
+export default function Notification({ toggleNotification, open }: { toggleNotification: () => void, open: boolean | undefined }) {
 	const { notifications } = useContext(NotificationContext);
+	const [enrichedNotifications, setEnrichedNotifications] = useState<EnrichedNotification[]>([]);
+
+	useEffect(() => {
+		const fetchProfiles = async () => {
+			const data = await Promise.all(notifications.map(async (notification) => {
+				const res = await apiProvider.getProfile(notification.fromId.toString());
+				return {
+					...notification,
+					username: res.data.username,
+					profilePicture: res.data.pictures[0]?.src,
+				};
+			}));
+			setEnrichedNotifications(data);
+		};
+
+		fetchProfiles();
+	}, [notifications]);
 
 	return (
 		<>
 			<Drawer
-				sx={{
-					width: "200px",
-					flexShrink: 0,
-					"& .MuiDrawer-paper": {
-						width: "200px",
-					},
-				}}
-				variant="persistent"
 				anchor="right"
-				open={NotificationIsopen}
+				open={open}
+				onClose={toggleNotification}
 			>
 				<Box
 					display="flex"
 					justifyContent="center"
 					alignItems="center"
 				>
-					<IconButton onClick={closeNotification}>
-						{<ArrowRight />}
+					<IconButton onClick={toggleNotification} sx={{ ml: "auto", display: "block", m: 1 }}>
+						<Close />
 					</IconButton>
 				</Box>
-				<Divider />
 				<List>
-					{createNotifications(notifications)}
+					{createNotifications(enrichedNotifications, toggleNotification)}
 				</List>
 			</Drawer>
 		</>

@@ -7,13 +7,13 @@ import SocketContext from "./SocketProvider";
 
 interface NotificationProvider {
 	notifications: Array<notification>;
-	haveUnread: boolean;
+	unreadCount: number;
 	setRead: () => void;
 }
 
 const NotificationContext = createContext<NotificationProvider>({
 	notifications: [],
-	haveUnread: false,
+	unreadCount: 0,
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	setRead: () => { }
 });
@@ -22,7 +22,7 @@ export default NotificationContext;
 
 export function NotificationtProvider({ children }: { children: React.ReactNode }) {
 	const [notifications, setNotifications] = useState<notification[]>([]);
-	const [haveUnread, sethaveUnread] = useState<boolean>(false);
+	const [unreadCount, setUnreadCount] = useState<number>(0);
 	const { notification } = useContext(SocketContext);
 	const auth = useAuth();
 
@@ -35,8 +35,8 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 				const data = await apiProvider.getNotifications();
 				const fetchedNotifications = data.data;
 				setNotifications(fetchedNotifications);
-				const haveUnread = fetchedNotifications.some((notification: notification) => !notification.read);
-				sethaveUnread(haveUnread);
+				const unreadCount = fetchedNotifications.filter((notification: notification) => !notification.read).length;
+				setUnreadCount(unreadCount);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des notifications:", error);
 			}
@@ -48,7 +48,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 		if (!notification)
 			return;
 		setNotifications([notification, ...notifications]);
-
+		setUnreadCount(unreadCount + 1);
 	}, [notification]);
 
 
@@ -59,7 +59,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 			...notification,
 			read: true,
 		}));
-		sethaveUnread(false);
+		setUnreadCount(0);
 		setNotifications(updatedNotifications);
 		try {
 			await apiProvider.setNotificationRead();
@@ -70,7 +70,7 @@ export function NotificationtProvider({ children }: { children: React.ReactNode 
 
 	const contextValue = {
 		notifications,
-		haveUnread,
+		unreadCount,
 		setRead
 	};
 
