@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import LockIcon from "@mui/icons-material/Lock";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -40,6 +40,10 @@ function LoginPage() {
 		// won"t end up back on the login page, which is also really nice for the
 		// user experience.
 		navigate(from, { replace: true });
+	}
+
+	if (auth.user !== null) {
+		return <Navigate to="/profile" />;
 	}
 
 	return (
