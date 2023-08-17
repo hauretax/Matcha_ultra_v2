@@ -27,6 +27,7 @@ module.exports = {
 		"computed-property-spacing": ["error", "never"],
 		"block-spacing": ["error", "always"],
 		"comma-spacing": ["error", { "before": false, "after": true }],
-		"key-spacing": ["error", { "beforeColon": false, "afterColon": true }]
+		"key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+		"space-infix-ops": "error"
 	}
 }

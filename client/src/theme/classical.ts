@@ -17,7 +17,7 @@ const themeOptions: ThemeOptions = {
 		},
 	},
 	typography: {
-		fontFamily: "\"Press Start 2P\""
+		fontFamily: "Poppins, Arial, sans-serif"
 	}
 };
 

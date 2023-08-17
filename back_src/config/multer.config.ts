@@ -1,9 +1,16 @@
 import multer, { MulterError } from "multer";
 import path from "path";
+import fs from "fs";
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, path.join(__dirname, "../../../back_src", "public/images"));
+		const dest = path.join(__dirname, "../../../back_src", "public/images");
+
+		if (!fs.existsSync(dest)) {
+			fs.mkdirSync(dest, { recursive: true });
+		}
+
+		cb(null, dest);
 	},
 	filename: function (req, file, cb) {
 		const ext = path.extname(file.originalname).toLowerCase();

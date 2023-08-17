@@ -51,7 +51,7 @@ const FindDb = {
 			]).then(([pictures, interests, preferences]) => {
 				user.pictures = pictures;
 				user.interests = interests;
-				user.preferences = preferences;
+				user.preferences = preferences.map(preference => preference.name);
 				return user;
 			});
 		} else {

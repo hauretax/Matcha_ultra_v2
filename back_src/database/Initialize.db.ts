@@ -21,6 +21,7 @@ const InitializeDb = {
 		    token TEXT, 
         latitude DECIMAL(9, 6),
         longitude DECIMAL(9, 6),
+		lastConnection TEXT DEFAULT CURRENT_TIMESTAMP,
         ip TEXT,
         customLocation BIT DEFAULT 0,
 				views INTEGER DEFAULT 0,
