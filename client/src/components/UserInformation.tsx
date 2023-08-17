@@ -21,6 +21,11 @@ interface UserInformationProps {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => { };
 
+const nullOrEmptyString = (str: string | null | undefined): string => {
+	if (str === null || str === undefined) return "";
+	return str;
+};
+
 const UserInformation: React.FC<UserInformationProps> = (props) => {
 	const [email, setEmail] = useState("");
 	const [firstName, setFirstName] = useState<string>("");
@@ -47,15 +52,15 @@ const UserInformation: React.FC<UserInformationProps> = (props) => {
 	};
 
 	React.useEffect(() => {
-		setEmail(props.email || "");
-		setFirstName(props.firstName);
-		setLastName(props.lastName);
-		setBirthDate(props.birthDate);
-		setGender(props.gender);
-		setPreferences(props.preferences);
+		setEmail(nullOrEmptyString(props.email));
+		setFirstName(nullOrEmptyString(props.firstName));
+		setLastName(nullOrEmptyString(props.lastName));
+		setBirthDate(nullOrEmptyString(props.birthDate));
+		setGender(nullOrEmptyString(props.gender));
+		setPreferences(props.preferences || []);
 		setCustomLocation(props.customLocation || false);
-		setLongitude(props.longitude);
-		setLatitude(props.latitude);
+		setLongitude(nullOrEmptyString(props.longitude));
+		setLatitude(nullOrEmptyString(props.latitude));
 	}, [props]);
 
 	const handlePreferencesChange = (event: SelectChangeEvent<string[]>) => {

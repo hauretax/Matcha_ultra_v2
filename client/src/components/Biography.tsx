@@ -25,7 +25,7 @@ const Biography: React.FC<BiographyProps> = (props) => {
 	};
 
 	useEffect(() => {
-		setBiography(props.biography);
+		setBiography(props.biography || "");
 	}, [props]);
 
 	return (
